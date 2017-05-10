@@ -229,6 +229,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['less', 'uglify', 'autoprefixer']);
 
     // Build task(s).
-    grunt.registerTask( 'build:translations', [ 'checktextdomain', 'makepot', 'newer:potomo' ] );
+    grunt.registerTask( 'translations', [ 'checktextdomain' ] );
     grunt.registerTask( 'build', [ 'clean', 'copy', 'compress' ] );
 };

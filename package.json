@@ -1,8 +1,8 @@
 {
-  "name": "edd-mailerlite",
+  "name": "woo-mailerlite",
   "version": "1.0.0",
   "private": true,
-  "description": "Plugin Description",
+  "description": "Mailerlite integration for WooCommerce",
   "directories": {
     "js": "",
     "sass": "",
@@ -12,18 +12,15 @@
   },
   "pot": {
     "type": "wp-plugin",
-    "textdomain": "edd-mailerlite",
-    "src": "edd-mailerlite.php",
+    "textdomain": "woo-mailerlite",
+    "src": "woo-mailerlite.php",
     "header": {
       "bugs": "https://coder.flowdee.de/support/",
       "team": "flowdee <coder@flowdee.de>",
       "last_translator": "flowdee <coder@flowdee.de>"
     }
   },
-  "dependencies": {
-    "dotsunited-equal-height-blocks": "3.1.0",
-    "gee.less": "3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "clean-css": "^3.4.12",
     "grunt": "^1.0.1",
