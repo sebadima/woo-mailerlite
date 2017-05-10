@@ -1,33 +1,32 @@
-# Copyright (C) 2017 flowdee
-# This file is distributed under the same license as the Woo Mailerlite package.
 #, fuzzy
 msgid ""
 msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Woo Mailerlite\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-udemy\n"
-"POT-Creation-Date: 2017-05-10 15:48+0200\n"
+"POT-Creation-Date: 2017-05-10 16:10+0200\n"
+"PO-Revision-Date: 2017-05-10 16:10+0200\n"
+"Last-Translator: flowdee <coder@flowdee.de>\n"
+"Language-Team: flowdee <coder@flowdee.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
-"Last-Translator: flowdee <coder@flowdee.de>\n"
-"Language-Team: flowdee <coder@flowdee.de>\n"
 "X-Generator: Poedit 1.8.7\n"
-"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
-"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
-"esc_html_x:1,2c\n"
-"Language: en_US\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ..\n"
-"X-Textdomain-Support: yes\n"
+"X-Poedit-WPHeader: woo-mailerlite.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: vendor\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SearchPathExcluded-1: node_modules\n"
+"X-Poedit-SearchPathExcluded-2: vendor\n"
 
 #: includes/class.woo-mailerlite-integration.php:24
 msgid "Mailerlite"
 msgstr ""
 
+#. Description of the plugin/theme
 #: includes/class.woo-mailerlite-integration.php:25
 msgid "Mailerlite integration for WooCommerce"
 msgstr ""
@@ -129,4 +128,20 @@ msgstr ""
 
 #: includes/functions.php:136
 msgid "Customer successfully subscribed to mailing list(s)."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Woo Mailerlite"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/woo-mailerlite/"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "flowdee"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://flowdee.de"
 msgstr ""

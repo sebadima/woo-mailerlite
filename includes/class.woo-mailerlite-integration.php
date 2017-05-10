@@ -33,10 +33,10 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_status       = $this->get_option( 'api_status', false );
 
             // Actions.
-            add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
+            add_action( 'woo-mailerlite_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
 
             // Filters.
-            add_filter( 'woocommerce_settings_api_sanitized_fields_' . $this->id, array( $this, 'sanitize_settings' ) );
+            add_filter( 'woo-mailerlite_settings_api_sanitized_fields_' . $this->id, array( $this, 'sanitize_settings' ) );
 
         }
 
@@ -56,7 +56,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'default'           => '',
                 ),
                 'group' => array(
-                    'title' 		=> __( 'Group', 'woocommerce' ),
+                    'title' 		=> __( 'Group', 'woo-mailerlite' ),
                     'type' 			=> 'select',
                     //'class'         => 'wc-enhanced-select',
                     'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
@@ -70,7 +70,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'default'           => 'yes'
                 ),
                 'checkout_position' => array(
-                    'title' 		=> __( 'Position', 'woocommerce' ),
+                    'title' 		=> __( 'Position', 'woo-mailerlite' ),
                     'type' 			=> 'select',
                     'default' 		=> 'checkout_billing',
                     'options'		=> array(
