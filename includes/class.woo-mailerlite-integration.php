@@ -4,7 +4,6 @@
  *
  * @package  Woo_Mailerlite_Integration
  * @category Integration
- * @author   WooThemes
  */
 
 if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
