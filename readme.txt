@@ -17,6 +17,7 @@ This plugin allows you easily to connect WooCommerce with Mailerlite. Add your c
 = Features =
 
 * Checkout integration
+* Select between multiple positions
 * Show/hide checkbox
 * Enable/disable double opt-in
 * Customize checkbox label via settings page
