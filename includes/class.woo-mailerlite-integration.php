@@ -133,8 +133,10 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 $settings['api_status'] = $api_status;
 
                 // Reset groups when saving options
-                if ( $api_status )
+                if ( $api_status ) {
                     delete_transient( 'woo_ml_groups' );
+                    $groups = woo_ml_settings_get_group_options( true );
+                }
             }
 
             return $settings;

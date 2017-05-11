@@ -27,13 +27,13 @@ function woo_ml_settings_get_api_key_status() {
  *
  * @return array
  */
-function woo_ml_settings_get_group_options() {
+function woo_ml_settings_get_group_options( $force_refresh = false ) {
 
     $options = array();
 
     $groups = get_transient( 'woo_ml_groups' );
 
-    if ( empty( $groups ) ) {
+    if ( $force_refresh || empty( $groups ) ) {
         $groups = flowdee_ml_get_groups();
 
         if ( ! empty( $groups ) )
