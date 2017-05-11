@@ -76,10 +76,10 @@ Yes of course.
 
 == Changelog ==
 
-= 1.0 =
+= 1.0 (11th May 2017) =
 * Initial release
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 1.0 (11th May 2017) =
 Initial release
