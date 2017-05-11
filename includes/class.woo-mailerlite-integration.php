@@ -32,10 +32,10 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_status       = $this->get_option( 'api_status', false );
 
             // Actions.
-            add_action( 'woo-mailerlite_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
+            add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
 
             // Filters.
-            add_filter( 'woo-mailerlite_settings_api_sanitized_fields_' . $this->id, array( $this, 'sanitize_settings' ) );
+            add_filter( 'woocommerce_settings_api_sanitized_fields_' . $this->id, array( $this, 'sanitize_settings' ) );
 
         }
 
