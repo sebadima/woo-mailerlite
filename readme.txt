@@ -35,7 +35,7 @@ This plugin allows you easily to connect WooCommerce with Mailerlite. Add your c
 
 = Credits =
 
-* This plugin is not official made or maintained by [WooCommerce](https://woocommerce.com/) or Mailerlite, but making use of the official [Mailerlite API](https://developers.mailerlite.com/docs).
+* This plugin is not official made or maintained by [WooCommerce](https://woocommerce.com/) or [Mailerlite](http://www.mailerlite.com/a/7qq80y6dbo), but making use of the official [Mailerlite API](https://developers.mailerlite.com/docs).
 
 == Installation ==
 
