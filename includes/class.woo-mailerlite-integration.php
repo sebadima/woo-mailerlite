@@ -46,11 +46,12 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          * @return void
          */
         public function init_form_fields() {
+
             $this->form_fields = array(
                 'api_key' => array(
                     'title'             => __( 'Mailerlite API Key', 'woo-mailerlite' ),
                     'type'              => 'text',
-                    //'description'       => woo_ml_settings_get_api_key_status(),
+                    'description'       => sprintf( wp_kses( __( 'You can find your Developer API key <a href="%s" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/integrations/api/' ) ),
                     'desc_tip'          => false,
                     'default'           => '',
                 ),

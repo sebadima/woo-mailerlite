@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Woo Mailerlite\n"
-"POT-Creation-Date: 2017-05-10 16:10+0200\n"
+"POT-Creation-Date: 2017-05-11 12:37+0200\n"
 "PO-Revision-Date: 2017-05-10 16:10+0200\n"
 "Last-Translator: flowdee <coder@flowdee.de>\n"
 "Language-Team: flowdee <coder@flowdee.de>\n"
@@ -15,24 +15,31 @@ msgstr ""
 "X-Poedit-WPHeader: woo-mailerlite.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SearchPathExcluded-1: node_modules\n"
 "X-Poedit-SearchPathExcluded-2: vendor\n"
 
-#: includes/class.woo-mailerlite-integration.php:24
+#: includes/class.woo-mailerlite-integration.php:23
 msgid "Mailerlite"
 msgstr ""
 
 #. Description of the plugin/theme
-#: includes/class.woo-mailerlite-integration.php:25
+#: includes/class.woo-mailerlite-integration.php:24
 msgid "Mailerlite integration for WooCommerce"
 msgstr ""
 
 #: includes/class.woo-mailerlite-integration.php:52
 msgid "Mailerlite API Key"
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:54
+#, php-format
+msgid ""
+"You can find your Developer API key <a href=\"%s\" target=\"_blank\">here</"
+"a>."
 msgstr ""
 
 #: includes/class.woo-mailerlite-integration.php:59
@@ -131,7 +138,7 @@ msgid "Customer successfully subscribed to mailing list(s)."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "Woo Mailerlite"
+msgid "WooCommerce - Mailerlite"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
