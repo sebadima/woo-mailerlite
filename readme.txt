@@ -1,4 +1,4 @@
-=== Woo Mailerlite ===
+=== WooCommerce - Mailerlite ===
 Contributors: flowdee
 Donate link: Donate link: https://donate.flowdee.de
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop

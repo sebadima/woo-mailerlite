@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:     Woo Mailerlite
+ * Plugin Name:     WooCommerce - Mailerlite
  * Plugin URI:      https://wordpress.org/plugins/woo-mailerlite/
  * Description:     Mailerlite integration for WooCommerce
  * Version:         1.0.0
@@ -62,7 +62,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
         private function setup_constants() {
 
             // Plugin name
-            define( 'WOO_MAILERLITE_NAME', 'Woo Mailerlite' );
+            define( 'WOO_MAILERLITE_NAME', 'WooCommerce - Mailerlite ' );
 
             // Plugin version
             define( 'WOO_MAILERLITE_VER', '1.0.0' );
