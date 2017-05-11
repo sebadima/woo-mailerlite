@@ -4,7 +4,7 @@ Donate link: Donate link: https://donate.flowdee.de
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
 Tested up to: 4.7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,10 +77,20 @@ Yes of course.
 
 == Changelog ==
 
+= 1.0.1 (11th May 2017) =
+* Improvement: Added description and link to API key setting
+* Fix: Settings not being saved
+* Fix: Groups not being available when entering API key for the first time
+
 = 1.0 (11th May 2017) =
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.1 (11th May 2017) =
+* Improvement: Added description and link to API key setting
+* Fix: Settings not being saved
+* Fix: Groups not being available when entering API key for the first time
 
 = 1.0 (11th May 2017) =
 Initial release
