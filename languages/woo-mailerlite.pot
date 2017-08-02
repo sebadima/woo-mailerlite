@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Woo Mailerlite\n"
-"POT-Creation-Date: 2017-05-11 12:37+0200\n"
+"POT-Creation-Date: 2017-08-02 12:19+0200\n"
 "PO-Revision-Date: 2017-05-10 16:10+0200\n"
 "Last-Translator: flowdee <coder@flowdee.de>\n"
 "Language-Team: flowdee <coder@flowdee.de>\n"
@@ -115,6 +115,14 @@ msgstr ""
 #: includes/class.woo-mailerlite-integration.php:105
 msgid ""
 "Check in order to force email confirmation before being added to your list"
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:106
+#, php-format
+msgid ""
+"Please ensure that you enabled this feature in your <a href=\"%s\" target="
+"\"_blank\">Mailerlite \n"
+"Subscribe settings</a>."
 msgstr ""
 
 #: includes/functions.php:22

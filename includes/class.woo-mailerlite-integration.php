@@ -103,6 +103,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'title'             => __( 'Double Opt-In', 'woo-mailerlite' ),
                     'type'              => 'checkbox',
                     'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
+                    'description'       => sprintf( wp_kses( __( 'Please ensure that you enabled this feature in your <a href="%s" target="_blank">Mailerlite 
+Subscribe settings</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/configuration/subscribe' ) ),
                     'default'           => 'yes'
                 ),
             );
