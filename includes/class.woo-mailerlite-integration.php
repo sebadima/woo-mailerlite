@@ -115,28 +115,41 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          */
         public function sanitize_settings( $settings ) {
 
-            // We're just going to make the api key all upper case characters since that's how our imaginary API works
             if ( isset( $settings ) && isset( $settings['api_key'] ) ) {
+
+                $reset_groups = false;
+                $refresh_groups = false;
 
                 $api_status = $this->api_status;
                 $api_key = $this->api_key;
 
                 if ( empty( $settings['api_key'] ) ) {
                     $api_status = false;
+                    $reset_groups = true;
 
                 } elseif ( ! empty( $settings['api_key'] ) && $settings['api_key'] != $api_key ) {
                     $validation = woo_ml_validate_api_key( esc_html( $settings['api_key'] ) );
                     $api_status = ( $validation );
+
+                    $reset_groups = true;
+                    $refresh_groups = true;
                 }
 
                 // Store API validation
                 $settings['api_status'] = $api_status;
 
-                // Reset groups when saving options
-                if ( $api_status ) {
+                // Maybe reset groups
+                if ( $reset_groups ) {
                     delete_transient( 'woo_ml_groups' );
+                    woo_ml_debug_log( 'resetting groups' );
+                }
+
+                // Maybe refresh groups
+                if ( $refresh_groups && $api_status ) {
+                    woo_ml_debug_log( 'refreshing groups' );
                     $groups = woo_ml_settings_get_group_options( true );
                 }
+
             }
 
             return $settings;
