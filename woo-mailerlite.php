@@ -3,7 +3,7 @@
  * Plugin Name:     WooCommerce - Mailerlite
  * Plugin URI:      https://wordpress.org/plugins/woo-mailerlite/
  * Description:     Mailerlite integration for WooCommerce
- * Version:         1.0.1
+ * Version:         1.0.2
  * Author:          flowdee
  * Author URI:      https://flowdee.de
  * Text Domain:     woo-mailerlite
@@ -65,7 +65,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             define( 'WOO_MAILERLITE_NAME', 'WooCommerce - Mailerlite' );
 
             // Plugin version
-            define( 'WOO_MAILERLITE_VER', '1.0.1' );
+            define( 'WOO_MAILERLITE_VER', '1.0.2' );
 
             // Plugin path
             define( 'WOO_MAILERLITE_DIR', plugin_dir_path( __FILE__ ) );
