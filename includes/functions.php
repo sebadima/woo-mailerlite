@@ -79,13 +79,15 @@ function woo_ml_validate_api_key( $api_key ) {
 /**
  * Process group signup(s)
  *
- * @param $payment_id
+ * @param $order_id
  */
 function woo_ml_process_signup( $order_id ) {
 
-    //woo_ml_debug_log('woo_ml_process_signup');
+    woo_ml_debug_log( '>> processing signup' );
 
     $group = woo_ml_get_option('group' );
+
+    woo_ml_debug_log('$group >> ' . $group );
 
     if ( empty( $group ) )
         return;
@@ -109,9 +111,12 @@ function woo_ml_process_signup( $order_id ) {
         );
     }
 
-    //woo_ml_debug_log($data);
+    woo_ml_debug_log( '$data' );
+    woo_ml_debug_log( $data );
 
     $double_option = woo_ml_get_option('double_optin', false );
+
+    woo_ml_debug_log( 'Double Optin? ' . $double_option );
 
     if ( empty( $data['email'] ) )
         return;
@@ -123,14 +128,15 @@ function woo_ml_process_signup( $order_id ) {
             'name' => ( ! empty( $data['first_name'] ) ) ? $data['first_name'] : '',
             'last_name' => ( ! empty( $data['last_name'] ) ) ? $data['last_name'] : '',
         ),
-        'type' => ( $double_option ) ? 'unconfirmed' : 'subscribed' // subscribed, active, unconfirmed
+        'type' => ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed' // subscribed, active, unconfirmed
     );
 
-    //woo_ml_debug_log($subscriber);
+    woo_ml_debug_log( '$subscriber' );
+    woo_ml_debug_log( $subscriber );
 
     $added = flowdee_ml_add_subscriber( $group, $subscriber );
 
-    //woo_ml_debug_log($added);
+    woo_ml_debug_log( '$added >> ' . $added );
 
     if ( $added )
         $order->add_order_note( __( 'Customer successfully subscribed to mailing list(s).', 'woo-mailerlite' ) );
@@ -173,7 +179,7 @@ function woo_ml_debug( $args, $title = false ) {
  */
 function woo_ml_debug_log( $message ) {
 
-    if ( WP_DEBUG === true ) {
+    if ( WP_DEBUG === true && defined( 'WOO_ML_DEBUG' ) && WOO_ML_DEBUG === true ) {
         if (is_array( $message ) || is_object( $message ) ) {
             error_log( print_r( $message, true ) );
         } else {
