@@ -145,12 +145,12 @@ Subscribe settings</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => ar
                 // Maybe reset groups
                 if ( $reset_groups ) {
                     delete_transient( 'woo_ml_groups' );
-                    woo_ml_debug_log( 'resetting groups' );
+                    //woo_ml_debug_log( 'resetting groups' );
                 }
 
                 // Maybe refresh groups
                 if ( $refresh_groups && $api_status ) {
-                    woo_ml_debug_log( 'refreshing groups' );
+                    //woo_ml_debug_log( 'refreshing groups' );
                     $groups = woo_ml_settings_get_group_options( true );
                 }
 
