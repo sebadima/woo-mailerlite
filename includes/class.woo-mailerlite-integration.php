@@ -64,6 +64,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
                     'default' 		=> '',
                     'options'		=> woo_ml_settings_get_group_options(),
+                    'desc_tip' => true
                 ),
                 'checkout' => array(
                     'title'             => __( 'Checkout', 'woo-mailerlite' ),
@@ -99,16 +100,16 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'title'             => __( 'Checkbox label', 'woo-mailerlite' ),
                     'type'              => 'text',
                     'description'       => __( 'The text which will be shown besides the checkbox', 'woo-mailerlite' ),
-                    'desc_tip'          => false,
-                    'default'           => __( 'Yes, I want to receive your newsletter.', 'woo-mailerlite' )
+                    'default'           => __( 'Yes, I want to receive your newsletter.', 'woo-mailerlite' ),
+                    'desc_tip' => true
                 ),
                 'double_optin' => array(
                     'title'             => __( 'Double Opt-In', 'woo-mailerlite' ),
                     'type'              => 'checkbox',
                     'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
-                    'description'       => sprintf( wp_kses( __( 'Please ensure that you enabled this feature in your <a href="%s" target="_blank">Mailerlite 
-Subscribe settings</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/configuration/subscribe' ) ),
-                    'default'           => 'yes'
+                    'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
+                    'default'           => 'yes',
+                    'desc_tip'          => true
                 ),
             );
         }
