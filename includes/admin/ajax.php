@@ -21,8 +21,6 @@ function woo_ml_admin_ajax_refresh_groups() {
          */
         $groups = woo_ml_settings_get_group_options( true );
 
-        woo_ml_debug_log( $groups );
-
         if ( $groups )
             $response = true;
 
