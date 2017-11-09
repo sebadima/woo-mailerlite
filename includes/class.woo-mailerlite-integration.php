@@ -60,7 +60,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 'group' => array(
                     'title' 		=> __( 'Group', 'woo-mailerlite' ),
                     'type' 			=> 'select',
-                    //'class'         => 'wc-enhanced-select',
+                    'class'         => 'wc-enhanced-select',
                     'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
                     'default' 		=> '',
                     'options'		=> woo_ml_settings_get_group_options(),
@@ -74,6 +74,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 'checkout_position' => array(
                     'title' 		=> __( 'Position', 'woo-mailerlite' ),
                     'type' 			=> 'select',
+                    'class'         => 'wc-enhanced-select',
                     'default' 		=> 'checkout_billing',
                     'options'		=> array(
                         'checkout_billing' => __( 'After billing details', 'woo-mailerlite' ),

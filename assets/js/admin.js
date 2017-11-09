@@ -3,8 +3,13 @@ jQuery(document).ready(function ($) {
     /**
      * Output refresh groups icon
      */
-    if ( $( '#woocommerce_mailerlite_group').length !== 0 ) {
-        $( '<span id="woo-ml-refresh-groups" class="woo-ml-icon-refresh" data-woo-ml-refresh-groups="true"></span>' ).insertAfter( '#woocommerce_mailerlite_group' );
+    var settingGroups = $( '#woocommerce_mailerlite_group');
+
+    if ( settingGroups.length !== 0 ) {
+
+        var settingGroupsSelectContainer = settingGroups.next('.select2-container');
+
+        $( '<span id="woo-ml-refresh-groups" class="woo-ml-icon-refresh" data-woo-ml-refresh-groups="true"></span>' ).insertAfter( settingGroupsSelectContainer );
     }
 
     /**

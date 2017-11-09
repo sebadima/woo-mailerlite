@@ -2,13 +2,13 @@
   display: inline-block;
   height: 16px;
   width: 16px;
+  margin-top: 8px;
   margin-left: 10px;
   background-repeat: no-repeat;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABIFBMVEUAAAAiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiJf1cGbAAAAX3RSTlMAAQIDBAUGBwgJCgsMDQ4QERITFBYXGBobHB0eHyAhIyYqLi86PkBCQ0RHSkxOVFZhYmZnaGxwdXd4gIWGi4yRlZuepq+0wcXHyMrR19rc3uDi5Obo6evt7/H19/n7/bWOYmEAAAE8SURBVBgZzcHpIhtRAIbh92QRjdTW2qq1d0WCllJVLUGCLqRtMOK7/7twzmQmc0b473lIyRWH+vM8ILvwrSnn/85chi65tSsl/n4wWOO/V4jMNJR2/hJeBGrRtqpu5alrSYQ2FPt51FAKzrJCN1tjBjBj6y11YI0odPCEWM93xbDqcj7h+6oIMC9nG99EoAhQl3Vo8EwEikFJziSewUAdsCirju+tOv7AQMV6hs+8r0TKgzwOmWzEkJa1gG3Fguf4NmXNghKv8eRasp6COvYMnrKsE0CxfYOn71rWMqBI1eDJHstqZgBFakUSvUdylrAUu3hnaDNvLuVUcZQ4W58e6C1Nr50r9K+AI+vXjbo1+glJquVHz3TXSYm2pmp5yO8q7XOGyKuPOZzhH0rsDHOPwsKXw2ZwerA130PiFqnGov3b75WUAAAAAElFTkSuQmCC');
   background-size: 16px 16px;
   background-position: center;
   cursor: pointer;
-  line-height: 28px;
   vertical-align: middle;
 }
 .woo-ml-icon-refresh.running {
