@@ -34,7 +34,7 @@ function woo_ml_settings_get_group_options( $force_refresh = false ) {
     $groups = get_transient( 'woo_ml_groups' );
 
     if ( $force_refresh || empty( $groups ) ) {
-        $groups = flowdee_ml_get_groups();
+        $groups = mailerlite_wp_get_groups();
 
         if ( ! empty( $groups ) )
             set_transient( 'woo_ml_groups', $groups, 60 * 60 * 24 ); // 24 hours
@@ -71,7 +71,7 @@ function woo_ml_validate_api_key( $api_key ) {
     if ( empty( $api_key ) )
         return false;
 
-    $validation = flowdee_ml_api_key_validation( $api_key );
+    $validation = mailerlite_wp_api_key_validation( $api_key );
 
     return $validation;
 }
@@ -134,7 +134,7 @@ function woo_ml_process_signup( $order_id ) {
     woo_ml_debug_log( '$subscriber' );
     woo_ml_debug_log( $subscriber );
 
-    $added = flowdee_ml_add_subscriber( $group, $subscriber );
+    $added = mailerlite_wp_add_subscriber( $group, $subscriber );
 
     woo_ml_debug_log( '$added >> ' . $added );
 

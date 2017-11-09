@@ -77,10 +77,10 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             define( 'WOO_MAILERLITE_PREFIX', 'woo_ml_' );
 
             // API Key
-            if ( ! defined( 'FLOWDEE_MAILERLITE_API_KEY' ) ) {
+            if ( ! defined( 'MAILERLITE_WP_API_KEY' ) ) {
                 $settings = get_option( 'woocommerce_mailerlite_settings' );
                 $api_key = ( ! empty( $settings['api_key'] ) ) ? $settings['api_key'] : '';
-                define( 'FLOWDEE_MAILERLITE_API_KEY', $api_key );
+                define( 'MAILERLITE_WP_API_KEY', $api_key );
             }
 
         }
@@ -100,7 +100,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
 
             // Dependencies
             require_once 'vendor/autoload.php';
-            require_once 'includes/shared/flowdee-mailerlite-functions.php';
+            require_once 'includes/shared/mailerlite-wp-functions.php';
 
             // Core functions and hooks
             require_once 'includes/functions.php';

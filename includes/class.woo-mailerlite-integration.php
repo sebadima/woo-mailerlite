@@ -163,7 +163,7 @@ Subscribe settings</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => ar
 
                     $double_optin = ( 'yes' === $settings['double_optin'] ) ? true : false;
 
-                    flowdee_ml_set_double_optin( $double_optin );
+                    mailerlite_wp_set_double_optin( $double_optin );
                 }
 
             }

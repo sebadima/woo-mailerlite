@@ -1,12 +1,16 @@
 <?php
-if ( ! function_exists( 'flowdee_ml_api_key_validation') ) :
+/**
+ * Functions inside this file are being used in different Mailerlite related WordPress plugins
+ */
+
+if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
 /**
  * Check Mailerlite API connection
  *
  * @param $api_key
  * @return bool
  */
-function flowdee_ml_api_key_validation( $api_key ) {
+function mailerlite_wp_api_key_validation( $api_key ) {
 
     if ( empty( $api_key ) )
         return false;
@@ -23,7 +27,7 @@ function flowdee_ml_api_key_validation( $api_key ) {
             return true;
 
     } catch (Exception $e) {
-        //echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+        //echo 'Exception caught: ',  $e->getMessage(), "\n";
         return false;
     }
 
@@ -31,23 +35,23 @@ function flowdee_ml_api_key_validation( $api_key ) {
 }
 endif;
 
-if ( ! function_exists( 'flowdee_ml_get_groups') ) :
+if ( ! function_exists( 'mailerlite_wp_get_groups') ) :
 /**
  * Get groups from API
  *
  * @param $api_key
  * @return array|bool
  */
-function flowdee_ml_get_groups() {
+function mailerlite_wp_get_groups() {
 
-    if ( ! flowdee_ml_api_key_exists() )
+    if ( ! mailerlite_wp_api_key_exists() )
         return false;
 
     $groups = array();
 
     try {
 
-        $mailerliteClient = new \MailerLiteApi\MailerLite( FLOWDEE_MAILERLITE_API_KEY );
+        $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
         $groupsApi = $mailerliteClient->groups();
         $results = $groupsApi->get();
@@ -63,7 +67,7 @@ function flowdee_ml_get_groups() {
         }
 
     } catch (Exception $e) {
-        //echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+        //echo 'Exception caught: ',  $e->getMessage(), "\n";
         return false;
     }
 
@@ -71,7 +75,7 @@ function flowdee_ml_get_groups() {
 }
 endif;
 
-if ( ! function_exists( 'flowdee_ml_add_subscriber') ) :
+if ( ! function_exists( 'mailerlite_wp_add_subscriber') ) :
 /**
  * Add subscriber to group via API
  *
@@ -79,9 +83,9 @@ if ( ! function_exists( 'flowdee_ml_add_subscriber') ) :
  * @param array $subscriber
  * @return bool
  */
-function flowdee_ml_add_subscriber( $group_id, $subscriber = array() ) {
+function mailerlite_wp_add_subscriber( $group_id, $subscriber = array() ) {
 
-    if ( ! flowdee_ml_api_key_exists() )
+    if ( ! mailerlite_wp_api_key_exists() )
         return false;
 
     if ( empty( $group_id ) || ! is_numeric( $group_id ) )
@@ -107,7 +111,7 @@ function flowdee_ml_add_subscriber( $group_id, $subscriber = array() ) {
 
     try {
 
-        $mailerliteClient = new \MailerLiteApi\MailerLite( FLOWDEE_MAILERLITE_API_KEY );
+        $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
         $groupsApi = $mailerliteClient->groups();
 
@@ -122,42 +126,42 @@ function flowdee_ml_add_subscriber( $group_id, $subscriber = array() ) {
         }
 
     } catch (Exception $e) {
-        //echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+        //echo 'Exception caught: ',  $e->getMessage(), "\n";
         return false;
     }
 }
 endif;
 
-if ( ! function_exists( 'flowdee_ml_api_key_exists') ) :
+if ( ! function_exists( 'mailerlite_wp_api_key_exists') ) :
 /**
  * Check wether API key exists or not
  *
  * @return bool
  */
-function flowdee_ml_api_key_exists() {
+function mailerlite_wp_api_key_exists() {
 
-    if ( defined( 'FLOWDEE_MAILERLITE_API_KEY' ) && ! empty( FLOWDEE_MAILERLITE_API_KEY ) )
+    if ( defined( 'MAILERLITE_WP_API_KEY' ) && ! empty( MAILERLITE_WP_API_KEY ) )
         return true;
 
     return false;
 }
 endif;
 
-if ( ! function_exists( 'flowdee_ml_set_double_optin') ) :
+if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
     /**
      * Set Mailerlite double opt in status
      *
      * @param bool $status
      * @return bool
      */
-    function flowdee_ml_set_double_optin( $status ) {
+    function mailerlite_wp_set_double_optin( $status ) {
 
-        if ( ! flowdee_ml_api_key_exists() )
+        if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( FLOWDEE_MAILERLITE_API_KEY );
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $settingsApi = $mailerliteClient->settings();
             $result = $settingsApi->setDoubleOptin( $status );
@@ -172,7 +176,7 @@ if ( ! function_exists( 'flowdee_ml_set_double_optin') ) :
             }
 
         } catch (Exception $e) {
-            //echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+            //echo 'Exception caught: ',  $e->getMessage(), "\n";
             return false;
         }
     }
