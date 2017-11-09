@@ -11,7 +11,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
     class Woo_Mailerlite_Integration extends WC_Integration {
 
         private $api_key = '';
-        private $api_status = false;
+        private $api_status;
+        private $double_optin;
 
         /**
          * Init and hook in the integration.
@@ -30,6 +31,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             // Define user set variables.
             $this->api_key          = $this->get_option( 'api_key' );
             $this->api_status       = $this->get_option( 'api_status', false );
+            $this->double_optin     = $this->get_option( 'double_optin', false );
 
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
@@ -117,7 +119,7 @@ Subscribe settings</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => ar
          */
         public function sanitize_settings( $settings ) {
 
-            if ( isset( $settings ) && isset( $settings['api_key'] ) ) {
+            if ( isset( $settings['api_key'] ) ) {
 
                 $reset_groups = false;
                 $refresh_groups = false;
@@ -150,6 +152,18 @@ Subscribe settings</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => ar
                 if ( $refresh_groups && $api_status ) {
                     woo_ml_debug_log( 'refreshing groups' );
                     $groups = woo_ml_settings_get_group_options( true );
+                }
+
+            }
+
+            // Handle Double Opt-In
+            if ( isset( $settings['double_optin'] ) ) {
+
+                if ( $settings['double_optin'] != $this->double_optin ) {
+
+                    $double_optin = ( 'yes' === $settings['double_optin'] ) ? true : false;
+
+                    flowdee_ml_set_double_optin( $double_optin );
                 }
 
             }

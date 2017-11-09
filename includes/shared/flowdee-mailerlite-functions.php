@@ -142,3 +142,38 @@ function flowdee_ml_api_key_exists() {
     return false;
 }
 endif;
+
+if ( ! function_exists( 'flowdee_ml_set_double_optin') ) :
+    /**
+     * Set Mailerlite double opt in status
+     *
+     * @param bool $status
+     * @return bool
+     */
+    function flowdee_ml_set_double_optin( $status ) {
+
+        if ( ! flowdee_ml_api_key_exists() )
+            return false;
+
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( FLOWDEE_MAILERLITE_API_KEY );
+
+            $settingsApi = $mailerliteClient->settings();
+            $result = $settingsApi->setDoubleOptin( $status );
+
+            //woo_ml_debug_log( $result );
+
+            if ( isset( $result->enabled ) ) {
+                return true;
+            } else {
+                // $result->error->message
+                return false;
+            }
+
+        } catch (Exception $e) {
+            //echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+endif;
