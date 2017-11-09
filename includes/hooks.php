@@ -48,7 +48,7 @@ function woo_ml_checkout_label() {
 }
 $checkout_position = woo_ml_get_option('checkout_position', 'checkout_billing' );
 $checkout_position_hook = 'woocommerce_' . $checkout_position;
-woo_ml_debug_log( '*** WOO MAILERLITE >> Firing checkout position hook: ' . $checkout_position_hook . ' ***');
+//woo_ml_debug_log( '*** WOO MAILERLITE >> Firing checkout position hook: ' . $checkout_position_hook . ' ***');
 add_action( $checkout_position_hook, 'woo_ml_checkout_label', 20 );
 
 /**
