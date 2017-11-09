@@ -157,6 +157,18 @@ function woo_ml_get_option( $key, $default = null ) {
 }
 
 /**
+ * Check whether we are on our admin pages or not
+ *
+ * @return bool
+ */
+function woo_ml_is_plugin_admin_area() {
+
+    $screen = get_current_screen();
+
+    return ( strpos( $screen->id, 'wc-settings') !== false ) ? true : false;
+}
+
+/**
  * Debug
  *
  * @param $args

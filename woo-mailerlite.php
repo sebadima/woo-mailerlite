@@ -102,15 +102,23 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             require_once 'vendor/autoload.php';
             require_once 'includes/shared/flowdee-mailerlite-functions.php';
 
+            // Core functions and hooks
+            require_once 'includes/functions.php';
+            require_once 'includes/hooks.php';
+            require_once 'includes/scripts.php';
+
+            // Admin functions and hooks
+            if ( is_admin() ) {
+                require_once 'includes/admin/functions.php';
+                require_once 'includes/admin/hooks.php';
+                require_once 'includes/admin/ajax.php';
+            }
+
             // Include our integration class.
             include_once 'includes/class.woo-mailerlite-integration.php';
 
             // Register the integration.
             add_filter( 'woocommerce_integrations', array( $this, 'add_integration' ) );
-
-            // Anything else
-            require_once 'includes/functions.php';
-            require_once 'includes/hooks.php';
         }
 
         /**
