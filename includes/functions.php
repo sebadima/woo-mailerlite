@@ -11,6 +11,79 @@ function woo_ml_is_active() {
 }
 
 /**
+ * Check if order tracking is enabled
+ *
+ * @return bool
+ */
+function woo_ml_is_order_tracking_enabled() {
+    $order_tracking = woo_ml_get_option( 'order_tracking', false );
+
+    return ( 'yes' === $order_tracking ) ? true : false;
+}
+
+/**
+ * Check if order tracking setup was finished
+ */
+function woo_ml_is_order_tracking_setup_finished() {
+
+    $order_tracking_setup = get_option( 'woo_ml_order_tracking_setup', false );
+
+    return ( '1' == $order_tracking_setup ) ? true : false;
+}
+
+/**
+ * Mark order tracking setup as completed
+ */
+function woo_ml_complete_order_tracking_setup() {
+    add_option( 'woo_ml_order_tracking_setup', true );
+}
+
+/**
+ * Revoke order tracking setup completion
+ */
+function woo_ml_revoke_order_tracking_setup() {
+    delete_option( 'woo_ml_order_tracking_setup' );
+}
+
+/**
+ * Setup order tracking
+ */
+function woo_ml_setup_order_tracking() {
+
+    $fields = array(
+        'orders' => array( 'title' => 'Orders', 'type' => 'NUMBER' ),
+        'revenues' => array( 'title' => 'Revenues', 'type' => 'NUMBER' ),
+        'last_order' => array( 'title' => 'Last Order', 'type' => 'DATE' ),
+    );
+
+    //$fields_created = mailerlite_wp_create_custom_fields( $fields );
+
+    $ml_fields = mailerlite_wp_get_custom_fields();
+
+    // Loop remote fields
+    foreach ( $ml_fields as $ml_field ) {
+
+        // If field already exists, kick it out
+        if ( isset( $ml_field->key ) && isset( $fields[$ml_field->key] ) )
+            unset( $fields[$ml_field->key] );
+    }
+
+    // Loop fields left
+    if ( sizeof( $fields ) > 0 ) {
+
+        foreach ( $fields as $field_data ) {
+            mailerlite_wp_create_custom_field( $field_data );
+        }
+    }
+
+    //woo_ml_debug( $fields );
+    //woo_ml_debug( $ml_fields );
+
+    // Mark order tracking setup as completed
+    woo_ml_complete_order_tracking_setup();
+}
+
+/**
  * Get settings api key status
  *
  * @return string

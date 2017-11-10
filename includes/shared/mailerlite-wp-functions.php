@@ -181,3 +181,70 @@ if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
         }
     }
 endif;
+
+if ( ! function_exists( 'mailerlite_wp_create_custom_field') ) :
+    /**
+     * Create custom field in MailerLite
+     *
+     * @param array $field_data
+     * @return bool
+     */
+    function mailerlite_wp_create_custom_field( $field_data ) {
+
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        if ( ! isset( $field_data['title'] ) || ! isset( $field_data['type'] ) )
+            return false;
+
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $fieldsApi = $mailerliteClient->fields();
+            $field_added = $fieldsApi->create( $field_data );
+            //woo_ml_debug_log( $field_added );
+            //woo_ml_debug( $field_added, '$field_added' );
+
+            if ( isset( $field_added->id ) ) {
+                return $field_added;
+            } else {
+                return false;
+            }
+
+        } catch (Exception $e) {
+            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+endif;
+
+if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
+    /**
+     * Get custom fields from MailerLite
+     *
+     * @param array $args
+     * @return mixed
+     */
+    function mailerlite_wp_get_custom_fields( $args = array() ) {
+
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $fieldsApi = $mailerliteClient->fields();
+
+            $fields = $fieldsApi->get();
+            //woo_ml_debug_log( $fields );
+
+            return $fields;
+
+        } catch (Exception $e) {
+            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+endif;
