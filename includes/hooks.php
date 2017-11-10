@@ -7,21 +7,21 @@
  */
 function woo_ml_checkout_label() {
 
-    woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() ***');
+    //woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() ***');
 
     if ( ! woo_ml_is_active() )
         return;
 
     $checkout = woo_ml_get_option('checkout', 'no' );
 
-    woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $checkout: ' . $checkout . ' ***');
+    //woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $checkout: ' . $checkout . ' ***');
 
     if ( 'yes' != $checkout )
         return;
 
     $group = woo_ml_get_option('group' );
 
-    woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $group: ' . $group . ' ***');
+    //woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $group: ' . $group . ' ***');
 
     if ( empty( $group ) )
         return;
@@ -30,9 +30,9 @@ function woo_ml_checkout_label() {
     $preselect = woo_ml_get_option('checkout_preselect', 'no' );
     $hidden = woo_ml_get_option('checkout_hide', 'no' );
 
-    woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $label: ' . $label . ' ***');
-    woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $preselect: ' . $preselect . ' ***');
-    woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $hidden: ' . $hidden . ' ***');
+    //woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $label: ' . $label . ' ***');
+    //woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $preselect: ' . $preselect . ' ***');
+    //woo_ml_debug_log( '*** WOO MAILERLITE >> woo_ml_checkout_label() >> $hidden: ' . $hidden . ' ***');
 
     if ( 'yes' === $hidden ) {
         ?>
@@ -65,26 +65,33 @@ function woo_ml_checkout_maybe_prepare_signup( $order_id ) {
 add_action( 'woocommerce_checkout_update_order_meta', 'woo_ml_checkout_maybe_prepare_signup' );
 
 /**
- * Maybe initiate signup after purchase completed
+ * Process checkout completed
  *
  * @param $order_id
  */
-function woo_ml_maybe_initiate_signup( $order_id ) {
+function woo_ml_process_checkout_completed( $order_id ) {
 
-    woo_ml_debug_log( '*** WOO MAILERLITE >> START ***' );
+    woo_ml_debug_log( '*** WOO MAILERLITE - CHECKOUT COMPLETED >> START ***' );
 
-    woo_ml_debug_log( '>> checking if signup is needed' );
+    woo_ml_process_order_subscription( $order_id );
 
-    woo_ml_debug_log( '$order_id >> ' . $order_id );
+    woo_ml_debug_log( '*** WOO MAILERLITE - CHECKOUT COMPLETED >> END ***' );
+}
+add_action( 'woocommerce_checkout_order_processed', 'woo_ml_process_checkout_completed' );
 
-    $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
+/**
+ * Process order completed (and finally paid)
+ *
+ * @param $order_id
+ */
+function woo_ml_process_order_completed( $order_id ) {
 
-    woo_ml_debug_log( '$subscribe >> ' . $subscribe );
+    woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
 
-    if ( $subscribe ) {
-        woo_ml_process_signup( $order_id );
+    if ( woo_ml_is_order_tracking_enabled() ) {
+        woo_ml_process_order_tracking( $order_id );
     }
 
-    woo_ml_debug_log( '*** WOO MAILERLITE >> END ***' );
+    woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
 }
-add_action( 'woocommerce_checkout_order_processed', 'woo_ml_maybe_initiate_signup' );
+add_action( 'woocommerce_order_status_completed', 'woo_ml_process_order_completed' );

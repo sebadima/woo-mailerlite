@@ -35,6 +35,21 @@ function mailerlite_wp_api_key_validation( $api_key ) {
 }
 endif;
 
+if ( ! function_exists( 'mailerlite_wp_api_key_exists') ) :
+    /**
+     * Check wether API key exists or not
+     *
+     * @return bool
+     */
+    function mailerlite_wp_api_key_exists() {
+
+        if ( defined( 'MAILERLITE_WP_API_KEY' ) && ! empty( MAILERLITE_WP_API_KEY ) )
+            return true;
+
+        return false;
+    }
+endif;
+
 if ( ! function_exists( 'mailerlite_wp_get_groups') ) :
 /**
  * Get groups from API
@@ -75,6 +90,43 @@ function mailerlite_wp_get_groups() {
 }
 endif;
 
+if ( ! function_exists( 'mailerlite_wp_get_subscriber_by_email') ) :
+    /**
+     * Get subscriber from API by email
+     *
+     * @param $email
+     * @return mixed
+     */
+    function mailerlite_wp_get_subscriber_by_email( $email ) {
+
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        if ( empty( $email ) )
+            return false;
+
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $subscribersApi = $mailerliteClient->subscribers();
+            $subscriber = $subscribersApi->find( $email ); // returns object of subscriber by its email
+
+            if ( isset( $subscriber->id ) ) {
+                //woo_ml_debug( $subscriber );
+                return $subscriber;
+            } else {
+                // $subscriber->error->message
+                return false;
+            }
+
+        } catch (Exception $e) {
+            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+endif;
+
 if ( ! function_exists( 'mailerlite_wp_add_subscriber') ) :
 /**
  * Add subscriber to group via API
@@ -93,12 +145,12 @@ function mailerlite_wp_add_subscriber( $group_id, $subscriber = array() ) {
 
     $default_subscriber = array(
         'email' => '',
-        'name' => '',
+        /*'name' => '',
         'fields' => array(
             'name' => '',
             'last_name' => '',
             'company' => ''
-        ),
+        ),*/
         'type' => 'unconfirmed' // subscribed, active, unconfirmed
     );
 
@@ -119,7 +171,7 @@ function mailerlite_wp_add_subscriber( $group_id, $subscriber = array() ) {
 
         if ( isset( $addedSubscriber->id ) ) {
             //woo_ml_debug( $addedSubscriber );
-            return $addedSubscriber->id;
+            return $addedSubscriber;
         } else {
             // $addedSubscriber->error->message
             return false;
@@ -132,19 +184,45 @@ function mailerlite_wp_add_subscriber( $group_id, $subscriber = array() ) {
 }
 endif;
 
-if ( ! function_exists( 'mailerlite_wp_api_key_exists') ) :
-/**
- * Check wether API key exists or not
- *
- * @return bool
- */
-function mailerlite_wp_api_key_exists() {
+if ( ! function_exists( 'mailerlite_wp_update_subscriber') ) :
+    /**
+     * Update subscriber via API
+     *
+     * @param $subscriber_email
+     * @param array $subscriber_data
+     * @return mixed
+     */
+    function mailerlite_wp_update_subscriber( $subscriber_email, $subscriber_data = array() ) {
 
-    if ( defined( 'MAILERLITE_WP_API_KEY' ) && ! empty( MAILERLITE_WP_API_KEY ) )
-        return true;
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
 
-    return false;
-}
+        if ( empty( $subscriber_email ) )
+            return false;
+
+        //woo_ml_debug( $subscriber );
+
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $subscribersApi = $mailerliteClient->subscribers();
+
+            $subscriber_updated =$subscribersApi->update( $subscriber_email, $subscriber_data ); // returns updated subscriber
+
+            if ( isset( $subscriber_updated->id ) ) {
+                //woo_ml_debug( $addedSubscriber );
+                return $subscriber_updated;
+            } else {
+                // $addedSubscriber->error->message
+                return false;
+            }
+
+        } catch (Exception $e) {
+            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            return false;
+        }
+    }
 endif;
 
 if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :

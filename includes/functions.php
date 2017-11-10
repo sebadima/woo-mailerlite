@@ -150,69 +150,254 @@ function woo_ml_validate_api_key( $api_key ) {
 }
 
 /**
- * Process group signup(s)
+ * Process order subscription
+ * 1.) Maybe add customer to group
+ * 2.) Set/update basic subscriber data
  *
  * @param $order_id
  */
-function woo_ml_process_signup( $order_id ) {
-
-    woo_ml_debug_log( '>> processing signup' );
-
-    $group = woo_ml_get_option('group' );
-
-    woo_ml_debug_log('$group >> ' . $group );
-
-    if ( empty( $group ) )
-        return;
+function woo_ml_process_order_subscription( $order_id ) {
 
     $order = wc_get_order( $order_id );
 
-    if( method_exists( $order, 'get_billing_email' ) ) {
+    $customer_data = woo_ml_get_customer_data_from_order( $order_id );
+
+    /*
+     * Step 1: Maybe subscribe customer to group with email address only
+     */
+    $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
+
+    if ( ! empty( $subscribe ) ) {
+
+        $group = woo_ml_get_option('group' );
+        $double_option = woo_ml_get_option('double_optin', false );
+
+        woo_ml_debug_log( 'Subscribing ' . $customer_data['email'] . ' to group id #' . $group . ' via double optin? ' . $double_option  );
+
+        $new_subscriber_data = array(
+            'email' => $customer_data['email'],
+            'type' => ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed' // subscribed, active, unconfirmed
+        );
+
+        $subscriber_added = mailerlite_wp_add_subscriber( $group, $new_subscriber_data );
+
+        woo_ml_debug_log( '>> $subscriber_added <<' );
+        woo_ml_debug_log( $subscriber_added );
+        woo_ml_debug_log( '-----------------------' );
+
+        if ( $subscriber_added )
+            $order->add_order_note( __( 'Customer successfully added to MailerLite group.', 'woo-mailerlite' ) );
+    }
+
+    /*
+     * Step 2: Maybe updating subscriber with customer details
+     */
+    $ml_subscriber_obj = ( ! empty( $subscriber_added ) ) ? $subscriber_added : mailerlite_wp_get_subscriber_by_email( $customer_data['email'] );
+
+    // Customer exists on MailerLite
+    if ( $ml_subscriber_obj ) {
+
+        // Collecting data
+        $subscriber_data = array();
+
+        if ( ! empty( $customer_data['name'] ) )
+            $subscriber_data['name'] = $customer_data['name'];
+
+        // Collecting fields
+        $subscriber_fields = array();
+
+        if ( ! empty( $customer_data['first_name'] ) )
+            $subscriber_fields['name'] = $customer_data['first_name'];
+
+        if ( ! empty( $customer_data['last_name'] ) )
+            $subscriber_fields['last_name'] = $customer_data['last_name'];
+
+        if ( ! empty( $customer_data['company'] ) )
+            $subscriber_fields['company'] = $customer_data['company'];
+
+        if ( ! empty( $customer_data['city'] ) )
+            $subscriber_fields['city'] = $customer_data['city'];
+
+        if ( ! empty( $customer_data['postcode'] ) )
+            $subscriber_fields['zip'] = $customer_data['postcode'];
+
+        if ( ! empty( $customer_data['state'] ) )
+            $subscriber_fields['state'] = $customer_data['state'];
+
+        if ( ! empty( $customer_data['country'] ) )
+            $subscriber_fields['country'] = $customer_data['country'];
+
+        if ( ! empty( $customer_data['phone'] ) )
+            $subscriber_fields['phone'] = $customer_data['phone'];
+
+        if ( sizeof( $subscriber_fields ) > 0 )
+            $subscriber_data['fields'] = $subscriber_fields;
+
+        woo_ml_debug_log( '>> $subscriber_data <<' );
+        woo_ml_debug_log( $subscriber_data );
+        woo_ml_debug_log( '-----------------------' );
+
+        // Update subscriber basic data
+        if ( sizeof( $subscriber_data ) > 0 ) {
+
+            $subscriber_updated = mailerlite_wp_update_subscriber( $customer_data['email'], $subscriber_data );
+
+            woo_ml_debug_log( '>> $subscriber_updated <<' );
+            woo_ml_debug_log( $subscriber_updated );
+            woo_ml_debug_log( '-----------------------' );
+        }
+    }
+}
+
+/**
+ * Process order tracking
+ * 1.) Get current data from MailerLite
+ * 2.) Prepare order data
+ * 3.) Merge both data
+ * 4.) Update subscriber data with updated values
+ *
+ * @param $order_id
+ */
+function woo_ml_process_order_tracking( $order_id ) {
+
+    $order = wc_get_order( $order_id );
+
+    $customer_data = woo_ml_get_customer_data_from_order( $order_id );
+
+    $ml_subscriber_obj = mailerlite_wp_get_subscriber_by_email( $customer_data['email'] );
+
+    // Customer exists on MailerLite
+    if ( $ml_subscriber_obj ) {
+
+        /*
+         * Step 1: Get current tracking data from MailerLite
+         */
+        $ml_tracking_data = array(
+            'orders' => 0,
+            'revenues' => 0,
+            'last_order' => ''
+        );
+
+        if ( isset( $ml_subscriber_obj->fields ) && is_array( $ml_subscriber_obj->fields ) ) {
+
+            foreach ( $ml_subscriber_obj->fields as $ml_subscriber_field ) {
+
+                if ( ! isset( $ml_subscriber_field->key ) || ! isset( $ml_subscriber_field->value ) || ! isset( $ml_subscriber_field->type ) )
+                    continue;
+
+                // Get orders
+                if ( 'orders' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
+                    $ml_tracking_data['orders'] = intval( $ml_subscriber_field->value );
+
+                // Get revenues
+                if ( 'revenues' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
+                    $ml_tracking_data['revenues'] = intval( $ml_subscriber_field->value );
+
+                // Get last order date
+                if ( 'last_order' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) )
+                    $ml_tracking_data['last_order'] = $ml_subscriber_field->value;
+            }
+        }
+
+        woo_ml_debug_log( '>> $ml_tracking_data <<' );
+        woo_ml_debug_log( $ml_tracking_data );
+        woo_ml_debug_log( '-----------------------' );
+
+        /*
+         * Step 2: Prepare order data
+         */
+        $order_total = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_total() : $order->total;
+        woo_ml_debug_log( '$order_total >> ' . $order_total );
+        $order_total = intval( $order_total );
+
+        $order_date = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_date_created() : $order->date_created;
+        woo_ml_debug_log( '$order_date >> ' . $order_date );
+        $order_date = date( 'Y-m-d', strtotime( $order_date ) );
+
+        /*
+         * Step 3: Merge order tracking data with the one on MailerLite
+         */
+        $tracking_data = array(
+            'orders' => $ml_tracking_data['orders'] + 1,
+            'revenues' => $ml_tracking_data['revenues'] + $order_total,
+            'last_order' => $order_date
+        );
+
+        /*
+         * Step 4: Update subscriber data via API
+         */
+        $subscriber_data = array(
+            'fields' => array(
+                'orders' => $tracking_data['orders'],
+                'revenues' => $tracking_data['revenues'],
+                'last_order' => $tracking_data['last_order']
+            )
+        );
+
+        woo_ml_debug_log( '>> $subscriber_data <<' );
+        woo_ml_debug_log( $subscriber_data );
+        woo_ml_debug_log( '-----------------------' );
+
+        $subscriber_updated = mailerlite_wp_update_subscriber( $customer_data['email'], $subscriber_data );
+
+        woo_ml_debug_log( '>> $subscriber_updated <<' );
+        woo_ml_debug_log( $subscriber_updated );
+        woo_ml_debug_log( '-----------------------' );
+
+        if ( $subscriber_updated ) {
+
+            // Mark order as tracked
+            add_post_meta( $order_id, '_woo_ml_order_tracking', true );
+
+            // Add note
+            $order->add_order_note( __( 'Order tracking successfully transmitted to MailerLite.', 'woo-mailerlite' ) );
+        }
+    }
+}
+
+/**
+ * Get customer data from order
+ *
+ * @param $order_id
+ * @return array|bool
+ */
+function woo_ml_get_customer_data_from_order( $order_id ) {
+
+    if ( empty( $order_id ) )
+        return false;
+
+    $order = wc_get_order( $order_id );
+
+    if ( method_exists( $order, 'get_billing_email' ) ) {
         $data = array(
             'email' => $order->get_billing_email(),
             'name' => "{$order->get_billing_first_name()} {$order->get_billing_last_name()}",
             'first_name' => $order->get_billing_first_name(),
             'last_name' => $order->get_billing_last_name(),
+            'company' => $order->get_billing_company(),
+            'city' => $order->get_billing_city(),
+            'postcode' => $order->get_billing_postcode(),
+            'state' => $order->get_billing_state(),
+            'country' => $order->get_billing_country(),
+            'phone' => $order->get_billing_phone()
         );
     } else {
-        // NOTE: for compatibility with WooCommerce < 3.0
+        // NOTE: Only for compatibility with WooCommerce < 3.0
         $data = array(
             'email' => $order->billing_email,
             'name' => "{$order->billing_first_name} {$order->billing_last_name}",
             'first_name' => $order->billing_first_name,
             'last_name' => $order->billing_last_name,
+            'company' => $order->billing_company,
+            'city' => $order->billing_city,
+            'postcode' => $order->billing_postcode,
+            'state' => $order->billing_state,
+            'country' => $order->billing_country,
+            'phone' => $order->billing_phone
         );
     }
 
-    woo_ml_debug_log( '$data' );
-    woo_ml_debug_log( $data );
-
-    $double_option = woo_ml_get_option('double_optin', false );
-
-    woo_ml_debug_log( 'Double Optin? ' . $double_option );
-
-    if ( empty( $data['email'] ) )
-        return;
-
-    $subscriber = array(
-        'email' => $data['email'],
-        'name' => ( ! empty( $data['name'] ) ) ? $data['name'] : '',
-        'fields' => array(
-            'name' => ( ! empty( $data['first_name'] ) ) ? $data['first_name'] : '',
-            'last_name' => ( ! empty( $data['last_name'] ) ) ? $data['last_name'] : '',
-        ),
-        'type' => ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed' // subscribed, active, unconfirmed
-    );
-
-    woo_ml_debug_log( '$subscriber' );
-    woo_ml_debug_log( $subscriber );
-
-    $added = mailerlite_wp_add_subscriber( $group, $subscriber );
-
-    woo_ml_debug_log( '$added >> ' . $added );
-
-    if ( $added )
-        $order->add_order_note( __( 'Customer successfully subscribed to mailing list(s).', 'woo-mailerlite' ) );
+    return $data;
 }
 
 /**
