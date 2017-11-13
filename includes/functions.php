@@ -51,8 +51,8 @@ function woo_ml_revoke_order_tracking_setup() {
 function woo_ml_setup_order_tracking() {
 
     $fields = array(
-        'orders_count' => array( 'title' => 'Orders', 'type' => 'NUMBER' ),
-        'total_spent' => array( 'title' => 'Revenues', 'type' => 'NUMBER' ),
+        'orders_count' => array( 'title' => 'Orders Count', 'type' => 'NUMBER' ),
+        'total_spent' => array( 'title' => 'Total Spent', 'type' => 'NUMBER' ),
         'last_order' => array( 'title' => 'Last Order', 'type' => 'DATE' ),
     );
 
