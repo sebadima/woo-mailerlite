@@ -260,6 +260,11 @@ function woo_ml_process_order_subscription( $order_id ) {
  */
 function woo_ml_process_order_tracking( $order_id ) {
 
+    $order_tracked = get_post_meta( $order_id, '_woo_ml_order_tracking', true );
+
+    if ( $order_tracked ) // Prevent tracking orders multiple times
+        return;
+
     $order = wc_get_order( $order_id );
 
     $customer_data = woo_ml_get_customer_data_from_order( $order_id );
