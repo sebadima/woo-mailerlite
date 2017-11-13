@@ -51,8 +51,8 @@ function woo_ml_revoke_order_tracking_setup() {
 function woo_ml_setup_order_tracking() {
 
     $fields = array(
-        'orders' => array( 'title' => 'Orders', 'type' => 'NUMBER' ),
-        'revenues' => array( 'title' => 'Revenues', 'type' => 'NUMBER' ),
+        'orders_count' => array( 'title' => 'Orders', 'type' => 'NUMBER' ),
+        'total_spent' => array( 'title' => 'Revenues', 'type' => 'NUMBER' ),
         'last_order' => array( 'title' => 'Last Order', 'type' => 'DATE' ),
     );
 
@@ -278,8 +278,8 @@ function woo_ml_process_order_tracking( $order_id ) {
          * Step 1: Get current tracking data from MailerLite
          */
         $ml_tracking_data = array(
-            'orders' => 0,
-            'revenues' => 0,
+            'orders_count' => 0,
+            'total_spent' => 0,
             'last_order' => ''
         );
 
@@ -291,12 +291,12 @@ function woo_ml_process_order_tracking( $order_id ) {
                     continue;
 
                 // Get orders
-                if ( 'orders' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
-                    $ml_tracking_data['orders'] = intval( $ml_subscriber_field->value );
+                if ( 'orders_count' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
+                    $ml_tracking_data['orders_count'] = intval( $ml_subscriber_field->value );
 
                 // Get revenues
-                if ( 'revenues' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
-                    $ml_tracking_data['revenues'] = intval( $ml_subscriber_field->value );
+                if ( 'total_spent' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
+                    $ml_tracking_data['total_spent'] = intval( $ml_subscriber_field->value );
 
                 // Get last order date
                 if ( 'last_order' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) )
@@ -323,8 +323,8 @@ function woo_ml_process_order_tracking( $order_id ) {
          * Step 3: Merge order tracking data with the one on MailerLite
          */
         $tracking_data = array(
-            'orders' => $ml_tracking_data['orders'] + 1,
-            'revenues' => $ml_tracking_data['revenues'] + $order_total,
+            'orders_count' => $ml_tracking_data['orders_count'] + 1,
+            'total_spent' => $ml_tracking_data['total_spent'] + $order_total,
             'last_order' => $order_date
         );
 
@@ -333,8 +333,8 @@ function woo_ml_process_order_tracking( $order_id ) {
          */
         $subscriber_data = array(
             'fields' => array(
-                'orders' => $tracking_data['orders'],
-                'revenues' => $tracking_data['revenues'],
+                'orders_count' => $tracking_data['orders_count'],
+                'total_spent' => $tracking_data['total_spent'],
                 'last_order' => $tracking_data['last_order']
             )
         );
