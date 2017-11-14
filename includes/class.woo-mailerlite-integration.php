@@ -120,8 +120,55 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'description'       => __( 'This takes action after a purchase was completed and the customer was found in your MailerLite group.', 'woo-mailerlite' ),
                     'default'           => 'no',
                     'desc_tip'          => true
+                ),
+                'order_tracking_sync' => array(
+                    'title'             => '',
+                    'type'              => 'woo_ml_sync_orders',
+                    'description'       => __( 'Synchronizing existing orders which were completed before plugin installation.', 'woo-mailerlite' ),
+                    'desc_tip'          => true,
                 )
             );
+        }
+
+        /**
+         * Generate Synchronize Existing Orders HTML.
+         *
+         * @access public
+         * @param mixed $key
+         * @param mixed $data
+         * @since 1.0.0
+         * @return string
+         */
+        public function generate_woo_ml_sync_orders_html( $key, $data ) {
+            $field    = $this->plugin_id . $this->id . '_' . $key;
+            $defaults = array(
+                'class'             => 'button-secondary',
+                'css'               => '',
+                'custom_attributes' => array(),
+                'desc_tip'          => false,
+                'description'       => '',
+                'title'             => '',
+            );
+
+            $data = wp_parse_args( $data, $defaults );
+
+            ob_start();
+            ?>
+            <tr valign="top">
+                <th scope="row" class="titledesc">
+                    <label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+                    <?php echo $this->get_tooltip_html( $data ); ?>
+                </th>
+                <td class="forminp">
+                    <fieldset>
+                        <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                        <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php _e('Synchronize Existing Orders', 'woo-mailerlite') ?></button>
+                        <?php echo $this->get_description_html( $data ); ?>
+                    </fieldset>
+                </td>
+            </tr>
+            <?php
+            return ob_get_clean();
         }
 
 

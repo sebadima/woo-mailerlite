@@ -35,14 +35,14 @@ function woo_ml_order_meta_box_output( $post ) {
     <p>
         <?php _e('Subscribed via API:', 'woo-mailerlite' ); ?> <?php echo ( $subscribed ) ? $icon_yes : $icon_no; ?>
     </p>
-    <?php $subscriber_updated = get_post_meta( $order_id, '_woo_ml_subscriber_updated', true ); ?>
+    <?php $subscriber_updated = woo_ml_get_order_subscriber_updated_status( $order_id ); ?>
     <p>
         <?php _e('Updated customer data via API:', 'woo-mailerlite' ); ?> <?php echo ( $subscriber_updated ) ? $icon_yes : $icon_no; ?>
     </p>
     <?php
     // Order Tracking related data
     if ( woo_ml_is_order_tracking_enabled() ) { ?>
-        <?php $order_tracked = get_post_meta( $order_id, '_woo_ml_order_tracked', true ); ?>
+        <?php $order_tracked = woo_ml_get_order_tracking_status( $order_id ); ?>
         <p>
             <?php _e('Submitted order data via API:', 'woo-mailerlite' ); ?> <?php echo ( $order_tracked ) ? $icon_yes : $icon_no; ?>
         </p>

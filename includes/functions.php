@@ -195,7 +195,7 @@ function woo_ml_process_order_subscription( $order_id ) {
      */
     $ml_subscriber_obj = ( ! empty( $subscriber_added ) ) ? $subscriber_added : mailerlite_wp_get_subscriber_by_email( $customer_data['email'] );
 
-    // Customer exists on MailerLite
+    // Customer exists in MailerLite
     if ( $ml_subscriber_obj ) {
 
         // Collecting data
@@ -205,31 +205,7 @@ function woo_ml_process_order_subscription( $order_id ) {
             $subscriber_data['name'] = $customer_data['name'];
 
         // Collecting fields
-        $subscriber_fields = array();
-
-        if ( ! empty( $customer_data['first_name'] ) )
-            $subscriber_fields['name'] = $customer_data['first_name'];
-
-        if ( ! empty( $customer_data['last_name'] ) )
-            $subscriber_fields['last_name'] = $customer_data['last_name'];
-
-        if ( ! empty( $customer_data['company'] ) )
-            $subscriber_fields['company'] = $customer_data['company'];
-
-        if ( ! empty( $customer_data['city'] ) )
-            $subscriber_fields['city'] = $customer_data['city'];
-
-        if ( ! empty( $customer_data['postcode'] ) )
-            $subscriber_fields['zip'] = $customer_data['postcode'];
-
-        if ( ! empty( $customer_data['state'] ) )
-            $subscriber_fields['state'] = $customer_data['state'];
-
-        if ( ! empty( $customer_data['country'] ) )
-            $subscriber_fields['country'] = $customer_data['country'];
-
-        if ( ! empty( $customer_data['phone'] ) )
-            $subscriber_fields['phone'] = $customer_data['phone'];
+        $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
 
         if ( sizeof( $subscriber_fields ) > 0 )
             $subscriber_data['fields'] = $subscriber_fields;
@@ -248,7 +224,7 @@ function woo_ml_process_order_subscription( $order_id ) {
             woo_ml_debug_log( '-----------------------' );
 
             if ( $subscriber_updated ) {
-                add_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
+                woo_ml_set_order_subscriber_updated_status_completed( $order_id );
             }
         }
     }
@@ -270,8 +246,6 @@ function woo_ml_process_order_tracking( $order_id ) {
     if ( $order_tracked ) // Prevent tracking orders multiple times
         return;
 
-    $order = wc_get_order( $order_id );
-
     $customer_data = woo_ml_get_customer_data_from_order( $order_id );
 
     $ml_subscriber_obj = mailerlite_wp_get_subscriber_by_email( $customer_data['email'] );
@@ -280,61 +254,17 @@ function woo_ml_process_order_tracking( $order_id ) {
     if ( $ml_subscriber_obj ) {
 
         /*
-         * Step 1: Get current tracking data from MailerLite
+         * Step 1: Get order tracking data from order
          */
-        $ml_tracking_data = array(
-            'orders_count' => 0,
-            'total_spent' => 0,
-            'last_order' => ''
-        );
-
-        if ( isset( $ml_subscriber_obj->fields ) && is_array( $ml_subscriber_obj->fields ) ) {
-
-            foreach ( $ml_subscriber_obj->fields as $ml_subscriber_field ) {
-
-                if ( ! isset( $ml_subscriber_field->key ) || ! isset( $ml_subscriber_field->value ) || ! isset( $ml_subscriber_field->type ) )
-                    continue;
-
-                // Get orders
-                if ( 'orders_count' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
-                    $ml_tracking_data['orders_count'] = intval( $ml_subscriber_field->value );
-
-                // Get revenues
-                if ( 'total_spent' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
-                    $ml_tracking_data['total_spent'] = intval( $ml_subscriber_field->value );
-
-                // Get last order date
-                if ( 'last_order' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) )
-                    $ml_tracking_data['last_order'] = $ml_subscriber_field->value;
-            }
-        }
-
-        woo_ml_debug_log( '>> $ml_tracking_data <<' );
-        woo_ml_debug_log( $ml_tracking_data );
-        woo_ml_debug_log( '-----------------------' );
+        $tracking_data = woo_ml_get_order_tracking_data( $order_id );
 
         /*
-         * Step 2: Prepare order data
+         * Step 2: Merge tracking data with the one from MailerLite
          */
-        $order_total = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_total() : $order->total;
-        woo_ml_debug_log( '$order_total >> ' . $order_total );
-        $order_total = intval( $order_total );
-
-        $order_date = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_date_created() : $order->date_created;
-        woo_ml_debug_log( '$order_date >> ' . $order_date );
-        $order_date = date( 'Y-m-d', strtotime( $order_date ) );
+        $tracking_data = woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj );
 
         /*
-         * Step 3: Merge order tracking data with the one on MailerLite
-         */
-        $tracking_data = array(
-            'orders_count' => $ml_tracking_data['orders_count'] + 1,
-            'total_spent' => $ml_tracking_data['total_spent'] + $order_total,
-            'last_order' => $order_date
-        );
-
-        /*
-         * Step 4: Update subscriber data via API
+         * Step 3: Update subscriber data via API
          */
         $subscriber_data = array(
             'fields' => array(
@@ -357,9 +287,109 @@ function woo_ml_process_order_tracking( $order_id ) {
         if ( $subscriber_updated ) {
 
             // Mark order data as tracked
-            add_post_meta( $order_id, '_woo_ml_order_tracked', true );
+            woo_ml_set_order_tracking_status_completed( $order_id );
         }
     }
+}
+
+/**
+ * Get order tracking data merged with the one from MailerLite's subscriber object
+ *
+ * @param $tracking_data
+ * @param $ml_subscriber_obj
+ * @return array
+ */
+function woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj ) {
+
+    /*
+     * Step 1: Collect current tracking data from MailerLite subscriber object
+     */
+    $ml_tracking_data = array(
+        'orders_count' => 0,
+        'total_spent' => 0,
+        'last_order' => ''
+    );
+
+    if ( isset( $ml_subscriber_obj->fields ) && is_array( $ml_subscriber_obj->fields ) ) {
+
+        foreach ( $ml_subscriber_obj->fields as $ml_subscriber_field ) {
+
+            if ( ! isset( $ml_subscriber_field->key ) || ! isset( $ml_subscriber_field->value ) || ! isset( $ml_subscriber_field->type ) )
+                continue;
+
+            // Get orders
+            if ( 'orders_count' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
+                $ml_tracking_data['orders_count'] = intval( $ml_subscriber_field->value );
+
+            // Get revenues
+            if ( 'total_spent' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) && is_numeric( $ml_subscriber_field->value ) )
+                $ml_tracking_data['total_spent'] = intval( $ml_subscriber_field->value );
+
+            // Get last order date
+            if ( 'last_order' === $ml_subscriber_field->key && ! empty( $ml_subscriber_field->value ) )
+                $ml_tracking_data['last_order'] = $ml_subscriber_field->value;
+        }
+    }
+
+    woo_ml_debug_log( '>> $ml_tracking_data <<' );
+    woo_ml_debug_log( $ml_tracking_data );
+    woo_ml_debug_log( '-----------------------' );
+
+    /*
+     * Step 2: Merge order tracking data with the one on MailerLite
+     */
+    $tracking_data = array(
+        'orders_count' => $ml_tracking_data['orders_count'] + $tracking_data['orders_count'],
+        'total_spent' => $ml_tracking_data['total_spent'] + $tracking_data['total_spent'],
+        'last_order' => $tracking_data['last_order']
+    );
+
+    return $tracking_data;
+}
+
+/**
+ * Get order tracking data from order(s)
+ *
+ * @param int/array $order_ids
+ * @return array|bool
+ */
+function woo_ml_get_order_tracking_data( $order_ids ) {
+
+    if ( ! is_array( $order_ids ) && ! is_numeric( $order_ids ) )
+        return false;
+
+    if ( is_numeric( $order_ids ) )
+        $order_ids = array( $order_ids );
+
+    $tracking_data = array(
+        'orders_count' => 0,
+        'total_spent' => 0,
+        'last_order' => ''
+    );
+
+    if ( sizeof( $order_ids ) > 0 ) {
+
+        foreach ( $order_ids as $order_id ) {
+
+            $order = wc_get_order( $order_id );
+
+            $tracking_data['orders_count']++;
+
+            $order_total = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_total() : $order->total;
+            woo_ml_debug_log( '$order_total >> ' . $order_total );
+            $order_total = intval( $order_total );
+
+            $tracking_data['total_spent'] += $order_total;
+
+            $order_date = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_date_created() : $order->date_created;
+            woo_ml_debug_log( '$order_date >> ' . $order_date );
+            $order_date = date( 'Y-m-d', strtotime( $order_date ) );
+
+            $tracking_data['last_order'] = $order_date;
+        }
+    }
+
+    return $tracking_data;
 }
 
 /**
@@ -405,6 +435,209 @@ function woo_ml_get_customer_data_from_order( $order_id ) {
     }
 
     return $data;
+}
+
+/**
+ * Get customer email address from order
+ *
+ * @param $order_id
+ * @return bool|mixed|string
+ */
+function woo_ml_get_customer_email_from_order( $order_id ) {
+
+    if ( empty( $order_id ) )
+        return false;
+
+    $order = wc_get_order( $order_id );
+
+    return ( method_exists( $order, 'get_billing_email' ) ) ? $order->get_billing_email() : $order->billing_email;
+}
+
+/**
+ * Get subscriber fields from customer data
+ *
+ * @param $customer_data
+ * @return array
+ */
+function woo_ml_get_subscriber_fields_from_customer_data( $customer_data ) {
+
+    $subscriber_fields = array();
+
+    if ( ! empty( $customer_data['first_name'] ) )
+        $subscriber_fields['name'] = $customer_data['first_name'];
+
+    if ( ! empty( $customer_data['last_name'] ) )
+        $subscriber_fields['last_name'] = $customer_data['last_name'];
+
+    if ( ! empty( $customer_data['company'] ) )
+        $subscriber_fields['company'] = $customer_data['company'];
+
+    if ( ! empty( $customer_data['city'] ) )
+        $subscriber_fields['city'] = $customer_data['city'];
+
+    if ( ! empty( $customer_data['postcode'] ) )
+        $subscriber_fields['zip'] = $customer_data['postcode'];
+
+    if ( ! empty( $customer_data['state'] ) )
+        $subscriber_fields['state'] = $customer_data['state'];
+
+    if ( ! empty( $customer_data['country'] ) )
+        $subscriber_fields['country'] = $customer_data['country'];
+
+    if ( ! empty( $customer_data['phone'] ) )
+        $subscriber_fields['phone'] = $customer_data['phone'];
+
+    return $subscriber_fields;
+}
+
+/**
+ * Bulk synchronize existing orders
+ *
+ * @return bool
+ */
+function woo_ml_bulk_synchronize_orders() {
+
+    $data = array();
+
+    // Get orders
+    $order_posts = get_posts( array(
+        'numberposts' => -1,
+        'post_type'   => 'shop_order',
+        'post_status' => 'wc-completed',
+        'order'       => 'ASC' // old to new in order to get latest address data first
+    ) );
+
+    //echo 'Order posts found: ' . sizeof( $order_posts ) . '<br>';
+
+    if ( is_array( $order_posts ) && sizeof( $order_posts ) > 0 ) {
+
+        foreach ( $order_posts as $order_post ) {
+
+            if ( ! isset( $order_post->ID ) )
+                continue;
+
+            $order_id = $order_post->ID;
+            //echo 'order #' . $order_id . '<br>';
+
+            // Maybe collect order tracking data
+            if ( woo_ml_is_order_tracking_enabled() ) {
+
+                $order_tracked = woo_ml_get_order_tracking_status( $order_id );
+
+                if ( ! $order_tracked ) {
+
+                    //echo 'tracking order #' . $order_id . ' data<br>';
+                    $order_email = woo_ml_get_customer_email_from_order( $order_id );
+
+                    if ( isset( $data[$order_email] ) && is_array( $data[$order_email] ) ) {
+                        $data[$order_email][] = $order_id;
+                    } else {
+                        $data[$order_email] = array( $order_id );
+                    }
+                }
+            }
+        }
+    }
+
+    //woo_ml_debug( $data, '$data' );
+
+    if ( sizeof( $data ) == 0 )
+        return true;
+
+    foreach ( $data as $customer_email => $order_ids ) {
+
+        $ml_subscriber_obj = mailerlite_wp_get_subscriber_by_email( $customer_email );
+
+        // Customer exists in MailerLite
+        if ( $ml_subscriber_obj ) {
+
+            if ( sizeof( $order_ids ) > 1 ) {
+                $last_order_id = array_values( array_slice( $order_ids, -1 ) )[0];
+            } else {
+                $last_order_id = $order_ids[0];
+            }
+
+            $customer_data = woo_ml_get_customer_data_from_order( $last_order_id );
+
+            // Collecting data
+            $subscriber_data = array();
+
+            if ( ! empty( $customer_data['name'] ) )
+                $subscriber_data['name'] = $customer_data['name'];
+
+            // Basic customer data fields
+            $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
+
+            // Order tracking data
+            $tracking_data = woo_ml_get_order_tracking_data( $order_ids );
+
+            $tracking_data = woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj );
+
+            $subscriber_fields['orders_count'] = $tracking_data['orders_count'];
+            $subscriber_fields['total_spent'] = $tracking_data['total_spent'];
+            $subscriber_fields['last_order'] = $tracking_data['last_order'];
+
+            $subscriber_data['fields'] = $subscriber_fields;
+
+            //woo_ml_debug( $subscriber_data, $customer_email . ' >> $subscriber_data' );
+
+            $subscriber_updated = mailerlite_wp_update_subscriber( $customer_email, $subscriber_data );
+
+            if ( $subscriber_updated ) {
+
+                //echo 'Subscriber ' . $customer_email . ' updated with ' . sizeof( $order_ids ) . ' orders.<br>';
+
+                foreach( $order_ids as $order_id ) {
+                    // Mark order data as tracked
+                    //woo_ml_set_order_tracking_status_completed( $order_id ); // TODO: Remove
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Check whether order was already tracked or not
+ *
+ * @param $order_id
+ * @return bool
+ */
+function woo_ml_get_order_tracking_status( $order_id ) {
+
+    $order_tracked = get_post_meta( $order_id, '_woo_ml_order_tracked', true );
+
+    return ( '1' == $order_tracked ) ? true : false;
+}
+
+/**
+ * Mark order as being tracked
+ *
+ * @param $order_id
+ */
+function woo_ml_set_order_tracking_status_completed( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_order_tracked', true );
+}
+
+/**
+ * Check whether a subscriber was updated from order or not
+ *
+ * @param $order_id
+ * @return bool
+ */
+function woo_ml_get_order_subscriber_updated_status( $order_id ) {
+
+    $subscriber_updated_from_order = get_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
+
+    return ( '1' == $subscriber_updated_from_order ) ? true : false;
+}
+
+/**
+ * Mark order as "subscriber was updated"
+ *
+ * @param $order_id
+ */
+function woo_ml_set_order_subscriber_updated_status_completed( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
 }
 
 /**
