@@ -112,6 +112,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
                 require_once 'includes/admin/functions.php';
                 require_once 'includes/admin/hooks.php';
                 require_once 'includes/admin/ajax.php';
+                require_once 'includes/admin/meta-boxes.php';
             }
 
             // Include our integration class.

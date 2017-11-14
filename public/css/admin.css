@@ -1,3 +1,13 @@
+.woo-ml-icon {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background-repeat: no-repeat;
+  background-image: url('../img/icon-mailerlite.svg');
+  background-size: 16px 16px;
+  background-position: center;
+  vertical-align: middle;
+}
 .woo-ml-icon-refresh {
   display: inline-block;
   height: 16px;

@@ -185,8 +185,9 @@ function woo_ml_process_order_subscription( $order_id ) {
         woo_ml_debug_log( $subscriber_added );
         woo_ml_debug_log( '-----------------------' );
 
-        if ( $subscriber_added )
-            $order->add_order_note( __( 'Customer successfully added to MailerLite group.', 'woo-mailerlite' ) );
+        if ( $subscriber_added ) {
+            add_post_meta( $order_id, '_woo_ml_subscribed', true );
+        }
     }
 
     /*
@@ -245,6 +246,10 @@ function woo_ml_process_order_subscription( $order_id ) {
             woo_ml_debug_log( '>> $subscriber_updated <<' );
             woo_ml_debug_log( $subscriber_updated );
             woo_ml_debug_log( '-----------------------' );
+
+            if ( $subscriber_updated ) {
+                add_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
+            }
         }
     }
 }
@@ -351,11 +356,8 @@ function woo_ml_process_order_tracking( $order_id ) {
 
         if ( $subscriber_updated ) {
 
-            // Mark order as tracked
-            add_post_meta( $order_id, '_woo_ml_order_tracking', true );
-
-            // Add note
-            $order->add_order_note( __( 'Order tracking successfully transmitted to MailerLite.', 'woo-mailerlite' ) );
+            // Mark order data as tracked
+            add_post_meta( $order_id, '_woo_ml_order_tracked', true );
         }
     }
 }

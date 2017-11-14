@@ -18,12 +18,10 @@ function woo_ml_admin_scripts( $hook ) {
     // Use minified libraries if SCRIPT_DEBUG is turned off
     $suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ) ? '' : '.min';
 
-    if ( woo_ml_is_plugin_admin_area() ) {
-        wp_enqueue_script( 'woo-ml-admin-script', WOO_MAILERLITE_URL . 'public/js/admin' . $suffix . '.js', array( 'jquery' ), WOO_MAILERLITE_VER );
-        wp_enqueue_style( 'woo-ml-admin-style', WOO_MAILERLITE_URL . 'public/css/admin' . $suffix . '.css', false, WOO_MAILERLITE_VER );
+    wp_enqueue_script( 'woo-ml-admin-script', WOO_MAILERLITE_URL . 'public/js/admin' . $suffix . '.js', array( 'jquery' ), WOO_MAILERLITE_VER );
+    wp_enqueue_style( 'woo-ml-admin-style', WOO_MAILERLITE_URL . 'public/css/admin' . $suffix . '.css', false, WOO_MAILERLITE_VER );
 
-        // Ajax
-        wp_localize_script( 'woo-ml-admin-script', 'woo_ml_post', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ));
-    }
+    // Ajax
+    wp_localize_script( 'woo-ml-admin-script', 'woo_ml_post', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ));
 }
 add_action( 'admin_enqueue_scripts', 'woo_ml_admin_scripts', 100 );
