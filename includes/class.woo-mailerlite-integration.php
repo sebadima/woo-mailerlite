@@ -13,7 +13,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         private $api_key = '';
         private $api_status;
         private $double_optin;
-        private $order_tracking;
 
         /**
          * Init and hook in the integration.
@@ -33,7 +32,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_key          = $this->get_option( 'api_key' );
             $this->api_status       = $this->get_option( 'api_status', false );
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
-            $this->order_tracking     = $this->get_option( 'order_tracking', 'no' );
 
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
@@ -113,14 +111,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'default'           => 'yes',
                     'desc_tip'          => true
                 ),
-                'order_tracking' => array(
-                    'title'             => __( 'Track Order Data', 'woo-mailerlite' ),
-                    'type'              => 'checkbox',
-                    'label'             => __( 'Check in order to track order data inside MailerLite', 'woo-mailerlite' ),
-                    'description'       => __( 'This takes action after a purchase was completed and the customer was found in your MailerLite group.', 'woo-mailerlite' ),
-                    'default'           => 'no',
-                    'desc_tip'          => true
-                ),
                 'order_tracking_sync' => array(
                     'title'             => 'Synchronize Orders',
                     'type'              => 'woo_ml_sync_orders',
@@ -182,6 +172,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          */
         public function sanitize_settings( $settings ) {
 
+            $setup_order_tracking = false;
+            $revoke_order_tracking_setup = false;
+
             if ( isset( $settings['api_key'] ) ) {
 
                 $reset_groups = false;
@@ -193,6 +186,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 if ( empty( $settings['api_key'] ) ) {
                     $api_status = false;
                     $reset_groups = true;
+                    $revoke_order_tracking_setup = true;
 
                 } elseif ( ! empty( $settings['api_key'] ) && $settings['api_key'] != $api_key ) {
                     $validation = woo_ml_validate_api_key( esc_html( $settings['api_key'] ) );
@@ -200,6 +194,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
                     $reset_groups = true;
                     $refresh_groups = true;
+
+                    if ( $api_status )
+                        $setup_order_tracking = true;
                 }
 
                 // Store API validation
@@ -230,20 +227,12 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 }
             }
 
-            // Handle order tracking
-            if ( isset( $settings['order_tracking'] ) ) {
+            // Handle order tracking setup
+            if ( $revoke_order_tracking_setup )
+                woo_ml_revoke_order_tracking_setup();
 
-                if ( $settings['order_tracking'] != $this->order_tracking ) {
-
-                    // Setup order tracking
-                    if ( 'yes' === $settings['order_tracking'] ) {
-                        woo_ml_setup_order_tracking();
-                    // Revoke order tracking setup if previously done
-                    } else {
-                        woo_ml_revoke_order_tracking_setup();
-                    }
-                }
-            }
+            if ( $setup_order_tracking )
+                woo_ml_setup_order_tracking();
 
             // Return sanitized settings
             return $settings;
