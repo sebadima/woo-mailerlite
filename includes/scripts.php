@@ -16,7 +16,7 @@ if( !defined( 'ABSPATH' ) ) exit;
 function woo_ml_admin_scripts( $hook ) {
 
     // Use minified libraries if SCRIPT_DEBUG is turned off
-    $suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ) ? '' : '.min';
+    $suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) || ( defined( 'WOO_ML_DEBUG' ) && WOO_ML_DEBUG ) ) ? '' : '.min';
 
     wp_enqueue_script( 'woo-ml-admin-script', WOO_MAILERLITE_URL . 'public/js/admin' . $suffix . '.js', array( 'jquery' ), WOO_MAILERLITE_VER );
     wp_enqueue_style( 'woo-ml-admin-style', WOO_MAILERLITE_URL . 'public/css/admin' . $suffix . '.css', false, WOO_MAILERLITE_VER );

@@ -491,7 +491,9 @@ function woo_ml_get_untracked_orders( $args = array() ) {
         'numberposts' => -1,
         'post_type'   => 'shop_order',
         'post_status' => 'wc-completed',
-        'order'       => 'ASC' // old to new in order to get latest address data first
+        'order'       => 'ASC', // old to new in order to get latest address data first
+        'meta_key'     => '_woo_ml_order_tracked',
+        'meta_compare' => 'NOT EXISTS'
     );
 
     $args = wp_parse_args( $args, $defaults );
@@ -501,17 +503,19 @@ function woo_ml_get_untracked_orders( $args = array() ) {
     return $order_posts;
 }
 
+define( 'WOO_ML_SYNC_UNTRACKED_ORDERS_CYCLE', 5 );
+
 /**
- * Bulk synchronize existing orders
+ * Bulk synchronize untracked orders
  *
  * @return bool
  */
-function woo_ml_bulk_synchronize_orders() {
+function woo_ml_sync_untracked_orders() {
 
     $data = array();
 
     // Get orders
-    $order_posts = woo_ml_get_untracked_orders();
+    $order_posts = woo_ml_get_untracked_orders( array( 'numberposts' => WOO_ML_SYNC_UNTRACKED_ORDERS_CYCLE ) );
 
     //echo 'Order posts found: ' . sizeof( $order_posts ) . '<br>';
 
@@ -523,22 +527,14 @@ function woo_ml_bulk_synchronize_orders() {
                 continue;
 
             $order_id = $order_post->ID;
-            //echo 'order #' . $order_id . '<br>';
+            //echo 'tracking order #' . $order_id . ' data<br>';
 
-            // Collect order tracking data
-            // TODO: Check if order tracking setup was finished
-            $order_tracked = woo_ml_get_order_tracking_status($order_id);
+            $order_email = woo_ml_get_customer_email_from_order($order_id);
 
-            if (!$order_tracked) {
-
-                //echo 'tracking order #' . $order_id . ' data<br>';
-                $order_email = woo_ml_get_customer_email_from_order($order_id);
-
-                if (isset($data[$order_email]) && is_array($data[$order_email])) {
-                    $data[$order_email][] = $order_id;
-                } else {
-                    $data[$order_email] = array($order_id);
-                }
+            if (isset($data[$order_email]) && is_array($data[$order_email])) {
+                $data[$order_email][] = $order_id;
+            } else {
+                $data[$order_email] = array($order_id);
             }
         }
     }
@@ -570,18 +566,11 @@ function woo_ml_bulk_synchronize_orders() {
                 $subscriber_data['name'] = $customer_data['name'];
 
             // Basic customer data fields
-            $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data($customer_data);
+            $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data($customer_data );
 
             // Order tracking data
-            $order_tracked = woo_ml_get_order_tracking_status($order_id); // TODO
-
-            if (!$order_tracked) {
-                // TODO: Dont track orders multiple times
-            }
-
-            $tracking_data = woo_ml_get_order_tracking_data($order_ids);
-
-            $tracking_data = woo_ml_get_merged_order_tracking_data($tracking_data, $ml_subscriber_obj);
+            $tracking_data = woo_ml_get_order_tracking_data( $order_ids );
+            $tracking_data = woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj );
 
             $subscriber_fields['orders_count'] = $tracking_data['orders_count'];
             $subscriber_fields['total_spent'] = $tracking_data['total_spent'];
@@ -591,19 +580,27 @@ function woo_ml_bulk_synchronize_orders() {
 
             //woo_ml_debug( $subscriber_data, $customer_email . ' >> $subscriber_data' );
 
-            $subscriber_updated = mailerlite_wp_update_subscriber($customer_email, $subscriber_data);
+            $subscriber_updated = mailerlite_wp_update_subscriber( $customer_email, $subscriber_data );
 
-            if ($subscriber_updated) {
-
+            if ( $subscriber_updated ) {
                 //echo 'Subscriber ' . $customer_email . ' updated with ' . sizeof( $order_ids ) . ' orders.<br>';
 
-                foreach ($order_ids as $order_id) {
+                foreach ( $order_ids as $order_id ) {
                     // Mark order data as tracked
-                    //woo_ml_set_order_tracking_status_completed( $order_id ); // TODO: Remove
+                    woo_ml_set_order_tracking_status_completed( $order_id );
                 }
+            }
+
+        } else {
+
+            foreach ( $order_ids as $order_id ) {
+                // Mark order data as tracked
+                //woo_ml_set_order_tracking_status_completed( $order_id );
             }
         }
     }
+
+    return true;
 }
 
 /**

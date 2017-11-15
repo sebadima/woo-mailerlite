@@ -143,7 +143,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $data = wp_parse_args( $data, $defaults );
 
             $untracked_orders = woo_ml_get_untracked_orders();
-            $untracked_orders_size = ( is_array( $untracked_orders ) ) ? sizeof( $untracked_orders ) : 0;
+            $untracked_orders_count = ( is_array( $untracked_orders ) ) ? sizeof( $untracked_orders ) : 0;
 
             ob_start();
             ?>
@@ -154,10 +154,31 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 </th>
                 <td class="forminp">
                     <fieldset>
-                        <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-                        <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php _e('Start Synchronizing', 'woo-mailerlite') ?></button>
-                        <span><?php echo $untracked_orders_size; ?> untracked Orders</span>
-                        <?php echo $this->get_description_html( $data ); ?>
+                        <?php if ( ! $this->api_status ) { ?>
+                            <p class="description">
+                                <?php _e('Right now there are no untracked orders.', 'woo-mailerlite' ); ?>
+                            </p>
+                        <?php } elseif ( ! empty( $untracked_orders_count ) ) { ?>
+                            <legend class="screen-reader-text">
+                                <span><?php echo wp_kses_post( $data['title'] ); ?></span>
+                            </legend>
+                            <button id="woo-ml-sync-untracked-orders" class="button-secondary" data-woo-ml-sync-untracked-orders="true"
+                               data-woo-ml-untracked-orders-count="<?php echo $untracked_orders_count; ?>" data-woo-ml-untracked-orders-left="<?php echo $untracked_orders_count; ?>"
+                                    data-woo-ml-untracked-orders-cycle="<?php echo WOO_ML_SYNC_UNTRACKED_ORDERS_CYCLE; ?>">
+                                <?php printf( esc_html( _n( 'Synchronize %d untracked order', 'Synchronize %d untracked orders', $untracked_orders_count, 'woo-mailerlite'  ) ), $untracked_orders_count ); ?>
+                            </button>
+                            <div id="woo-ml-sync-untracked-orders-progress-bar" class="woo-ml-progress-bar">
+                                <div></div>
+                            </div>
+                            <p id="woo-ml-sync-untracked-orders-success" class="description" style="display: none; color: green; font-style: normal;">
+                                <?php _e('Untracked orders successfully submitted to MailerLite.', 'woo-mailerlite' ); ?>
+                            </p>
+                            <?php echo $this->get_description_html( $data ); ?>
+                        <?php } else { ?>
+                            <p class="description">
+                                <?php _e('Right now there are no untracked orders.', 'woo-mailerlite' ); ?>
+                            </p>
+                        <?php } ?>
                     </fieldset>
                 </td>
             </tr>
