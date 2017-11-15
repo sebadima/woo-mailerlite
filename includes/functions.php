@@ -491,6 +491,28 @@ function woo_ml_get_subscriber_fields_from_customer_data( $customer_data ) {
 }
 
 /**
+ * Get untracked orders
+ *
+ * @param array $args
+ * @return array
+ */
+function woo_ml_get_untracked_orders( $args = array() ) {
+
+    $defaults = array(
+        'numberposts' => -1,
+        'post_type'   => 'shop_order',
+        'post_status' => 'wc-completed',
+        'order'       => 'ASC' // old to new in order to get latest address data first
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $order_posts = get_posts( $args );
+
+    return $order_posts;
+}
+
+/**
  * Bulk synchronize existing orders
  *
  * @return bool
@@ -500,12 +522,7 @@ function woo_ml_bulk_synchronize_orders() {
     $data = array();
 
     // Get orders
-    $order_posts = get_posts( array(
-        'numberposts' => -1,
-        'post_type'   => 'shop_order',
-        'post_status' => 'wc-completed',
-        'order'       => 'ASC' // old to new in order to get latest address data first
-    ) );
+    $order_posts = woo_ml_get_untracked_orders();
 
     //echo 'Order posts found: ' . sizeof( $order_posts ) . '<br>';
 
@@ -569,13 +586,22 @@ function woo_ml_bulk_synchronize_orders() {
             $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
 
             // Order tracking data
-            $tracking_data = woo_ml_get_order_tracking_data( $order_ids );
+            if ( woo_ml_is_order_tracking_enabled() ) {
 
-            $tracking_data = woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj );
+                $order_tracked = woo_ml_get_order_tracking_status( $order_id );
 
-            $subscriber_fields['orders_count'] = $tracking_data['orders_count'];
-            $subscriber_fields['total_spent'] = $tracking_data['total_spent'];
-            $subscriber_fields['last_order'] = $tracking_data['last_order'];
+                if ( ! $order_tracked ) {
+                    // TODO: Dont track orders multiple times
+                }
+
+                $tracking_data = woo_ml_get_order_tracking_data( $order_ids );
+
+                $tracking_data = woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj );
+
+                $subscriber_fields['orders_count'] = $tracking_data['orders_count'];
+                $subscriber_fields['total_spent'] = $tracking_data['total_spent'];
+                $subscriber_fields['last_order'] = $tracking_data['last_order'];
+            }
 
             $subscriber_data['fields'] = $subscriber_fields;
 

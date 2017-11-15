@@ -122,9 +122,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'desc_tip'          => true
                 ),
                 'order_tracking_sync' => array(
-                    'title'             => '',
+                    'title'             => 'Synchronize Orders',
                     'type'              => 'woo_ml_sync_orders',
-                    'description'       => __( 'Synchronizing existing orders which were completed before plugin installation.', 'woo-mailerlite' ),
+                    'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite yet.", 'woo-mailerlite' ),
                     'desc_tip'          => true,
                 )
             );
@@ -152,6 +152,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             $data = wp_parse_args( $data, $defaults );
 
+            $untracked_orders = woo_ml_get_untracked_orders();
+            $untracked_orders_size = ( is_array( $untracked_orders ) ) ? sizeof( $untracked_orders ) : 0;
+
             ob_start();
             ?>
             <tr valign="top">
@@ -162,7 +165,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 <td class="forminp">
                     <fieldset>
                         <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
-                        <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php _e('Synchronize Existing Orders', 'woo-mailerlite') ?></button>
+                        <button class="<?php echo esc_attr( $data['class'] ); ?>" type="button" name="<?php echo esc_attr( $field ); ?>" id="<?php echo esc_attr( $field ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php echo $this->get_custom_attribute_html( $data ); ?>><?php _e('Start Synchronizing', 'woo-mailerlite') ?></button>
+                        <span><?php echo $untracked_orders_size; ?> untracked Orders</span>
                         <?php echo $this->get_description_html( $data ); ?>
                     </fieldset>
                 </td>
