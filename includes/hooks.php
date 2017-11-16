@@ -59,7 +59,7 @@ add_action( $checkout_position_hook, 'woo_ml_checkout_label', 20 );
 function woo_ml_checkout_maybe_prepare_signup( $order_id ) {
 
     if ( isset( $_POST['woo_ml_subscribe'] ) && '1' == $_POST['woo_ml_subscribe'] ) {
-        update_post_meta( $order_id, '_woo_ml_subscribe', true );
+        woo_ml_set_order_customer_subscribe( $order_id );
     }
 }
 add_action( 'woocommerce_checkout_update_order_meta', 'woo_ml_checkout_maybe_prepare_signup' );
@@ -88,9 +88,10 @@ function woo_ml_process_order_completed( $order_id ) {
 
     woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
 
-    if ( woo_ml_is_order_tracking_setup_finished() ) {
-        woo_ml_process_order_tracking( $order_id );
-    }
+    if ( ! woo_ml_is_order_tracking_setup_finished() )
+        woo_ml_setup_order_tracking();
+
+    woo_ml_process_order_tracking( $order_id );
 
     woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
 }

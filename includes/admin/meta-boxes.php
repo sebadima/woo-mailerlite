@@ -27,21 +27,21 @@ function woo_ml_order_meta_box_output( $post ) {
     $icon_yes = '<span class="dashicons dashicons-yes" style="color: #00A153;"></span>';
     $icon_no = '<span class="dashicons dashicons-no-alt" style="color: #a00;"></span>';
     ?>
-    <?php $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true ); ?>
+    <?php $subscribe = woo_ml_order_customer_subscribe( $order_id ); ?>
     <p>
-        <?php _e('Signed up for newsletter:', 'woo-mailerlite' ); ?> <?php echo ( $subscribe ) ? $icon_yes : $icon_no; ?>
+        <?php _e('Signed up for mailing list:', 'woo-mailerlite' ); ?> <?php echo ( $subscribe ) ? $icon_yes : $icon_no; ?>
     </p>
-    <?php $subscribed = get_post_meta( $order_id, '_woo_ml_subscribed', true ); ?>
+    <?php $subscribed = woo_ml_order_customer_subscribed( $order_id ); ?>
     <p>
         <?php _e('Subscribed via API:', 'woo-mailerlite' ); ?> <?php echo ( $subscribed ) ? $icon_yes : $icon_no; ?>
     </p>
-    <?php $subscriber_updated = woo_ml_get_order_subscriber_updated_status( $order_id ); ?>
+    <?php $subscriber_updated = woo_ml_order_subscriber_updated( $order_id ); ?>
     <p>
-        <?php _e('Updated customer data via API:', 'woo-mailerlite' ); ?> <?php echo ( $subscriber_updated ) ? $icon_yes : $icon_no; ?>
+        <?php _e('Updated subscriber data:', 'woo-mailerlite' ); ?> <?php echo ( $subscriber_updated ) ? $icon_yes : $icon_no; ?>
     </p>
-    <?php $order_tracked = woo_ml_get_order_tracking_status( $order_id ); ?>
+    <?php $order_tracked = woo_ml_order_tracking_completed( $order_id ); ?>
     <p>
-        <?php _e('Submitted order data via API:', 'woo-mailerlite' ); ?> <?php echo ( $order_tracked ) ? $icon_yes : $icon_no; ?>
+        <?php _e('Order tracking completed:', 'woo-mailerlite' ); ?> <?php echo ( $order_tracked ) ? $icon_yes : $icon_no; ?>
     </p>
     <?php
 }

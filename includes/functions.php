@@ -175,7 +175,7 @@ function woo_ml_process_order_subscription( $order_id ) {
         woo_ml_debug_log( '-----------------------' );
 
         if ( $subscriber_added ) {
-            add_post_meta( $order_id, '_woo_ml_subscribed', true );
+            woo_ml_complete_order_customer_subscribed( $order_id );
         }
     }
 
@@ -213,7 +213,7 @@ function woo_ml_process_order_subscription( $order_id ) {
             woo_ml_debug_log( '-----------------------' );
 
             if ( $subscriber_updated ) {
-                woo_ml_set_order_subscriber_updated_status_completed( $order_id );
+                woo_ml_complete_order_subscriber_updated( $order_id );
             }
         }
     }
@@ -272,13 +272,10 @@ function woo_ml_process_order_tracking( $order_id ) {
         woo_ml_debug_log( '>> $subscriber_updated <<' );
         woo_ml_debug_log( $subscriber_updated );
         woo_ml_debug_log( '-----------------------' );
-
-        if ( $subscriber_updated ) {
-
-            // Mark order data as tracked
-            woo_ml_set_order_tracking_status_completed( $order_id );
-        }
     }
+
+    // Mark order data as tracked
+    woo_ml_complete_order_tracking( $order_id );
 }
 
 /**
@@ -566,11 +563,11 @@ function woo_ml_sync_untracked_orders() {
                 $subscriber_data['name'] = $customer_data['name'];
 
             // Basic customer data fields
-            $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data($customer_data );
+            $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data($customer_data);
 
             // Order tracking data
-            $tracking_data = woo_ml_get_order_tracking_data( $order_ids );
-            $tracking_data = woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_obj );
+            $tracking_data = woo_ml_get_order_tracking_data($order_ids);
+            $tracking_data = woo_ml_get_merged_order_tracking_data($tracking_data, $ml_subscriber_obj);
 
             $subscriber_fields['orders_count'] = $tracking_data['orders_count'];
             $subscriber_fields['total_spent'] = $tracking_data['total_spent'];
@@ -580,23 +577,14 @@ function woo_ml_sync_untracked_orders() {
 
             //woo_ml_debug( $subscriber_data, $customer_email . ' >> $subscriber_data' );
 
-            $subscriber_updated = mailerlite_wp_update_subscriber( $customer_email, $subscriber_data );
+            $subscriber_updated = mailerlite_wp_update_subscriber($customer_email, $subscriber_data);
 
-            if ( $subscriber_updated ) {
-                //echo 'Subscriber ' . $customer_email . ' updated with ' . sizeof( $order_ids ) . ' orders.<br>';
+            //echo 'Subscriber ' . $customer_email . ' updated with ' . sizeof( $order_ids ) . ' orders.<br>';
+        }
 
-                foreach ( $order_ids as $order_id ) {
-                    // Mark order data as tracked
-                    woo_ml_set_order_tracking_status_completed( $order_id );
-                }
-            }
-
-        } else {
-
-            foreach ( $order_ids as $order_id ) {
-                // Mark order data as tracked
-                //woo_ml_set_order_tracking_status_completed( $order_id );
-            }
+        // Mark order tracking as completed
+        foreach ( $order_ids as $order_id ) {
+            woo_ml_complete_order_tracking( $order_id );
         }
     }
 
@@ -604,25 +592,47 @@ function woo_ml_sync_untracked_orders() {
 }
 
 /**
- * Check whether order was already tracked or not
+ * Check whether a customer wants to be subscribed to our mailing list or not
  *
  * @param $order_id
  * @return bool
  */
-function woo_ml_get_order_tracking_status( $order_id ) {
+function woo_ml_order_customer_subscribe( $order_id ) {
 
-    $order_tracked = get_post_meta( $order_id, '_woo_ml_order_tracked', true );
+    $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
 
-    return ( '1' == $order_tracked ) ? true : false;
+    return ( '1' == $subscribe ) ? true : false;
 }
 
 /**
- * Mark order as being tracked
+ * Mark order as "wants to be subscribed to mailing our list"
  *
  * @param $order_id
  */
-function woo_ml_set_order_tracking_status_completed( $order_id ) {
-    add_post_meta( $order_id, '_woo_ml_order_tracked', true );
+function woo_ml_set_order_customer_subscribe( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_subscribe', true );
+}
+
+/**
+ * Check whether a customer was subscribed via API or not
+ *
+ * @param $order_id
+ * @return bool
+ */
+function woo_ml_order_customer_subscribed( $order_id ) {
+
+    $subscribed = get_post_meta( $order_id, '_woo_ml_subscribed', true );
+
+    return ( '1' == $subscribed ) ? true : false;
+}
+
+/**
+ * Mark order as "customer subscribed via API"
+ *
+ * @param $order_id
+ */
+function woo_ml_complete_order_customer_subscribed( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_subscribed', true );
 }
 
 /**
@@ -631,7 +641,7 @@ function woo_ml_set_order_tracking_status_completed( $order_id ) {
  * @param $order_id
  * @return bool
  */
-function woo_ml_get_order_subscriber_updated_status( $order_id ) {
+function woo_ml_order_subscriber_updated( $order_id ) {
 
     $subscriber_updated_from_order = get_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
 
@@ -643,8 +653,30 @@ function woo_ml_get_order_subscriber_updated_status( $order_id ) {
  *
  * @param $order_id
  */
-function woo_ml_set_order_subscriber_updated_status_completed( $order_id ) {
+function woo_ml_complete_order_subscriber_updated( $order_id ) {
     add_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
+}
+
+/**
+ * Check whether order was already tracked or not
+ *
+ * @param $order_id
+ * @return bool
+ */
+function woo_ml_order_tracking_completed( $order_id ) {
+
+    $order_tracked = get_post_meta( $order_id, '_woo_ml_order_tracked', true );
+
+    return ( '1' == $order_tracked ) ? true : false;
+}
+
+/**
+ * Mark order as being tracked
+ *
+ * @param $order_id
+ */
+function woo_ml_complete_order_tracking( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_order_tracked', true );
 }
 
 /**
