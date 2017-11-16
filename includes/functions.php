@@ -272,6 +272,9 @@ function woo_ml_process_order_tracking( $order_id ) {
         woo_ml_debug_log( '>> $subscriber_updated <<' );
         woo_ml_debug_log( $subscriber_updated );
         woo_ml_debug_log( '-----------------------' );
+
+        if ( $subscriber_updated )
+            woo_ml_set_order_data_submitted( $order_id );
     }
 
     // Mark order data as tracked
@@ -655,6 +658,28 @@ function woo_ml_order_subscriber_updated( $order_id ) {
  */
 function woo_ml_complete_order_subscriber_updated( $order_id ) {
     add_post_meta( $order_id, '_woo_ml_subscriber_updated', true );
+}
+
+/**
+ * Check whether order data was submitted via API or not
+ *
+ * @param $order_id
+ * @return bool
+ */
+function woo_ml_order_data_submitted( $order_id ) {
+
+    $data_submitted = get_post_meta( $order_id, '_woo_ml_order_data_submitted', true );
+
+    return ( '1' == $data_submitted ) ? true : false;
+}
+
+/**
+ * Mark order as "order data submitted"
+ *
+ * @param $order_id
+ */
+function woo_ml_set_order_data_submitted( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_order_data_submitted', true );
 }
 
 /**

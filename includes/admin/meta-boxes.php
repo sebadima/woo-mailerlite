@@ -33,15 +33,19 @@ function woo_ml_order_meta_box_output( $post ) {
     </p>
     <?php $subscribed = woo_ml_order_customer_subscribed( $order_id ); ?>
     <p>
-        <?php _e('Subscribed via API:', 'woo-mailerlite' ); ?> <?php echo ( $subscribed ) ? $icon_yes : $icon_no; ?>
+        <?php _e('Subscribed  to mailing list:', 'woo-mailerlite' ); ?> <?php echo ( $subscribed ) ? $icon_yes : $icon_no; ?>
     </p>
     <?php $subscriber_updated = woo_ml_order_subscriber_updated( $order_id ); ?>
     <p>
         <?php _e('Updated subscriber data:', 'woo-mailerlite' ); ?> <?php echo ( $subscriber_updated ) ? $icon_yes : $icon_no; ?>
     </p>
-    <?php $order_tracked = woo_ml_order_tracking_completed( $order_id ); ?>
+    <?php $order_data_submitted = woo_ml_order_data_submitted( $order_id ); ?>
     <p>
-        <?php _e('Order tracking completed:', 'woo-mailerlite' ); ?> <?php echo ( $order_tracked ) ? $icon_yes : $icon_no; ?>
+        <?php _e('Order data submitted:', 'woo-mailerlite' ); ?> <?php echo ( $order_data_submitted ) ? $icon_yes : $icon_no; ?>
+    </p>
+    <?php $order_tracking_completed = woo_ml_order_tracking_completed( $order_id ); ?>
+    <p>
+        <?php _e('Order tracking completed:', 'woo-mailerlite' ); ?> <?php echo ( $order_tracking_completed ) ? $icon_yes : $icon_no; ?>
     </p>
     <?php
 }
