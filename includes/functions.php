@@ -274,7 +274,7 @@ function woo_ml_process_order_tracking( $order_id ) {
         woo_ml_debug_log( '-----------------------' );
 
         if ( $subscriber_updated )
-            woo_ml_set_order_data_submitted( $order_id );
+            woo_ml_complete_order_data_submitted( $order_id );
     }
 
     // Mark order data as tracked
@@ -583,6 +583,17 @@ function woo_ml_sync_untracked_orders() {
             $subscriber_updated = mailerlite_wp_update_subscriber($customer_email, $subscriber_data);
 
             //echo 'Subscriber ' . $customer_email . ' updated with ' . sizeof( $order_ids ) . ' orders.<br>';
+
+            if ( $subscriber_updated ) {
+
+                foreach ( $order_ids as $order_id ) {
+                    // Mark order customer data as being updated
+                    woo_ml_complete_order_subscriber_updated( $order_id );
+
+                    // Mark order data as being submitted
+                    woo_ml_complete_order_data_submitted( $order_id );
+                }
+            }
         }
 
         // Mark order tracking as completed
@@ -678,7 +689,7 @@ function woo_ml_order_data_submitted( $order_id ) {
  *
  * @param $order_id
  */
-function woo_ml_set_order_data_submitted( $order_id ) {
+function woo_ml_complete_order_data_submitted( $order_id ) {
     add_post_meta( $order_id, '_woo_ml_order_data_submitted', true );
 }
 
