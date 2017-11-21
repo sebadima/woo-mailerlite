@@ -88,8 +88,8 @@ function woo_ml_process_order_completed( $order_id ) {
 
     woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
 
-    if ( ! woo_ml_is_order_tracking_setup_finished() )
-        woo_ml_setup_order_tracking();
+    if ( ! woo_ml_integration_setup_completed() )
+        woo_ml_setup_integration();
 
     woo_ml_process_order_tracking( $order_id );
 

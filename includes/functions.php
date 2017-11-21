@@ -13,32 +13,40 @@ function woo_ml_is_active() {
 /**
  * Check if order tracking setup was finished
  */
-function woo_ml_is_order_tracking_setup_finished() {
+function woo_ml_integration_setup_completed() {
 
-    $order_tracking_setup = get_option( 'woo_ml_order_tracking_setup', false );
+    $integration_setup = get_option( 'woo_ml_integration_setup', false );
 
-    return ( '1' == $order_tracking_setup ) ? true : false;
+    return ( '1' == $integration_setup ) ? true : false;
 }
 
 /**
  * Mark order tracking setup as completed
  */
-function woo_ml_complete_order_tracking_setup() {
-    add_option( 'woo_ml_order_tracking_setup', true );
+function woo_ml_complete_integration_setup() {
+    add_option( 'woo_ml_integration_setup', true );
 }
 
 /**
  * Revoke order tracking setup completion
  */
-function woo_ml_revoke_order_tracking_setup() {
-    delete_option( 'woo_ml_order_tracking_setup' );
+function woo_ml_revoke_integration_setup() {
+    delete_option( 'woo_ml_integration_setup' );
 }
 
 /**
- * Setup order tracking
+ * Setup MailerLite integration
+ *
+ * 1.) Create custom fields
+ * 2.) Create segments
  */
-function woo_ml_setup_order_tracking() {
+function woo_ml_setup_integration() {
 
+    $ml_fields = mailerlite_wp_get_custom_fields();
+
+    /*
+     * Step 1: Setup custom fields
+     */
     $fields = array(
         'orders_count' => array( 'title' => 'Orders Count', 'type' => 'NUMBER' ),
         'total_spent' => array( 'title' => 'Total Spent', 'type' => 'NUMBER' ),
@@ -46,8 +54,6 @@ function woo_ml_setup_order_tracking() {
     );
 
     //$fields_created = mailerlite_wp_create_custom_fields( $fields );
-
-    $ml_fields = mailerlite_wp_get_custom_fields();
 
     // Loop remote fields
     foreach ( $ml_fields as $ml_field ) {
@@ -61,6 +67,7 @@ function woo_ml_setup_order_tracking() {
     if ( sizeof( $fields ) > 0 ) {
 
         foreach ( $fields as $field_data ) {
+            // Finally create missing custom fields
             mailerlite_wp_create_custom_field( $field_data );
         }
     }
@@ -68,8 +75,15 @@ function woo_ml_setup_order_tracking() {
     //woo_ml_debug( $fields );
     //woo_ml_debug( $ml_fields );
 
-    // Mark order tracking setup as completed
-    woo_ml_complete_order_tracking_setup();
+    /*
+     * Step 2: Setup segments
+     */
+
+
+    /*
+     * Finally mark integration setup as completed
+     */
+    woo_ml_complete_integration_setup();
 }
 
 /**

@@ -193,8 +193,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          */
         public function sanitize_settings( $settings ) {
 
-            $setup_order_tracking = false;
-            $revoke_order_tracking_setup = false;
+            $setup_integration = false;
+            $revoke_integration_setup = false;
 
             if ( isset( $settings['api_key'] ) ) {
 
@@ -207,7 +207,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 if ( empty( $settings['api_key'] ) ) {
                     $api_status = false;
                     $reset_groups = true;
-                    $revoke_order_tracking_setup = true;
+                    $revoke_integration_setup = true;
 
                 } elseif ( ! empty( $settings['api_key'] ) && $settings['api_key'] != $api_key ) {
                     $validation = woo_ml_validate_api_key( esc_html( $settings['api_key'] ) );
@@ -217,7 +217,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     $refresh_groups = true;
 
                     if ( $api_status )
-                        $setup_order_tracking = true;
+                        $setup_integration = true;
                 }
 
                 // Store API validation
@@ -248,12 +248,12 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 }
             }
 
-            // Handle order tracking setup
-            if ( $revoke_order_tracking_setup )
-                woo_ml_revoke_order_tracking_setup();
+            // Handle integration setup
+            if ( $revoke_integration_setup )
+                woo_ml_revoke_integration_setup();
 
-            if ( $setup_order_tracking )
-                woo_ml_setup_order_tracking();
+            if ( $setup_integration )
+                woo_ml_setup_integration();
 
             // Return sanitized settings
             return $settings;
