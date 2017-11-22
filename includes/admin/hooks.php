@@ -25,7 +25,7 @@ function woo_ml_admin_notices() {
             'type' => 'warning',
             'dismiss' => false,
             'force' => true,
-            'message' => sprintf( wp_kses( __( 'In order to complete our integration setup, please <a href="%s">click here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( add_query_arg( 'woo_ml_action', 'setup_integration', woo_mailerlite_get_settings_page_url() ) ) )
+            'message' => sprintf( wp_kses( __( 'In order to complete our integration setup, please <a href="%s">click here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( woo_ml_get_complete_integration_setup_url() ) )
         );
     }
 
@@ -83,7 +83,7 @@ function woo_ml_admin_actions() {
         // Setup integration
         woo_ml_setup_integration();
         // Afterwards redirect to settings and show success notice
-        wp_redirect( add_query_arg( 'woo_ml_admin_notice', 'integration_setup_completed', woo_mailerlite_get_settings_page_url() ) );
+        wp_redirect( add_query_arg( 'woo_ml_admin_notice', 'integration_setup_completed', woo_ml_get_settings_page_url() ) );
         exit;
     }
 }

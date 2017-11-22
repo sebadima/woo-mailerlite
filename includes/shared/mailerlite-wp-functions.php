@@ -326,3 +326,49 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
         }
     }
 endif;
+
+if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
+    /**
+     * Create segment in MailerLite
+     *
+     * @param array $segment_data
+     * @return bool
+     */
+    function mailerlite_wp_create_segment( $segment_data ) {
+
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        $api_key = woo_ml_get_option( 'api_key' );
+
+        $data = json_encode( $segment_data );
+
+        try {
+
+            // TODO: As soon as the segments route is officially added to the API docs, we're using our library instead
+
+            $response = wp_remote_post( 'https://api.mailerlite.com/api/v2/segments', array(
+                'headers' => array(
+                    'Cache-Control' => 'no-cache',
+                    'Content-Type' => 'application/json' ,
+                    'x-mailerlite-apikey' => $api_key
+                ),
+                'body' => $data
+            ));
+
+            //woo_ml_debug( $response );
+
+            if ( is_wp_error( $response ) ) {
+                return false;
+            } else {
+                $segment_added = json_decode( wp_remote_retrieve_body( $response ), false );
+
+                return ( isset( $segment_added->id ) ) ? $segment_added : false;
+            }
+
+        } catch (Exception $e) {
+            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+endif;

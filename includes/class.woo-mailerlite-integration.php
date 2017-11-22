@@ -156,7 +156,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     <fieldset>
                         <?php if ( ! $this->api_status ) { ?>
                             <p class="description">
-                                <?php _e('Right now there are no untracked orders.', 'woo-mailerlite' ); ?>
+                                <?php _e('Plugin not connected to MailerLite yet.', 'woo-mailerlite' ); ?>
+                            </p>
+                        <?php } elseif ( ! woo_ml_integration_setup_completed() ) { ?>
+                            <p class="description">
+                                <?php printf( wp_kses( __( 'MailerLite integration setup not completed yet. Please <a href="%s">click here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( woo_ml_get_complete_integration_setup_url() ) ); ?>
                             </p>
                         <?php } elseif ( ! empty( $untracked_orders_count ) ) { ?>
                             <legend class="screen-reader-text">

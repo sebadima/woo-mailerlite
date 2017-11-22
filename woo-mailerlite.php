@@ -104,6 +104,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
 
             // Core functions and hooks
             require_once 'includes/functions.php';
+            require_once 'includes/integration-setup-functions.php';
             require_once 'includes/hooks.php';
             require_once 'includes/scripts.php';
 
