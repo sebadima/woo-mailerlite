@@ -20,7 +20,7 @@ function woo_ml_admin_notices() {
     */
 
     // Integration setup (in case setup was not yet completed via settings handling)
-    if ( ! woo_ml_integration_setup_completed() ) {
+    if ( woo_ml_is_active() && ! woo_ml_integration_setup_completed() ) {
         $notices[] = array(
             'type' => 'warning',
             'dismiss' => false,
