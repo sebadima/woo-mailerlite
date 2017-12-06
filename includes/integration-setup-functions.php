@@ -200,9 +200,9 @@ function woo_ml_setup_integration_segments() {
 function woo_ml_get_integration_custom_fields() {
 
     return array(
-        'orders_count' => array( 'title' => 'Orders Count', 'type' => 'NUMBER' ),
-        'total_spent' => array( 'title' => 'Total Spent', 'type' => 'NUMBER' ),
-        'last_order' => array( 'title' => 'Last Order', 'type' => 'DATE' ),
+        'woo_orders_count' => array( 'title' => 'Woo Orders Count', 'type' => 'NUMBER' ),
+        'woo_total_spent' => array( 'title' => 'Woo Total Spent', 'type' => 'NUMBER' ),
+        'woo_last_order' => array( 'title' => 'Woo Last Order', 'type' => 'DATE' ),
     );
 }
 
@@ -226,7 +226,7 @@ function woo_ml_get_integration_segments() {
                         [
                             "operator" => "numeric_field_equals",
                             "args" => [
-                                "orders_count", // Will be replaced with field id
+                                "woo_orders_count", // Will be replaced with field id
                                 "1"
                             ]
                         ]
@@ -246,7 +246,7 @@ function woo_ml_get_integration_segments() {
                             "args" => [
                                 [
                                     "display" => "WooCommerce orders count", // Will be replaced with field Title
-                                    "value" => "orders_count" // Will be replaced with field id
+                                    "value" => "woo_orders_count" // Will be replaced with field id
                                 ],
                                 "1"
                             ],
@@ -272,7 +272,7 @@ function woo_ml_get_integration_segments() {
                         [
                             "operator" => "numeric_field_equals",
                             "args" => [
-                                "orders_count", // Will be replaced with field id
+                                "woo_orders_count", // Will be replaced with field id
                                 "0"
                             ]
                         ]
@@ -292,7 +292,7 @@ function woo_ml_get_integration_segments() {
                             "args" => [
                                 [
                                     "display" => "WooCommerce orders count", // Will be replaced with field Title
-                                    "value" => "orders_count" // Will be replaced with field id
+                                    "value" => "woo_orders_count" // Will be replaced with field id
                                 ],
                                 "0"
                             ],
@@ -318,7 +318,7 @@ function woo_ml_get_integration_segments() {
                         [
                             "operator" => "numeric_field_greater",
                             "args" => [
-                                "total_spent", // Will be replaced with field id
+                                "woo_total_spent", // Will be replaced with field id
                                 "500"
                             ]
                         ]
@@ -338,7 +338,7 @@ function woo_ml_get_integration_segments() {
                             "args" => [
                                 [
                                     "display" => "WooCommerce total spent", // Will be replaced with field Title
-                                    "value" => "total_spent" // Will be replaced with field id
+                                    "value" => "woo_total_spent" // Will be replaced with field id
                                 ],
                                 "500"
                             ],
@@ -364,7 +364,7 @@ function woo_ml_get_integration_segments() {
                         [
                             "operator" => "numeric_field_greater",
                             "args" => [
-                                "orders_count", // Will be replaced with field id
+                                "woo_orders_count", // Will be replaced with field id
                                 "5"
                             ]
                         ]
@@ -384,7 +384,7 @@ function woo_ml_get_integration_segments() {
                             "args" => [
                                 [
                                     "display" => "WooCommerce orders count", // Will be replaced with field Title
-                                    "value" => "orders_count" // Will be replaced with field id
+                                    "value" => "woo_orders_count" // Will be replaced with field id
                                 ],
                                 "5"
                             ],
@@ -410,14 +410,14 @@ function woo_ml_get_integration_segments() {
                         [
                             "operator" => "numeric_field_greater",
                             "args" => [
-                                "total_spent", // Will be replaced with field id
+                                "woo_total_spent", // Will be replaced with field id
                                 "500"
                             ]
                         ],
                         [
                             "operator" => "numeric_field_greater",
                             "args" => [
-                                "orders_count", // Will be replaced with field id
+                                "woo_orders_count", // Will be replaced with field id
                                 "5"
                             ]
                         ]
@@ -437,7 +437,7 @@ function woo_ml_get_integration_segments() {
                             "args" => [
                                 [
                                     "display" => "WooCommerce total spent", // Will be replaced with field Title
-                                    "value" => "total_spent" // Will be replaced with field id
+                                    "value" => "woo_total_spent" // Will be replaced with field id
                                 ],
                                 "500"
                             ],
@@ -448,7 +448,7 @@ function woo_ml_get_integration_segments() {
                             "args" => [
                                 [
                                     "display" => "WooCommerce orders count", // Will be replaced with field Title
-                                    "value" => "orders_count" // Will be replaced with field id
+                                    "value" => "woo_orders_count" // Will be replaced with field id
                                 ],
                                 "5"
                             ],
