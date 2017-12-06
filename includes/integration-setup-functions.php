@@ -67,11 +67,13 @@ function woo_ml_setup_integration_custom_fields() {
     //$fields_created = mailerlite_wp_create_custom_fields( $fields );
 
     // Loop remote fields
-    foreach ( $ml_fields as $ml_field ) {
+    if ( is_array( $ml_fields ) ) {
+        foreach ( $ml_fields as $ml_field ) {
 
-        // If field already exists, kick it out
-        if ( isset( $ml_field->key ) && isset( $fields[$ml_field->key] ) )
-            unset( $fields[$ml_field->key] );
+            // If field already exists, kick it out
+            if ( isset( $ml_field->key ) && isset( $fields[$ml_field->key] ) )
+                unset( $fields[$ml_field->key] );
+        }
     }
 
     // Loop fields left
