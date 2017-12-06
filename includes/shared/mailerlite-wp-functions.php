@@ -23,6 +23,9 @@ function mailerlite_wp_api_key_validation( $api_key ) {
         $response = $groups->get();
         $results = $response->toArray();
 
+        //woo_ml_debug( $response, 'mailerlite_wp_api_key_validation >> $response' );
+        //woo_ml_debug( $results, 'mailerlite_wp_api_key_validation >> $results' );
+
         if ( is_array( $results ) && ! isset( $results[0]->error->message ) )
             return true;
 
