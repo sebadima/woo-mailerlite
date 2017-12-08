@@ -1,16 +1,19 @@
 === WooCommerce - Mailerlite ===
-Contributors: flowdee
-Donate link: Donate link: https://donate.flowdee.de
+Contributors: mailerlite, flowdee
+Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
-Tested up to: 4.8.2
-Stable tag: 1.0.2
+Tested up to: 4.9.1
+Requires PHP: 5.6.0
+Stable tag: 1.1.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Mailerlite integration for WooCommerce.
+MailerLite integration for WooCommerce.
 
 == Description ==
+
+==== Official MailerLite Integration for WooCommerce ====
 
 This plugin allows you easily to connect WooCommerce with Mailerlite. Add your customers to your email marketing lists directly via WooCommerce's checkout process.
 
@@ -21,7 +24,10 @@ This plugin allows you easily to connect WooCommerce with Mailerlite. Add your c
 * Show/hide checkbox
 * Enable/disable double opt-in
 * Customize checkbox label via settings page
-* Regular updates and improvements: Go though the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
+* Forward order data to MailerLite
+* Setup order tracking MailerLite custom fields
+* Setup order related MailerLite segments
+* Regular updates and improvements: Check out the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
 
 = Quickstart =
 
@@ -29,14 +35,9 @@ This plugin allows you easily to connect WooCommerce with Mailerlite. Add your c
 * Select your default list/group
 * Enable checkout integration
 
-= Support =
-
-* Browse [issue tracker](https://github.com/flowdee/woo-mailerlite/issues) on GitHub
-* [Follow me on Twitter](https://twitter.com/flowdee) to stay in contact and informed about updates
-
 = Credits =
 
-* This plugin is not official made or maintained by [WooCommerce](https://woocommerce.com/) or [Mailerlite](http://www.mailerlite.com/a/7qq80y6dbo), but making use of the official [Mailerlite API](https://developers.mailerlite.com/docs).
+* This plugin is made by using the official [Mailerlite API](https://developers.mailerlite.com/docs).
 
 == Installation ==
 
@@ -77,6 +78,15 @@ Yes of course.
 
 == Changelog ==
 
+= 1.1.0 (8th December 2017) =
+* New: Forward order data to MailerLite
+* New: Setup order tracking MailerLite custom fields
+* New: Setup order related MailerLite segments
+* Improvement: Optimized group selection via settings
+* Improvement: Optimized settings page
+* Minor improvements and fixes
+* WordPress v4.9.1 compatibility
+
 = 1.0.2 (23th September 2017) =
 * Fix: Disabling double optin via settings didn't take affect
 
@@ -89,6 +99,15 @@ Yes of course.
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1.0 (8th December 2017) =
+* New: Forward order data to MailerLite
+* New: Setup order tracking MailerLite custom fields
+* New: Setup order related MailerLite segments
+* Improvement: Optimized group selection via settings
+* Improvement: Optimized settings page
+* Minor improvements and fixes
+* WordPress v4.9.1 compatibility
 
 = 1.0.2 (23th September 2017) =
 * Fix: Disabling double optin via settings didn't take affect

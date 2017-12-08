@@ -3,14 +3,14 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Woo Mailerlite\n"
-"POT-Creation-Date: 2017-08-02 12:19+0200\n"
+"POT-Creation-Date: 2017-12-08 15:25+0100\n"
 "PO-Revision-Date: 2017-05-10 16:10+0200\n"
 "Last-Translator: flowdee <coder@flowdee.de>\n"
-"Language-Team: flowdee <coder@flowdee.de>\n"
+"Language-Team: MailerLite <support@mailerlite.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 2.0.5\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: woo-mailerlite.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -22,107 +22,172 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: node_modules\n"
 "X-Poedit-SearchPathExcluded-2: vendor\n"
 
-#: includes/class.woo-mailerlite-integration.php:23
+#: includes/admin/hooks.php:28
+#, php-format
+msgid ""
+"In order to complete our integration setup, please <a href=\"%s\">click "
+"here</a>."
+msgstr ""
+
+#: includes/admin/hooks.php:38
+msgid "Integration setup has been successfully completed."
+msgstr ""
+
+#. Author of the plugin/theme
+#: includes/admin/meta-boxes.php:9
+msgid "MailerLite"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:32
+msgid "Signed up for mailing list:"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:36
+msgid "Subscribed  to mailing list:"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:40
+msgid "Updated subscriber data:"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:44
+msgid "Order data submitted:"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:48
+msgid "Order tracking completed:"
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:24
 msgid "Mailerlite"
 msgstr ""
 
-#. Description of the plugin/theme
-#: includes/class.woo-mailerlite-integration.php:24
+#: includes/class.woo-mailerlite-integration.php:25
 msgid "Mailerlite integration for WooCommerce"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:52
+#: includes/class.woo-mailerlite-integration.php:54
 msgid "Mailerlite API Key"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:54
+#: includes/class.woo-mailerlite-integration.php:56
 #, php-format
 msgid ""
 "You can find your Developer API key <a href=\"%s\" target=\"_blank\">here</"
 "a>."
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:59
+#: includes/class.woo-mailerlite-integration.php:61
 msgid "Group"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:62
+#: includes/class.woo-mailerlite-integration.php:64
 msgid "The default group which will be taken for new subscribers"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:67
+#: includes/class.woo-mailerlite-integration.php:70
 msgid "Checkout"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:69
+#: includes/class.woo-mailerlite-integration.php:72
 msgid "Enable list subscription via checkout page"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:73
+#: includes/class.woo-mailerlite-integration.php:76
 msgid "Position"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:77
+#: includes/class.woo-mailerlite-integration.php:81
 msgid "After billing details"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:78
+#: includes/class.woo-mailerlite-integration.php:82
 msgid "After shipping details"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:79
+#: includes/class.woo-mailerlite-integration.php:83
 msgid "After customer details"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:80
+#: includes/class.woo-mailerlite-integration.php:84
 msgid "Before submit button"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:84
+#: includes/class.woo-mailerlite-integration.php:88
 msgid "Pre-select checkbox"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:86
+#: includes/class.woo-mailerlite-integration.php:90
 msgid "Check in order to pre-select the signup checkbox by default"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:90
+#: includes/class.woo-mailerlite-integration.php:94
 msgid "Hide checkbox"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:92
+#: includes/class.woo-mailerlite-integration.php:96
 msgid ""
 "Check in order to hide the checkbox. All customers will be subscribed "
 "automatically"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:96
+#: includes/class.woo-mailerlite-integration.php:100
 msgid "Checkbox label"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:98
+#: includes/class.woo-mailerlite-integration.php:102
 msgid "The text which will be shown besides the checkbox"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:100
+#: includes/class.woo-mailerlite-integration.php:103
 msgid "Yes, I want to receive your newsletter."
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:103
+#: includes/class.woo-mailerlite-integration.php:107
 msgid "Double Opt-In"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:105
+#: includes/class.woo-mailerlite-integration.php:109
 msgid ""
 "Check in order to force email confirmation before being added to your list"
 msgstr ""
 
-#: includes/class.woo-mailerlite-integration.php:106
+#: includes/class.woo-mailerlite-integration.php:110
+msgid ""
+"Changing this setting will automatically update your double opt-in setting "
+"for your MailerLite account."
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:117
+msgid ""
+"Synchronizing orders whose customer and order data haven't been submitted "
+"to MailerLite yet."
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:159
+msgid "Plugin not connected to MailerLite yet."
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:163
 #, php-format
 msgid ""
-"Please ensure that you enabled this feature in your <a href=\"%s\" target="
-"\"_blank\">Mailerlite \n"
-"Subscribe settings</a>."
+"MailerLite integration setup not completed yet. Please <a href=\"%s"
+"\">click here</a>."
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:172
+#, php-format
+msgid "Synchronize %d untracked order"
+msgid_plural "Synchronize %d untracked orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class.woo-mailerlite-integration.php:178
+msgid "Untracked orders successfully submitted to MailerLite."
+msgstr ""
+
+#: includes/class.woo-mailerlite-integration.php:183
+msgid "Right now there are no untracked orders."
 msgstr ""
 
 #: includes/functions.php:22
@@ -141,22 +206,18 @@ msgstr ""
 msgid "No groups found"
 msgstr ""
 
-#: includes/functions.php:136
-msgid "Customer successfully subscribed to mailing list(s)."
-msgstr ""
-
 #. Plugin Name of the plugin/theme
-msgid "WooCommerce - Mailerlite"
+msgid "WooCommerce - MailerLite"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
 msgid "https://wordpress.org/plugins/woo-mailerlite/"
 msgstr ""
 
-#. Author of the plugin/theme
-msgid "flowdee"
+#. Description of the plugin/theme
+msgid "Official MailerLite integration for WooCommerce"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "https://flowdee.de"
+msgid "https://mailerlite.com"
 msgstr ""

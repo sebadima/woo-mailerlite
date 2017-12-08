@@ -1,17 +1,12 @@
 <?php
 /**
- * Plugin Name:     WooCommerce - Mailerlite
+ * Plugin Name:     WooCommerce - MailerLite
  * Plugin URI:      https://wordpress.org/plugins/woo-mailerlite/
- * Description:     Mailerlite integration for WooCommerce
- * Version:         1.0.2
- * Author:          flowdee
- * Author URI:      https://flowdee.de
+ * Description:     Official MailerLite integration for WooCommerce
+ * Version:         1.1.0
+ * Author:          MailerLite
+ * Author URI:      https://mailerlite.com
  * Text Domain:     woo-mailerlite
- *
- * @author          flowdee
- * @copyright       Copyright (c) flowdee
- *
- * Copyright (c) 2017 - flowdee ( https://twitter.com/flowdee )
  */
 
 // Exit if accessed directly
@@ -65,7 +60,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             define( 'WOO_MAILERLITE_NAME', 'WooCommerce - Mailerlite' );
 
             // Plugin version
-            define( 'WOO_MAILERLITE_VER', '1.0.2' );
+            define( 'WOO_MAILERLITE_VER', '1.1.0' );
 
             // Plugin path
             define( 'WOO_MAILERLITE_DIR', plugin_dir_path( __FILE__ ) );

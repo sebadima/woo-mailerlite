@@ -1,8 +1,8 @@
 {
   "name": "woo-mailerlite",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "private": true,
-  "description": "Mailerlite integration for WooCommerce",
+  "description": "Official Mailerlite integration for WooCommerce",
   "directories": {
     "js": "",
     "sass": "",
@@ -15,9 +15,9 @@
     "textdomain": "woo-mailerlite",
     "src": "woo-mailerlite.php",
     "header": {
-      "bugs": "https://coder.flowdee.de/support/",
-      "team": "flowdee <coder@flowdee.de>",
-      "last_translator": "flowdee <coder@flowdee.de>"
+      "bugs": "https://mailerlite.com/",
+      "team": "MailerLite <support@mailerlite.com>",
+      "last_translator": "MailerLite <support@mailerlite.com>"
     }
   },
   "dependencies": {},
