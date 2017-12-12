@@ -78,7 +78,7 @@ Yes of course.
 
 == Changelog ==
 
-= 1.1.0 (8th December 2017) =
+= 1.1.0 (12th December 2017) =
 * New: Forward order data to MailerLite
 * New: Setup order tracking MailerLite custom fields
 * New: Setup order related MailerLite segments
@@ -100,7 +100,7 @@ Yes of course.
 
 == Upgrade Notice ==
 
-= 1.1.0 (8th December 2017) =
+= 1.1.0 (12th December 2017) =
 * New: Forward order data to MailerLite
 * New: Setup order tracking MailerLite custom fields
 * New: Setup order related MailerLite segments
