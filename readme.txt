@@ -5,7 +5,7 @@ Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce
 Requires at least: 3.0.1
 Tested up to: 4.9.1
 Requires PHP: 5.6.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -78,6 +78,9 @@ Yes of course.
 
 == Changelog ==
 
+= 1.1.1 (27th December 2017) =
+* Fix: Using PHP lower than 5.6 lead into fatal errors
+
 = 1.1.0 (12th December 2017) =
 * New: Forward order data to MailerLite
 * New: Setup order tracking MailerLite custom fields
@@ -99,6 +102,9 @@ Yes of course.
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1.1 (27th December 2017) =
+* Fix: Using PHP lower than 5.6 lead into fatal errors
 
 = 1.1.0 (12th December 2017) =
 * New: Forward order data to MailerLite
