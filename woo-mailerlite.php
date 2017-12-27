@@ -40,6 +40,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
                 self::$instance = new Woo_Mailerlite();
                 self::$instance->setup_constants();
                 self::$instance->includes();
+                self::$instance->hooks();
                 self::$instance->load_textdomain();
             }
 
@@ -116,6 +117,34 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
 
             // Register the integration.
             add_filter( 'woocommerce_integrations', array( $this, 'add_integration' ) );
+        }
+
+        /**
+         * Fire plugin main hooks
+         */
+        private function hooks() {
+            add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 2 );
+        }
+
+        /**
+         * Add plugin action links
+         *
+         * @param $links
+         * @param $file
+         * @return mixed
+         */
+        public function plugin_action_links( $links, $file ) {
+
+            // Get out if WooCommerce is not active
+            if( ! class_exists( 'WC_Integration' ) )
+                return $links;
+
+            $settings_link = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . esc_html__( 'Settings', 'woo-mailerlite' ) . '</a>';
+
+            if ( $file == 'woo-mailerlite/woo-mailerlite.php' )
+                array_unshift( $links, $settings_link );
+
+            return $links;
         }
 
         /**
