@@ -27,7 +27,6 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
          */
         private static $instance;
 
-
         /**
          * Get active instance
          *
@@ -79,6 +78,8 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
                 define( 'MAILERLITE_WP_API_KEY', $api_key );
             }
 
+            // Other
+            define( 'WOO_MAILERLITE_MIN_PHP_VERSION', '5.6' );
         }
         
         /**
@@ -92,6 +93,9 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
 
             // Get out if WooCommerce is not active
             if ( ! class_exists( 'WC_Integration' ) )
+                return;
+
+            if ( ! $this->check_server_requirements() )
                 return;
 
             // Dependencies
@@ -120,7 +124,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
         }
 
         /**
-         * Fire plugin main hooks
+         * Fire some hooks
          */
         private function hooks() {
             add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 2 );
@@ -135,14 +139,19 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
          */
         public function plugin_action_links( $links, $file ) {
 
-            // Get out if WooCommerce is not active
-            if( ! class_exists( 'WC_Integration' ) )
+            if ( $file !== 'woo-mailerlite/woo-mailerlite.php' )
                 return $links;
 
-            $settings_link = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . esc_html__( 'Settings', 'woo-mailerlite' ) . '</a>';
+            if ( ! $this->check_server_requirements() ) {
+                $info = '<span style="color: red; font-weight: bold;">' . sprintf( esc_html__( 'PHP Version %1$s or newer required', 'woo-mailerlaite' ), WOO_MAILERLITE_MIN_PHP_VERSION ) . '</span>';
+                array_unshift( $links, $info );
+                return $links;
+            }
 
-            if ( $file == 'woo-mailerlite/woo-mailerlite.php' )
+            if ( class_exists( 'WC_Integration' ) ) {
+                $settings_link = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=integration' ) . '">' . esc_html__( 'Settings', 'woo-mailerlite' ) . '</a>';
                 array_unshift( $links, $settings_link );
+            }
 
             return $links;
         }
@@ -190,6 +199,19 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
                 // Load the default language files
                 load_plugin_textdomain( 'woo-mailerlite', false, $lang_dir );
             }
+        }
+
+        /**
+         * Check web server requirements
+         *
+         * @return bool
+         */
+        private function check_server_requirements() {
+
+            if ( version_compare( phpversion(), WOO_MAILERLITE_MIN_PHP_VERSION, '<' ) )
+                return false;
+
+            return true;
         }
     }
 } // End if class_exists check
