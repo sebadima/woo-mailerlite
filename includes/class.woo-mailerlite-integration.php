@@ -275,7 +275,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             if (isset($settings['consumer_key']) && isset($settings['consumer_secret']) && isset($settings['store'])) {
                 if (strpos($settings['store'], 'https://') !== false) {
-                    mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['store'], $settings['api_key']);
+                    $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['store'], $settings['api_key']);
+                    if ($result)
+                        add_action('wp_head', mailerlite_universal($result->account_id, $result->account_subdomain));
                 } else {
                     echo '<div class="error">
                             <p>Your shop url is wrong.</p>
