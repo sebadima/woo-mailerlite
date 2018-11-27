@@ -275,7 +275,9 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey);
 
             if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
-                return $result;
+                update_option('account_id', $result->account_id);
+                update_option('account_subdomain', $result->account_subdomain);
+                return true;
             } 
         } catch (Exception $e) {
             return false;
@@ -395,21 +397,3 @@ if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
         }
     }
 endif;
-//mailerlite universal script for tracking orders
-function mailerlite_universal($account_id, $account_subdomain)
-{
-    { ?>
-        <!-- MailerLite Universal -->
-        <script>
-        (function(m,a,i,l,e,r){ m['MailerLiteObject']=e;function f(){
-        var c={ a:arguments,q:[]};var r=this.push(c);return "number"!=typeof r?r:f.bind(c.q);}
-        f.q=f.q||[];m[e]=m[e]||f.bind(f.q);m[e].q=m[e].q||f.q;r=a.createElement(i);
-        var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
-        _.parentNode.insertBefore(r,_);})(window, document, 'script', 'http://nikoldev.e-mailer.lt/js/universal-dev.js', 'ml');
-
-        var ml_account = ml('accounts', '<?php echo $account_id; ?>', '<?php echo $account_subdomain; ?>', <if popups enabled>'load'</if>);
-        ml('ecommerce', 'visitor', 'woocommerce');
-        </script>
-        <!-- End MailerLite Universal -->
-    <?php }
-}

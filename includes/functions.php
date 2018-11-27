@@ -710,3 +710,27 @@ function woo_ml_debug_log( $message ) {
         }
     }
 }
+
+//mailerlite universal script for tracking orders
+function mailerlite_universal_woo_commerce()
+{
+    ?>
+        <!-- MailerLite Universal -->
+        <script>
+        (function(m,a,i,l,e,r){ m['MailerLiteObject']=e;function f(){
+        var c={ a:arguments,q:[]};var r=this.push(c);return "number"!=typeof r?r:f.bind(c.q);}
+        f.q=f.q||[];m[e]=m[e]||f.bind(f.q);m[e].q=m[e].q||f.q;r=a.createElement(i);
+        var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
+        _.parentNode.insertBefore(r,_);})(window, document, 'script', 'http://nikoldev.e-mailer.lt/js/universal-dev.js', 'ml');
+
+        var ml_account = ml('accounts', '<?php echo get_option("account_id"); ?>', '<?php echo get_option("account_subdomain"); ?>', 'load');
+        ml('ecommerce', 'visitor', 'woocommerce');
+        </script>
+        <!-- End MailerLite Universal -->
+    <?php 
+}
+
+if (get_option('account_id') && get_option('account_subdomain'))
+{
+    add_action('admin_head', 'mailerlite_universal_woo_commerce');
+}
