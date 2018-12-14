@@ -264,7 +264,7 @@ if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
 endif;
 
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
-    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $store, $apiKey) {
+    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey) {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
@@ -272,13 +272,18 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey);
+            $store = get_option('siteurl');
+            if (strpos($store, 'https://') !== false ) {
+                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey);
 
-            if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
-                update_option('account_id', $result->account_id);
-                update_option('account_subdomain', $result->account_subdomain);
+                if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
+                    update_option('account_id', $result->account_id);
+                    update_option('account_subdomain', $result->account_subdomain);
+                }
                 return true;
-            } 
+            } else {
+                return false;
+            }
         } catch (Exception $e) {
             return false;
         }

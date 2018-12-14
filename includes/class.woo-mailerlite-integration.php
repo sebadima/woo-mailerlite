@@ -71,13 +71,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'desc_tip'          => false,
                     'default'           => '',
                 ),
-                'store' => array(
-                    'title'             => __( 'Shop website', 'woo-mailerlite' ),
-                    'type'              => 'text',
-                    'description' => __( 'Format should be https://yourshop.com', 'woo-mailerlite' ),
-                    'desc_tip'          => true,
-                    'default'           => '',
-                ),
                 'group' => array(
                     'title' 		=> __( 'Group', 'woo-mailerlite' ),
                     'type' 			=> 'select',
@@ -274,14 +267,12 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             }
 
             if (isset($settings['consumer_key']) && isset($settings['consumer_secret']) && isset($settings['store'])) {
-                if (strpos($settings['store'], 'https://') !== false) {
-                    mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['store'], $settings['api_key']);   
-                } else {
+                $success = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
+                if (! $success)  {
                     echo '<div class="error">
-                            <p>Your shop url is wrong.</p>
+                            <p>Your shop url does not have the right security protocol.</p>
                         </div> ';
                 }
-                
             }
 
             // Handle integration setup
