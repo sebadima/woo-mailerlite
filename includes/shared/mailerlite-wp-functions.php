@@ -279,10 +279,13 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);
+
+                } else if (isset($result->errors)) {
+                    return ['errors' => $result->errors];
                 }
                 return true;
             } else {
-                return false;
+                return ['errors' => 'Your shop url does not have the right security protocol'];
             }
         } catch (Exception $e) {
             return false;

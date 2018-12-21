@@ -267,11 +267,20 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             }
 
             if (isset($settings['consumer_key']) && isset($settings['consumer_secret']) && isset($settings['store'])) {
-                $success = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
-                if (! $success)  {
-                    echo '<div class="error">
-                            <p>Your shop url does not have the right security protocol.</p>
-                        </div> ';
+                if (strpos($settings['consumer_key'],'....') !== 0 &&
+                    strpos($settings['consumer_secret'], '....') !== 0) {
+                    $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
+
+                    if (isset($result['errors']))  {
+                        $settings['consumer_key']  = '';
+                        $settings['consumer_secret'] = ''; 
+                        echo '<div class="error">
+                                <p>'.$result['errors'].'</p>
+                            </div> ';   
+                    } else {
+                        $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
+                        $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
+                    }
                 }
             }
 
