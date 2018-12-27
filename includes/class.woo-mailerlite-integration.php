@@ -267,8 +267,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             }
 
             if (isset($settings['consumer_key']) && isset($settings['consumer_secret']) && isset($settings['store'])) {
-                if (strpos($settings['consumer_key'],'....') !== 0 &&
-                    strpos($settings['consumer_secret'], '....') !== 0) {
                     $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
 
                     if (isset($result['errors']))  {
@@ -281,7 +279,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
                         $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
                     }
-                }
             }
 
             // Handle integration setup
