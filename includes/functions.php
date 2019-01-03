@@ -734,3 +734,16 @@ if (get_option('account_id') && get_option('account_subdomain'))
 {
     add_action('admin_head', 'mailerlite_universal_woo_commerce');
 }
+
+function woo_ml_send_completed_order($order_id)
+{
+    $order = wc_get_order($order_id);
+    $order_data['order'] = $order->get_data();
+    $order_items = $order->get_items();
+    $order_data['line_items'] = [];
+    foreach ($order_items as $key => $value) {
+        $order_data['line_items'][] = $value->get_data();
+    }
+    
+    mailerlite_wp_send_order($order_data);
+}
