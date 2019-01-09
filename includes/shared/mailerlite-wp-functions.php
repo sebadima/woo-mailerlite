@@ -273,8 +273,9 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $store = get_option('siteurl');
+            $currency = get_option('woocommerce_currency');
             if (strpos($store, 'https://') !== false ) {
-                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey);
+                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
 
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
