@@ -428,3 +428,26 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
         }
     }
 endif; 
+
+if ( ! function_exists( 'mailerlite_wp_disconnect_shop') ) :
+    function mailerlite_wp_disconnect_shop()
+    {
+        //file_put_contents('test5.txt', 'here to deactivate your life 2.0 ufjghkfdj');
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        $api_key = woo_ml_get_option( 'api_key' );
+
+        try {
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            
+            $store = get_option('siteurl');
+            $result =$wooCommerceApi->disconnectShop($store);
+        } catch (Exception $e) {
+            
+            return false;
+        }
+    }
+endif; 

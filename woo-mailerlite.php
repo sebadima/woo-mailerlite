@@ -227,3 +227,10 @@ function woo_ml_load() {
     return Woo_Mailerlite::instance();
 }
 add_action( 'plugins_loaded', 'woo_ml_load' );
+
+function deactivate()
+{
+    require_once 'includes/shared/mailerlite-wp-functions.php';
+    mailerlite_wp_disconnect_shop();
+}
+register_deactivation_hook( __FILE__, 'deactivate' );
