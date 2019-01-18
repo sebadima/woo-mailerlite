@@ -742,7 +742,9 @@ function woo_ml_send_completed_order($order_id)
     $order_items = $order->get_items();
     $order_data['line_items'] = [];
     foreach ($order_items as $key => $value) {
-        $order_data['line_items'][] = $value->get_data();
+        $line_item_data = $value->get_data();
+        $order_data['order']['line_items'][$key] = $line_item_data;
+        $order_data['line_items'][] = $line_item_data;
     }
     
     mailerlite_wp_send_order($order_data);
