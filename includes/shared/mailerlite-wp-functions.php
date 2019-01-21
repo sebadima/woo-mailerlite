@@ -263,37 +263,6 @@ if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
     }
 endif;
 
-if (! function_exists('mailerlite_wp_set_consumer_data') ) :
-    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey) {
-        if ( ! mailerlite_wp_api_key_exists() )
-            return false;
-
-        try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
-
-            $wooCommerceApi = $mailerliteClient->woocommerce();
-            $store = get_option('siteurl');
-            $currency = get_option('woocommerce_currency');
-            if (strpos($store, 'https://') !== false ) {
-                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
-
-                if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
-                    update_option('account_id', $result->account_id);
-                    update_option('account_subdomain', $result->account_subdomain);
-
-                } else if (isset($result->errors)) {
-                    return ['errors' => $result->errors];
-                }
-                return true;
-            } else {
-                return ['errors' => 'Your shop url does not have the right security protocol'];
-            }
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-endif;
-
 if ( ! function_exists( 'mailerlite_wp_create_custom_field') ) :
     /**
      * Create custom field in MailerLite
@@ -407,6 +376,44 @@ if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
     }
 endif;
 
+/**
+ * Sends to api shop data needed to make back and forth connection with woo commerce
+ * Api returns account id and subdomain used to for universal script
+ */
+if (! function_exists('mailerlite_wp_set_consumer_data') ) :
+    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey) {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        try {
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            $store = get_option('siteurl');
+            $currency = get_option('woocommerce_currency');
+            if (strpos($store, 'https://') !== false ) {
+                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
+
+                if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
+                    update_option('account_id', $result->account_id);
+                    update_option('account_subdomain', $result->account_subdomain);
+
+                } else if (isset($result->errors)) {
+                    return ['errors' => $result->errors];
+                }
+                return true;
+            } else {
+                return ['errors' => 'Your shop url does not have the right security protocol'];
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;
+
+/**
+ * Sends completed order data to api to be evaluated and saved and/if trigger automations
+ */
 if ( ! function_exists( 'mailerlite_wp_send_order') ) :
     function mailerlite_wp_send_order($order_data)
     {
@@ -429,10 +436,13 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
     }
 endif; 
 
+/**
+ * Get triggered on deactivate plugin event. Sends store name to api
+ * to be deleted from our database
+ */
 if ( ! function_exists( 'mailerlite_wp_disconnect_shop') ) :
     function mailerlite_wp_disconnect_shop()
     {
-        //file_put_contents('test5.txt', 'here to deactivate your life 2.0 ufjghkfdj');
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
