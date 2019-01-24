@@ -28,6 +28,16 @@ function woo_ml_admin_notices() {
             'message' => sprintf( wp_kses( __( 'In order to complete our integration setup, please <a href="%s">click here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( woo_ml_get_complete_integration_setup_url() ) )
         );
     }
+    
+    //message to be displayed for users who are only using the old functionalities just now
+    if (woo_ml_is_active() && woo_ml_old_integration()) {
+        $notices[] = array(
+            'type' => 'warning',
+            'dismiss' => false,
+            'force' => true,
+            'message' => sprintf( wp_kses( __( 'We updated our integration for campaign e-commerce tracking, check it out.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( woo_ml_get_complete_integration_setup_url() ) )
+        );
+    }
 
     // Integration setup completed
     if ( 'integration_setup_completed' === $admin_notice ) {

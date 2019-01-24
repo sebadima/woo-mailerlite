@@ -397,7 +397,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);
-
+                    update_option('new_plugin_enabled', true);
                 } else if (isset($result->errors)) {
                     return ['errors' => $result->errors];
                 }
