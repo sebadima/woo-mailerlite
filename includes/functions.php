@@ -721,7 +721,7 @@ function mailerlite_universal_woo_commerce()
         var c={ a:arguments,q:[]};var r=this.push(c);return "number"!=typeof r?r:f.bind(c.q);}
         f.q=f.q||[];m[e]=m[e]||f.bind(f.q);m[e].q=m[e].q||f.q;r=a.createElement(i);
         var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
-        _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://app.mailerlite.com/js/universal-dev.js', 'ml');
+        _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
 
         var ml_account = ml('accounts', '<?php echo get_option("account_id"); ?>', '<?php echo get_option("account_subdomain"); ?>', 'load');
         ml('ecommerce', 'visitor', 'woocommerce');
@@ -732,7 +732,7 @@ function mailerlite_universal_woo_commerce()
 
 if (get_option('account_id') && get_option('account_subdomain'))
 {
-    add_action('admin_head', 'mailerlite_universal_woo_commerce');
+    add_action('wp_head', 'mailerlite_universal_woo_commerce');
 }
 /**
  * Gets triggered on completed order event. Fetches order data
