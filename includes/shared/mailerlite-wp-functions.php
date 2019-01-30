@@ -389,7 +389,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            $store = get_option('siteurl');
+            $store = site_url();
             $currency = get_option('woocommerce_currency');
             if (strpos($store, 'https://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
