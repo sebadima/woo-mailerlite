@@ -427,7 +427,7 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
-            $store = get_option('siteurl');
+            $store = site_url();
             $wooCommerceApi->saveOrder($order_data, $store);
             
         } catch (Exception $e) {
@@ -453,7 +453,7 @@ if ( ! function_exists( 'mailerlite_wp_disconnect_shop') ) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
-            $store = get_option('siteurl');
+            $store = site_url();
             $result =$wooCommerceApi->disconnectShop($store);
         } catch (Exception $e) {
             
