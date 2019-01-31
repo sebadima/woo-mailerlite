@@ -34,6 +34,7 @@ This plugin allows you to easily connect WooCommerce with Mailerlite. Track sale
 = Quickstart =
 
 * Enter your Mailerlite API key
+* For e-commerce tracking on campaigns generate a [consumer key + secret](https://docs.woocommerce.com/document/woocommerce-rest-api/) with read rights
 * Select your default list/group
 * Enable checkout integration
 
