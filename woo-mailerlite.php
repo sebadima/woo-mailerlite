@@ -231,6 +231,13 @@ add_action( 'plugins_loaded', 'woo_ml_load' );
 function deactivate()
 {
     require_once 'includes/shared/mailerlite-wp-functions.php';
-    mailerlite_wp_disconnect_shop();
+    mailerlite_wp_toggle_shop_connection(0);
 }
 register_deactivation_hook( __FILE__, 'deactivate' );
+
+/*function activate()
+{
+    require_once 'includes/shared/mailerlite-wp-functions.php';
+    mailerlite_wp_toggle_shop_connection(1);
+}
+register_activation_hook( __FILE__, 'activate' );*/

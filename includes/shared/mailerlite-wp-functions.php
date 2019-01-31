@@ -438,10 +438,10 @@ endif;
 
 /**
  * Get triggered on deactivate plugin event. Sends store name to api
- * to be deleted from our database
+ * to toggle its active status
  */
-if ( ! function_exists( 'mailerlite_wp_disconnect_shop') ) :
-    function mailerlite_wp_disconnect_shop()
+if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
+    function mailerlite_wp_toggle_shop_connection($active_state)
     {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
@@ -454,7 +454,7 @@ if ( ! function_exists( 'mailerlite_wp_disconnect_shop') ) :
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
             $store = site_url();
-            $result =$wooCommerceApi->disconnectShop($store);
+            $result =$wooCommerceApi->toggleShopConnection($store, $active_state);
         } catch (Exception $e) {
             
             return false;
