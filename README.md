@@ -13,15 +13,18 @@ This plugin allows you easily to connect WooCommerce with Mailerlite. Add your c
 
 ## Features
 
-*   Checkout integration
-*   Select between multiple positions
-*   Show/hide checkbox
-*   Enable/disable double opt-in
-*   Customize checkbox label via settings page
-*   Forward order data to MailerLite
-*   Setup order tracking MailerLite custom fields
-*   Setup order related MailerLite segments
-*   Regular updates and improvements: Go though the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
+*  Checkout integration
+*  Select between multiple positions
+*  Show/hide checkbox
+*  Enable/disable double opt-in
+*  Product importing
+*  Sales tracking and campaign ROI
+*  Customize checkbox label via settings page
+*  Forward order data to MailerLite
+*  Setup order tracking MailerLite custom fields
+*  Setup order related MailerLite segments
+*  Set up automation triggered by recent purchases
+*  Regular updates and improvements: Check out the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
 
 ### Credits
 
