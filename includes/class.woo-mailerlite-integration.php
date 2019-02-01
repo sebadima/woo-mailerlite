@@ -57,6 +57,20 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'desc_tip'          => false,
                     'default'           => '',
                 ),
+                'consumer_key' => array(
+                    'title'             => __( 'Consumer Key', 'woo-mailerlite' ),
+                    'type'              => 'text',
+                    'description'       => sprintf( wp_kses( __( 'You can information on how to generate one  <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                    'desc_tip'          => false,
+                    'default'           => '',
+                ),
+                'consumer_secret' => array(
+                    'title'             => __( 'Consumer Secret', 'woo-mailerlite' ),
+                    'type'              => 'text',
+                    'description'       => sprintf( wp_kses( __( 'You can information on how to generate one <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                    'desc_tip'          => false,
+                    'default'           => '',
+                ),
                 'group' => array(
                     'title' 		=> __( 'Group', 'woo-mailerlite' ),
                     'type' 			=> 'select',
@@ -167,7 +181,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 <span><?php echo wp_kses_post( $data['title'] ); ?></span>
                             </legend>
                             <button id="woo-ml-sync-untracked-orders" class="button-secondary" data-woo-ml-sync-untracked-orders="true"
-                               data-woo-ml-untracked-orders-count="<?php echo $untracked_orders_count; ?>" data-woo-ml-untracked-orders-left="<?php echo $untracked_orders_count; ?>"
+                                    data-woo-ml-untracked-orders-count="<?php echo $untracked_orders_count; ?>" data-woo-ml-untracked-orders-left="<?php echo $untracked_orders_count; ?>"
                                     data-woo-ml-untracked-orders-cycle="<?php echo WOO_ML_SYNC_UNTRACKED_ORDERS_CYCLE; ?>">
                                 <?php printf( esc_html( _n( 'Synchronize %d untracked order', 'Synchronize %d untracked orders', $untracked_orders_count, 'woo-mailerlite'  ) ), $untracked_orders_count ); ?>
                             </button>
@@ -250,6 +264,23 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
                     mailerlite_wp_set_double_optin( $double_optin );
                 }
+            }
+            // save shop to our db for e commerce tracking
+            // hiding the ck and cs values once save performed as we don't need to have them saved here anyway
+            // we only need them for backwards connection  from api to plugin to get products and categories.
+            if (isset($settings['consumer_key']) && isset($settings['consumer_secret'])) {
+                    $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
+
+                    if (isset($result['errors']))  {
+                        $settings['consumer_key']  = '';
+                        $settings['consumer_secret'] = ''; 
+                        echo '<div class="error">
+                                <p>'.$result['errors'].'</p>
+                            </div> ';   
+                    } else {
+                        $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
+                        $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
+                    }
             }
 
             // Handle integration setup

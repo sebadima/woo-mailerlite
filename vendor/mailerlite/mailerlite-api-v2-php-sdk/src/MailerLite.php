@@ -97,6 +97,10 @@ class MailerLite {
         return new \MailerLiteApi\Api\Segments($this->restClient);
     }
 
+    public function woocommerce()
+    {
+        return new \MailerLiteApi\Api\WooCommerce($this->restClient);
+    }
 
     /**
      * @param  string $version

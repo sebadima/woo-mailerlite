@@ -710,3 +710,43 @@ function woo_ml_debug_log( $message ) {
         }
     }
 }
+
+//mailerlite universal script for tracking visits
+function mailerlite_universal_woo_commerce()
+{
+    ?>
+        <!-- MailerLite Universal -->
+        <script>
+        (function(m,a,i,l,e,r){ m['MailerLiteObject']=e;function f(){
+        var c={ a:arguments,q:[]};var r=this.push(c);return "number"!=typeof r?r:f.bind(c.q);}
+        f.q=f.q||[];m[e]=m[e]||f.bind(f.q);m[e].q=m[e].q||f.q;r=a.createElement(i);
+        var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
+        _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
+
+        var ml_account = ml('accounts', '<?php echo get_option("account_id"); ?>', '<?php echo get_option("account_subdomain"); ?>');
+        ml('ecommerce', 'visitor', 'woocommerce');
+        </script>
+        <!-- End MailerLite Universal -->
+    <?php 
+}
+
+if (get_option('account_id') && get_option('account_subdomain'))
+{
+    add_action('wp_head', 'mailerlite_universal_woo_commerce');
+}
+/**
+ * Gets triggered on completed order event. Fetches order data
+ * and passes it along to api
+ */
+function woo_ml_send_completed_order($order_id)
+{
+    $order = wc_get_order($order_id);
+    $order_data['order'] = $order->get_data();
+    $order_items = $order->get_items();
+
+    foreach ($order_items as $key => $value) {
+        $order_data['order']['line_items'][$key] = $value->get_data();
+    }
+    
+    mailerlite_wp_send_order($order_data);
+}
