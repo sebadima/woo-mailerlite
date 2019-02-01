@@ -5,7 +5,7 @@ Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce
 Requires at least: 3.0.1
 Tested up to: 4.9.1
 Requires PHP: 5.6.0
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,23 +15,26 @@ MailerLite integration for WooCommerce.
 
 ==== Official MailerLite Integration for WooCommerce ====
 
-This plugin allows you easily to connect WooCommerce with Mailerlite. Add your customers to your email marketing lists directly via WooCommerce's checkout process.
-
+This plugin allows you to easily connect WooCommerce with Mailerlite. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
 = Features =
 
 * Checkout integration
 * Select between multiple positions
 * Show/hide checkbox
 * Enable/disable double opt-in
+* Product importing
+* Sales tracking and campaign ROI
 * Customize checkbox label via settings page
 * Forward order data to MailerLite
 * Setup order tracking MailerLite custom fields
 * Setup order related MailerLite segments
+* Set up automation triggered by recent purchases
 * Regular updates and improvements: Check out the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
 
 = Quickstart =
 
 * Enter your Mailerlite API key
+* For e-commerce tracking on campaigns generate a [consumer key + secret](https://docs.woocommerce.com/document/woocommerce-rest-api/) with read rights
 * Select your default list/group
 * Enable checkout integration
 
@@ -77,6 +80,11 @@ Yes of course.
 2. Checkout page integration
 
 == Changelog ==
+
+= 1.2.0 (1st February 2018)
+* New: Product importing in Mailerlite campaign builder
+* New: Product and category importing in MailerLite automation workflow builder
+* New: Campaign sales tracking
 
 = 1.1.1 (27th December 2017) =
 * Fix: Using PHP lower than 5.6 lead into fatal errors

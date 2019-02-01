@@ -464,3 +464,8 @@ function woo_ml_get_integration_segments() {
 
     return $segments;
 }
+
+function woo_ml_old_integration()
+{
+    return ! get_option('new_plugin_enabled');
+}

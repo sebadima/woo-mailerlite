@@ -3,7 +3,7 @@
  * Plugin Name:     WooCommerce - MailerLite
  * Plugin URI:      https://wordpress.org/plugins/woo-mailerlite/
  * Description:     Official MailerLite integration for WooCommerce
- * Version:         1.1.1
+ * Version:         1.2.0
  * Author:          MailerLite
  * Author URI:      https://mailerlite.com
  * Text Domain:     woo-mailerlite
@@ -227,3 +227,17 @@ function woo_ml_load() {
     return Woo_Mailerlite::instance();
 }
 add_action( 'plugins_loaded', 'woo_ml_load' );
+
+function deactivate()
+{
+    require_once 'includes/shared/mailerlite-wp-functions.php';
+    mailerlite_wp_toggle_shop_connection(0);
+}
+register_deactivation_hook( __FILE__, 'deactivate' );
+
+/*function activate()
+{
+    require_once 'includes/shared/mailerlite-wp-functions.php';
+    mailerlite_wp_toggle_shop_connection(1);
+}
+register_activation_hook( __FILE__, 'activate' );*/
