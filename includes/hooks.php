@@ -91,6 +91,10 @@ function woo_ml_process_order_completed( $order_id ) {
     if ( ! woo_ml_integration_setup_completed() )
         woo_ml_setup_integration();
 
+    if ( ! woo_ml_old_integration() ) {
+        woo_ml_send_completed_order($order_id);
+    }
+    
     woo_ml_process_order_tracking( $order_id );
 
     woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
