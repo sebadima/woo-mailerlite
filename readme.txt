@@ -3,7 +3,7 @@ Contributors: mailerlite, flowdee
 Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
-Tested up to: 4.9.1
+Tested up to: 5.0.3
 Requires PHP: 5.6.0
 Stable tag: 1.2.0
 License: GPLv3 or later
