@@ -268,7 +268,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             // save shop to our db for e commerce tracking
             // hiding the ck and cs values once save performed as we don't need to have them saved here anyway
             // we only need them for backwards connection  from api to plugin to get products and categories.
-            if (isset($settings['consumer_key']) && isset($settings['consumer_secret'])) {
+            if (! empty($settings['consumer_key']) && ! empty($settings['consumer_secret'])) {
                     $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
 
                     if (isset($result['errors']))  {
