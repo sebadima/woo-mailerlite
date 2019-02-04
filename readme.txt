@@ -1,4 +1,4 @@
-=== WooCommerce - Mailerlite ===
+=== WooCommerce - MailerLite ===
 Contributors: mailerlite, flowdee
 Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
@@ -9,7 +9,7 @@ Stable tag: 1.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-MailerLite integration for WooCommerce.
+Official MailerLite integration for WooCommerce. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
 
 == Description ==
 
@@ -78,6 +78,10 @@ Yes of course.
 
 1. Settings page
 2. Checkout page integration
+3. Product block in campaign builder
+4. Product picker in campaign builder
+5. Campaign e-commerce tracking
+6. Dashboard e-commerce performance
 
 == Changelog ==
 
