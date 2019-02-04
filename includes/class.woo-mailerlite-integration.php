@@ -60,14 +60,14 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 'consumer_key' => array(
                     'title'             => __( 'Consumer Key', 'woo-mailerlite' ),
                     'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'You can information on how to generate one  <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                    'description'       => sprintf( wp_kses( __( 'Find out how to generate key <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
                     'desc_tip'          => false,
                     'default'           => '',
                 ),
                 'consumer_secret' => array(
                     'title'             => __( 'Consumer Secret', 'woo-mailerlite' ),
                     'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'You can information on how to generate one <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                    'description'       => sprintf( wp_kses( __( 'Find out how to generate secret <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
                     'desc_tip'          => false,
                     'default'           => '',
                 ),
@@ -122,7 +122,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'type'              => 'checkbox',
                     'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
                     'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
-                    'default'           => 'yes',
+                    'default'           => woo_ml_get_double_optin(),
                     'desc_tip'          => true
                 ),
                 'order_tracking_sync' => array(
