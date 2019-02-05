@@ -21,8 +21,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             global $woocommerce;
 
             $this->id                 = 'mailerlite';
-            $this->method_title       = __( 'Mailerlite', 'woo-mailerlite' );
-            $this->method_description = __( 'Mailerlite integration for WooCommerce', 'woo-mailerlite' );
+            $this->method_title       = __( 'MailerLite', 'woo-mailerlite' );
+            $this->method_description = __( 'MailerLite integration for WooCommerce', 'woo-mailerlite' );
 
             // Load the settings.
             $this->init_form_fields();
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             $this->form_fields = array(
                 'api_key' => array(
-                    'title'             => __( 'Mailerlite API Key', 'woo-mailerlite' ),
+                    'title'             => __( 'MailerLite API Key', 'woo-mailerlite' ),
                     'type'              => 'text',
                     'description'       => sprintf( wp_kses( __( 'You can find your Developer API key <a href="%s" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/integrations/api/' ) ),
                     'desc_tip'          => false,
