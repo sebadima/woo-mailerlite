@@ -750,3 +750,8 @@ function woo_ml_send_completed_order($order_id)
     
     mailerlite_wp_send_order($order_data);
 }
+
+function woo_ml_get_double_optin()
+{
+    return mailerlite_wp_get_double_optin();
+}

@@ -21,8 +21,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             global $woocommerce;
 
             $this->id                 = 'mailerlite';
-            $this->method_title       = __( 'Mailerlite', 'woo-mailerlite' );
-            $this->method_description = __( 'Mailerlite integration for WooCommerce', 'woo-mailerlite' );
+            $this->method_title       = __( 'MailerLite', 'woo-mailerlite' );
+            $this->method_description = __( 'MailerLite integration for WooCommerce', 'woo-mailerlite' );
 
             // Load the settings.
             $this->init_form_fields();
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             $this->form_fields = array(
                 'api_key' => array(
-                    'title'             => __( 'Mailerlite API Key', 'woo-mailerlite' ),
+                    'title'             => __( 'MailerLite API Key', 'woo-mailerlite' ),
                     'type'              => 'text',
                     'description'       => sprintf( wp_kses( __( 'You can find your Developer API key <a href="%s" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/integrations/api/' ) ),
                     'desc_tip'          => false,
@@ -60,14 +60,14 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 'consumer_key' => array(
                     'title'             => __( 'Consumer Key', 'woo-mailerlite' ),
                     'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'You can information on how to generate one  <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                    'description'       => sprintf( wp_kses( __( 'Find out how to generate key <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
                     'desc_tip'          => false,
                     'default'           => '',
                 ),
                 'consumer_secret' => array(
                     'title'             => __( 'Consumer Secret', 'woo-mailerlite' ),
                     'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'You can information on how to generate one <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                    'description'       => sprintf( wp_kses( __( 'Find out how to generate secret <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
                     'desc_tip'          => false,
                     'default'           => '',
                 ),
@@ -122,7 +122,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'type'              => 'checkbox',
                     'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
                     'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
-                    'default'           => 'yes',
+                    'default'           => woo_ml_get_double_optin(),
                     'desc_tip'          => true
                 ),
                 'order_tracking_sync' => array(
@@ -268,7 +268,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             // save shop to our db for e commerce tracking
             // hiding the ck and cs values once save performed as we don't need to have them saved here anyway
             // we only need them for backwards connection  from api to plugin to get products and categories.
-            if (isset($settings['consumer_key']) && isset($settings['consumer_secret'])) {
+            if (! empty($settings['consumer_key']) && ! empty($settings['consumer_secret'])) {
                     $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
 
                     if (isset($result['errors']))  {

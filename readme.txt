@@ -15,7 +15,7 @@ Official MailerLite integration for WooCommerce. Track sales and campaign ROI, i
 
 ==== Official MailerLite Integration for WooCommerce ====
 
-This plugin allows you to easily connect WooCommerce with Mailerlite. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
+This plugin allows you to easily connect WooCommerce with MailerLite. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
 = Features =
 
 * Checkout integration
@@ -33,14 +33,14 @@ This plugin allows you to easily connect WooCommerce with Mailerlite. Track sale
 
 = Quickstart =
 
-* Enter your Mailerlite API key
+* Enter your MailerLite API key
 * For e-commerce tracking on campaigns generate a [consumer key + secret](https://docs.woocommerce.com/document/woocommerce-rest-api/) with read rights
 * Select your default list/group
 * Enable checkout integration
 
 = Credits =
 
-* This plugin is made by using the official [Mailerlite API](https://developers.mailerlite.com/docs).
+* This plugin is made by using the official [MailerLite API](https://developers.mailerlite.com/docs).
 
 == Installation ==
 
@@ -85,8 +85,12 @@ Yes of course.
 
 == Changelog ==
 
-= 1.2.0 (1st February 2018)
-* New: Product importing in Mailerlite campaign builder
+= 1.2.1 (5th February 2019)
+* Improvement: Helper messages on plugin from
+* Minor improvements and fixes
+
+= 1.2.0 (1st February 2019)
+* New: Product importing in MailerLite campaign builder
 * New: Product and category importing in MailerLite automation workflow builder
 * New: Campaign sales tracking
 
