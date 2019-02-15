@@ -286,8 +286,7 @@ if ( ! function_exists('mailerlite_wp_get_double_optin') ) :
             }
 
         } catch (Exception $e) {
-            dd($e);
-            //return 'no';
+            return 'no';
         }
     }
     
