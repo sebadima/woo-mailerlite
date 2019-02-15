@@ -122,6 +122,11 @@ Yes of course.
 
 == Upgrade Notice ==
 
+= 1.2.0 (1st February 2018)
+* New: Product importing in Mailerlite campaign builder
+* New: Product and category importing in MailerLite automation workflow builder
+* New: Campaign sales tracking
+
 = 1.1.1 (27th December 2017) =
 * Fix: Using PHP lower than 5.6 lead into fatal errors
 
