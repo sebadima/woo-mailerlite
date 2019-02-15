@@ -3,9 +3,9 @@ Contributors: mailerlite, flowdee
 Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
-Tested up to: 4.9.1
+Tested up to: 5.1
 Requires PHP: 5.6.0
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -84,6 +84,9 @@ Yes of course.
 6. Dashboard e-commerce performance
 
 == Changelog ==
+
+= 1.2.2 (15th February 2019)
+* Minor improvements and fixes
 
 = 1.2.1 (5th February 2019)
 * Improvement: Helper messages on plugin from
