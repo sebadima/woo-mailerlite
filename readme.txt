@@ -5,7 +5,7 @@ Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce
 Requires at least: 3.0.1
 Tested up to: 5.1
 Requires PHP: 5.6.0
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -85,14 +85,17 @@ Yes of course.
 
 == Changelog ==
 
-= 1.2.2 (15th February 2019)
+= 1.2.4 (19th March 2019) =
+* Fix: creating custom fields wasn't working properly
+
+= 1.2.2 & 1.2.3 (15th February 2019) =
 * Minor improvements and fixes
 
-= 1.2.1 (5th February 2019)
+= 1.2.1 (5th February 2019) =
 * Improvement: Helper messages on plugin from
 * Minor improvements and fixes
 
-= 1.2.0 (1st February 2019)
+= 1.2.0 (1st February 2019) =
 * New: Product importing in MailerLite campaign builder
 * New: Product and category importing in MailerLite automation workflow builder
 * New: Campaign sales tracking

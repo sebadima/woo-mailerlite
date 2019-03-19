@@ -347,13 +347,12 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
 
             $fieldsApi = $mailerliteClient->fields();
 
-            $fields = $fieldsApi->get();
-            //woo_ml_debug_log( $fields );
+            $fields = $fieldsApi->getAccountFields();
 
             return $fields;
 
         } catch (Exception $e) {
-            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            
             return false;
         }
     }
@@ -411,11 +410,11 @@ endif;
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
     function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey) {
-        if ( ! mailerlite_wp_api_key_exists() )
+        if ( ! mailerlite_wp_api_key_exists() && empty($apiKey))
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLiteApi\MailerLite( $apiKey );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $store = site_url();
