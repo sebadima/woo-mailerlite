@@ -85,6 +85,9 @@ Yes of course.
 
 == Changelog ==
 
+= 1.2.4 (19th March 2019) =
+* Fix: creating custom fields wasn't working properly
+
 = 1.2.2 & 1.2.3 (15th February 2019) =
 * Minor improvements and fixes
 
