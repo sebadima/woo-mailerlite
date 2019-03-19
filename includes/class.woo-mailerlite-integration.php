@@ -278,8 +278,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 <p>'.$result['errors'].'</p>
                             </div> ';   
                     } else {
-                        $settings['consumer_key']  = substr($settings['consumer_key'],0 ,3).'...'.substr($settings['consumer_key'], -2);
-                        $settings['consumer_secret'] = substr($settings['consumer_secret'],0 , 3).'...'.substr($settings['consumer_secret'], -2);
+                        $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
+                        $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
                     }
             }
 
