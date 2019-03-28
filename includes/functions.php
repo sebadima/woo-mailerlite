@@ -763,6 +763,8 @@ function woo_ml_send_cart($cart_id)
     $customer = WC()->customer;
     $customer_email = $customer->get_email();
 
+    $cart_items['id'] = $cart_items[$cart_id]['data_hash'];
+
     if (! empty($customer_email)) {
         mailerlite_wp_send_cart($customer_email, $cart_items);
     }
