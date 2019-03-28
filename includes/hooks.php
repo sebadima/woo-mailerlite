@@ -100,3 +100,10 @@ function woo_ml_process_order_completed( $order_id ) {
     woo_ml_debug_log( '*** WOO MAILERLITE - ORDER COMPLETED >> END ***' );
 }
 add_action( 'woocommerce_order_status_completed', 'woo_ml_process_order_completed' );
+
+function woo_ml_procees_add_to_cart($cart_id) {
+    //if ( ! woo_ml_old_integration() ) {
+        woo_ml_send_cart($cart_id);
+    //}
+}
+add_action('woocommerce_add_to_cart', 'woo_ml_procees_add_to_cart');

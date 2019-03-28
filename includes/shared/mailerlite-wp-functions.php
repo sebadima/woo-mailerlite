@@ -490,3 +490,24 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
         }
     }
 endif; 
+
+if (! function_exists('mailerlite_wp_send_cart')) :
+    function mailerlite_wp_send_cart($email, $cart_items) {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        $api_key = woo_ml_get_option( 'api_key' );
+
+        try {
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            
+            $shop_url = site_url();
+            
+            $wooCommerceApi->sendCartData($shop_url, $email, $cart_items);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;

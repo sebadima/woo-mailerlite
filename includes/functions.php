@@ -755,3 +755,16 @@ function woo_ml_get_double_optin()
 {
     return mailerlite_wp_get_double_optin();
 }
+
+function woo_ml_send_cart($cart_id)
+{
+    $cart = WC()->cart;
+    $cart_items = $cart->get_cart();
+    $customer = WC()->customer;
+    $customer_email = $customer->get_email();
+
+    if (! empty($customer_email)) {
+        mailerlite_wp_send_cart($customer_email, $cart_items);
+    }
+    
+}
