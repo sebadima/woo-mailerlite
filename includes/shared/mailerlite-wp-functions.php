@@ -492,7 +492,7 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
 endif; 
 
 if (! function_exists('mailerlite_wp_send_cart')) :
-    function mailerlite_wp_send_cart($email, $cart_items) {
+    function mailerlite_wp_send_cart($cart_items) {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
@@ -505,7 +505,7 @@ if (! function_exists('mailerlite_wp_send_cart')) :
             
             $shop_url = site_url();
             
-            $wooCommerceApi->sendCartData($shop_url, $email, $cart_items);
+            $wooCommerceApi->sendCartData($shop_url, $cart_items);
         } catch (Exception $e) {
             return false;
         }

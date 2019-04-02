@@ -35,7 +35,6 @@ class WooCommerce extends ApiAbstract
         $endpoint = 'woocommerce/alternative_save_order';
 
         $params = array_merge($this->prepareParams(), ['order_data' => $orderData, 'shop' => $shop] );
-
         return $this->restClient->post( $endpoint, $params );
     }
 
@@ -48,11 +47,10 @@ class WooCommerce extends ApiAbstract
         return $this->restClient->post( $endpoint, $params );
     }
 
-    public function sendCartData($shopUrl, $email, $cartItems) {
+    public function sendCartData($shopUrl, $cartItems) {
         $endpoint = 'woocommerce/save_cart';
 
-        $params = array_merge($this->prepareParams(), ['cart_items' => $cartItems, 'shop' => $shopUrl, 'email' => $email] );
-        
+        $params = array_merge($this->prepareParams(), ['cart_items' => $cartItems, 'shop' => $shopUrl] );
         return $this->restClient->post( $endpoint, $params );
     } 
 }
