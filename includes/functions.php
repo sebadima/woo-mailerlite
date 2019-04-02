@@ -760,10 +760,27 @@ function woo_ml_send_cart($cart_id)
 {
     $cart = WC()->cart;
     $cart_items = $cart->get_cart();
-    $customer = WC()->customer;
+    $customer = $cart->get_customer();
     $customer_email = $customer->get_email();
+    $line_items = [];
 
-    $cart_items['id'] = $cart_items[$cart_id]['data_hash'];
+    foreach($cart_items as $key => $value) {
+        $line_items[] = $value;
+    }
+
+    $checkout_id = $cart_items[$cart_id]['data_hash'];
+
+    $shop_checkout_url = $cart->get_checkout_url();
+    $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
+    
+    $cart_data = [
+        'id' => $checkout_id,
+        'email' => $customer_email,
+        'line_items' => $line_items,
+        'checkout_url' => $checkout_url
+    ];
+
+    file_put_contents('checkout.txt', json_encode($cart_data));
 
     if (! empty($customer_email)) {
         mailerlite_wp_send_cart($customer_email, $cart_items);
