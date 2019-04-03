@@ -756,7 +756,7 @@ function woo_ml_get_double_optin()
     return mailerlite_wp_get_double_optin();
 }
 
-function woo_ml_send_cart($cart_id)
+function woo_ml_send_cart()
 {
     $cart = WC()->cart;
     $cart_items = $cart->get_cart();
@@ -768,9 +768,9 @@ function woo_ml_send_cart($cart_id)
         $line_items[] = $value;
     }
 
-    $checkout_id = $cart_items[$cart_id]['data_hash'];
+    $checkout_id = $line_items[0]['data_hash'];
 
-    $shop_checkout_url = $cart->get_checkout_url();
+    $shop_checkout_url = wc_get_checkout_url();
     $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
     
     $cart_data = [
