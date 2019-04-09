@@ -780,8 +780,6 @@ function woo_ml_send_cart()
         'checkout_url' => $checkout_url
     ];
 
-    file_put_contents('checkout.txt', json_encode($cart_data));
-
     if (! empty($customer_email)) {
         mailerlite_wp_send_cart($cart_data);
     }
