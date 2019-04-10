@@ -724,7 +724,7 @@ function mailerlite_universal_woo_commerce()
         _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
 
         var ml_account = ml('accounts', '<?php echo get_option("account_id"); ?>', '<?php echo get_option("account_subdomain"); ?>');
-        ml('ecommerce', 'visitor', 'woocommerce');
+        ml('ecommerce', 'visitor', 'woocommerce');  
         </script>
         <!-- End MailerLite Universal -->
     <?php 
@@ -768,7 +768,7 @@ function woo_ml_send_cart()
         $line_items[] = $value;
     }
 
-    $checkout_id = $line_items[0]['data_hash'];
+    $checkout_id = md5($customer_email);
 
     $shop_checkout_url = wc_get_checkout_url();
     $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
