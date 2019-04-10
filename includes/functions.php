@@ -744,6 +744,10 @@ function woo_ml_send_completed_order($order_id)
     $order_data['order'] = $order->get_data();
     $order_items = $order->get_items();
 
+    $customer_email = $order->get_billing_email('view');
+    $checkout_id = md5($customer_email);
+    $order_data['order']['checkout_id'] = $checkout_id;
+
     foreach ($order_items as $key => $value) {
         $order_data['order']['line_items'][$key] = $value->get_data();
     }
