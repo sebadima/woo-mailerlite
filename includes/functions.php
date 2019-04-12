@@ -766,6 +766,9 @@ function woo_ml_send_cart()
     $cart_items = $cart->get_cart();
     $customer = $cart->get_customer();
     $customer_email = $customer->get_email();
+    if (! $customer_email) {
+        $customer_email = $_COOKIE['mailerlite_checkout_email'];
+    }
     $line_items = [];
 
     foreach($cart_items as $key => $value) {
