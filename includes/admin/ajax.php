@@ -56,7 +56,7 @@ function woo_ml_email_cookie() {
         try{
             $email = isset($_POST['email']) ? $_POST['email'] : null;
 
-            @setcookie('mailerlite_checkout_email', $email, time()+2419200);
+            @setcookie('mailerlite_checkout_email', $email, time()+2419200, '/');
         }catch(\Exception $e) {
             return true;
         }

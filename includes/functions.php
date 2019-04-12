@@ -767,27 +767,26 @@ function woo_ml_send_cart()
     $customer = $cart->get_customer();
     $customer_email = $customer->get_email();
     if (! $customer_email) {
-        $customer_email = $_COOKIE['mailerlite_checkout_email'];
+        $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : null;
     }
-    $line_items = [];
-
-    foreach($cart_items as $key => $value) {
-        $line_items[] = $value;
-    }
-
-    $checkout_id = md5($customer_email);
-
-    $shop_checkout_url = wc_get_checkout_url();
-    $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
-    
-    $cart_data = [
-        'id' => $checkout_id,
-        'email' => $customer_email,
-        'line_items' => $line_items,
-        'checkout_url' => $checkout_url
-    ];
-
     if (! empty($customer_email)) {
+        $line_items = [];
+
+        foreach($cart_items as $key => $value) {
+            $line_items[] = $value;
+        }
+
+        $checkout_id = md5($customer_email);
+
+        $shop_checkout_url = wc_get_checkout_url();
+        $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
+        
+        $cart_data = [
+            'id' => $checkout_id,
+            'email' => $customer_email,
+            'line_items' => $line_items,
+            'checkout_url' => $checkout_url
+        ];
         mailerlite_wp_send_cart($cart_data);
     }
     
