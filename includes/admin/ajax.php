@@ -11,25 +11,18 @@ if( !defined( 'ABSPATH' ) ) exit;
  */
 function woo_ml_admin_ajax_refresh_groups() {
 
-    // AJAX Call
     if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
         $response = false;
 
-        /*
-         * Action
-         */
         $groups = woo_ml_settings_get_group_options( true );
 
         if ( $groups )
             $response = true;
 
-        // response output
-        //header( "Content-Type: application/json" );
         echo $response;
     }
 
-    // IMPORTANT: don't forget to "exit"
     exit;
 }
 add_action( 'wp_ajax_nopriv_post_woo_ml_refresh_groups', 'woo_ml_admin_ajax_refresh_groups' );
@@ -45,23 +38,30 @@ function woo_ml_admin_ajax_sync_untracked_orders() {
 
         $response = false;
 
-        /*
-         * Action
-         */
-        //sleep(1); // Debugging only
-
         $orders_synced = woo_ml_sync_untracked_orders();
 
         if ( $orders_synced )
             $response = true;
 
-        // response output
-        //header( "Content-Type: application/json" );
         echo $response;
     }
-
-    // IMPORTANT: don't forget to "exit"
     exit;
 }
 add_action( 'wp_ajax_nopriv_post_woo_ml_sync_untracked_orders', 'woo_ml_admin_ajax_sync_untracked_orders' );
 add_action( 'wp_ajax_post_woo_ml_sync_untracked_orders', 'woo_ml_admin_ajax_sync_untracked_orders' );
+
+function woo_ml_email_cookie() {
+
+    if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+        try{
+            $email = isset($_POST['email']) ? $_POST['email'] : null;
+
+            @setcookie('mailerlite_checkout_email', $email, time()+2419200);
+        }catch(\Exception $e) {
+            return true;
+        }
+    }
+    exit;
+}
+add_action( 'wp_ajax_nopriv_post_woo_ml_email_cookie', 'woo_ml_email_cookie' );
+add_action( 'wp_ajax_post_woo_ml_email_cookie', 'woo_ml_email_cookie' );
