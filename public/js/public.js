@@ -1,7 +1,7 @@
 window.onload = function() {
     var email = document.querySelector('#billing_email');
     if (email !== null) {
-        email.addEventListener('focus', (event) => {
+        email.addEventListener('blur', (event) => {
             jQuery.ajax({
                 url: woo_ml_public_post.ajax_url,
                 type: "post",
