@@ -122,7 +122,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'type'              => 'checkbox',
                     'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
                     'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
-                    'default'           => woo_ml_get_double_optin(),
+                    'default'           => 'yes',
                     'desc_tip'          => true
                 ),
                 'order_tracking_sync' => array(
@@ -278,8 +278,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 <p>'.$result['errors'].'</p>
                             </div> ';   
                     } else {
-                        $settings['consumer_key']  = substr($settings['consumer_key'],0 ,3).'...'.substr($settings['consumer_key'], -2);
-                        $settings['consumer_secret'] = substr($settings['consumer_secret'],0 , 3).'...'.substr($settings['consumer_secret'], -2);
+                        $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
+                        $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
                     }
             }
 

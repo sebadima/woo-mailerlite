@@ -757,7 +757,10 @@ function woo_ml_send_completed_order($order_id)
 
 function woo_ml_get_double_optin()
 {
-    return mailerlite_wp_get_double_optin();
+    if (get_option('double_optin') === null) {
+        return mailerlite_wp_get_double_optin();
+    }
+    return get_option('double_optin');
 }
 
 function woo_ml_send_cart()
@@ -789,5 +792,4 @@ function woo_ml_send_cart()
         ];
         mailerlite_wp_send_cart($cart_data);
     }
-    
 }

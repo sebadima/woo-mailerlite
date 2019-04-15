@@ -347,13 +347,12 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
 
             $fieldsApi = $mailerliteClient->fields();
 
-            $fields = $fieldsApi->get();
-            //woo_ml_debug_log( $fields );
+            $fields = $fieldsApi->getAccountFields();
 
             return $fields;
 
         } catch (Exception $e) {
-            //echo 'Exception caught: ',  $e->getMessage(), "\n";
+            
             return false;
         }
     }
