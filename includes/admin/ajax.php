@@ -51,12 +51,14 @@ add_action( 'wp_ajax_nopriv_post_woo_ml_sync_untracked_orders', 'woo_ml_admin_aj
 add_action( 'wp_ajax_post_woo_ml_sync_untracked_orders', 'woo_ml_admin_ajax_sync_untracked_orders' );
 
 function woo_ml_email_cookie() {
-
     if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
         try{
             $email = isset($_POST['email']) ? $_POST['email'] : null;
-
-            @setcookie('mailerlite_checkout_email', $email, time()+2419200, '/');
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                //setting email cookie for a day
+                @setcookie('mailerlite_checkout_email', $email, time()+86400, '/');
+                woo_ml_send_cart();
+            }
         }catch(\Exception $e) {
             return true;
         }
