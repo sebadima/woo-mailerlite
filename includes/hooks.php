@@ -102,7 +102,9 @@ function woo_ml_process_order_completed( $order_id ) {
 add_action( 'woocommerce_order_status_completed', 'woo_ml_process_order_completed' );
 
 function woo_ml_proceed_to_checkout() {
-    woo_ml_send_cart();
+    if ( ! woo_ml_old_integration() ) {
+        woo_ml_send_cart();
+    }
 }
 add_action('woocommerce_add_to_cart', 'woo_ml_proceed_to_checkout');
 add_action('woocommerce_remove_cart_item', 'woo_ml_proceed_to_checkout');
