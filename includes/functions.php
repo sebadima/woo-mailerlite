@@ -84,22 +84,15 @@ function woo_ml_validate_api_key( $api_key ) {
  * @param $order_id
  */
 function woo_ml_process_order_subscription( $order_id ) {
-
     $order = wc_get_order( $order_id );
-
     $customer_data = woo_ml_get_customer_data_from_order( $order_id );
-
     /*
      * Step 1: Maybe subscribe customer to group with email address only
      */
     $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
-
     if ( ! empty( $subscribe ) ) {
-
         $group = woo_ml_get_option('group' );
         $double_option = woo_ml_get_option('double_optin', false );
-
-        woo_ml_debug_log( 'Subscribing ' . $customer_data['email'] . ' to group id #' . $group . ' via double optin? ' . $double_option  );
 
         $new_subscriber_data = array(
             'email' => $customer_data['email'],
@@ -107,49 +100,29 @@ function woo_ml_process_order_subscription( $order_id ) {
         );
 
         $subscriber_added = mailerlite_wp_add_subscriber( $group, $new_subscriber_data );
-
-        woo_ml_debug_log( '>> $subscriber_added <<' );
-        woo_ml_debug_log( $subscriber_added );
-        woo_ml_debug_log( '-----------------------' );
-
         if ( $subscriber_added ) {
             woo_ml_complete_order_customer_subscribed( $order_id );
         }
     }
-
     /*
      * Step 2: Maybe updating subscriber with customer details
      */
     $ml_subscriber_obj = ( ! empty( $subscriber_added ) ) ? $subscriber_added : mailerlite_wp_get_subscriber_by_email( $customer_data['email'] );
-
     // Customer exists in MailerLite
     if ( $ml_subscriber_obj ) {
-
         // Collecting data
         $subscriber_data = array();
-
         if ( ! empty( $customer_data['name'] ) )
             $subscriber_data['name'] = $customer_data['name'];
 
         // Collecting fields
         $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
-
         if ( sizeof( $subscriber_fields ) > 0 )
             $subscriber_data['fields'] = $subscriber_fields;
 
-        woo_ml_debug_log( '>> $subscriber_data <<' );
-        woo_ml_debug_log( $subscriber_data );
-        woo_ml_debug_log( '-----------------------' );
-
         // Update subscriber basic data
         if ( sizeof( $subscriber_data ) > 0 ) {
-
             $subscriber_updated = mailerlite_wp_update_subscriber( $customer_data['email'], $subscriber_data );
-
-            woo_ml_debug_log( '>> $subscriber_updated <<' );
-            woo_ml_debug_log( $subscriber_updated );
-            woo_ml_debug_log( '-----------------------' );
-
             if ( $subscriber_updated ) {
                 woo_ml_complete_order_subscriber_updated( $order_id );
             }
