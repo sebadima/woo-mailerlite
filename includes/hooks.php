@@ -85,4 +85,4 @@ function woo_ml_proceed_to_checkout() {
         woo_ml_send_cart();
 }
 add_action('woocommerce_add_to_cart', 'woo_ml_proceed_to_checkout');
-add_action('woocommerce_remove_cart_item', 'woo_ml_proceed_to_checkout');
+add_action('woocommerce_cart_item_removed', 'woo_ml_proceed_to_checkout');
