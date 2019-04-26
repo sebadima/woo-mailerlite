@@ -53,4 +53,17 @@ class WooCommerce extends ApiAbstract
         $params = array_merge($this->prepareParams(), ['cart_data' => $cartData, 'shop' => $shopUrl] );
         return $this->restClient->post( $endpoint, $params );
     } 
+
+    public function sendSubscriberData($data) {
+        $endpoint = 'woocommerce/save_subscriber';
+
+        $params = array_merge($this->prepareParams(), ['data'=>$data] );
+        $response = $this->restClient->post( $endpoint, $params );
+        
+        if (isset($response['body'])){
+            return $response['body'];
+        } else {
+            return false;
+        }
+    }
 }
