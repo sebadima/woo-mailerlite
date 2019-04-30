@@ -515,9 +515,10 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
             
             $shop_url = site_url();
             $data['shop_url'] = $shop_url;
-
+            $data['order_url'] = $shop_url."/wp-admin/post.php?post=".$data['order_id']."&action=edit";
+            
             $result = $wooCommerceApi->sendSubscriberData($data);
-
+            
             if (isset($result->added_to_group) && isset($result->updated_fields)) {
                 return $result;
             } else {
