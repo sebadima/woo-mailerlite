@@ -719,14 +719,14 @@ function woo_ml_get_double_optin()
     return get_option('double_optin');
 }
 
-function woo_ml_send_cart()
+function woo_ml_send_cart($cookie_email = null)
 {
     $cart = WC()->cart;
     $cart_items = $cart->get_cart();
     $customer = $cart->get_customer();
     $customer_email = $customer->get_email();
     if (! $customer_email) {
-        $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : null;
+        $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : $cookie_email;
     }
     if (! empty($customer_email)) {
         $line_items = [];
@@ -743,7 +743,7 @@ function woo_ml_send_cart()
             'id' => $checkout_id,
             'email' => $customer_email,
             'line_items' => $line_items,
-            'checkout_url' => $checkout_url
+            'abandoned_checkout_url' => $checkout_url
         ];
         mailerlite_wp_send_cart($cart_data);
     }

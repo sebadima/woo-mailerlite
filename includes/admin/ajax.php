@@ -57,7 +57,7 @@ function woo_ml_email_cookie() {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 //setting email cookie for a day
                 @setcookie('mailerlite_checkout_email', $email, time()+86400, '/');
-                woo_ml_send_cart();
+                woo_ml_send_cart($email);
             }
         }catch(\Exception $e) {
             return true;
