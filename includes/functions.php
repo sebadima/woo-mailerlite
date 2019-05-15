@@ -96,7 +96,7 @@ function woo_ml_process_order_subscription( $order_id ) {
     $data['type'] = ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed';
     $data['checked_sub_to_mailist'] = $subscribe;
     $data['group_id'] = $group;
-    $data['checkout_id'] = md5($customer_data['email']);
+    $data['checkout_id'] = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : md5($customer_data['email']);
     $data['order_id'] = $order_id;
 
     $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
