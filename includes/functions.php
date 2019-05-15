@@ -98,14 +98,13 @@ function woo_ml_process_order_subscription( $order_id ) {
     $data['group_id'] = $group;
     $data['checkout_id'] = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : md5($customer_data['email']);
     $data['order_id'] = $order_id;
+    $data['payment_method'] = $order->get_payment_method();
 
     $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
     if ( sizeof( $subscriber_fields ) > 0 )
         $data['fields'] = $subscriber_fields;
 
-    $subscriber_result = mailerlite_wp_add_subscriber_and_save_order($data);
-    @setcookie('mailerlite_checkout_email', null, -1, '/');
-    @setcookie('mailerlite_checkout_token', null, -1, '/');
+    $subscriber_result = mailerlite_wp_add_subscriber_and_save_order($data, 'order_created');
 
     if (isset($subscriber_result->added_to_group))
         woo_ml_complete_order_customer_subscribed( $order_id );
@@ -703,13 +702,14 @@ function woo_ml_send_completed_order($order_id)
     $order_items = $order->get_items();
 
     $customer_email = $order->get_billing_email('view');
-    $checkout_id = md5($customer_email);
+
     $order_data['order']['checkout_id'] = $checkout_id;
 
     foreach ($order_items as $key => $value) {
         $order_data['order']['line_items'][$key] = $value->get_data();
     }
-    
+    @setcookie('mailerlite_checkout_email', null, -1, '/');
+    @setcookie('mailerlite_checkout_token', null, -1, '/');
     mailerlite_wp_send_order($order_data);
 }
 
@@ -736,8 +736,13 @@ function woo_ml_send_cart($cookie_email = null)
             $line_items[] = $value;
         }
 
-        $checkout_id = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : md5($customer_email);
-
+        if (! isset($_COOKIE['mailerlite_checkout_token'])) {
+            $checkout_id = md5($customer_email);
+            @setcookie('mailerlite_checkout_token', $checkout_id, time()+172800, '/');
+        } else {
+            $checkout_id = $_COOKIE['mailerlite_checkout_token'];
+        }
+            
         $shop_checkout_url = wc_get_checkout_url();
         $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
         
@@ -748,5 +753,21 @@ function woo_ml_send_cart($cookie_email = null)
             'abandoned_checkout_url' => $checkout_url
         ];
         mailerlite_wp_send_cart($cart_data);
+    }
+}
+function woo_ml_payment_status_processing($order_id)
+{
+    $order = wc_get_order($order_id);
+    file_put_contents('status.txt', $order->get_status());
+    if ($order->get_status() === 'processing') {
+        $data = [];
+        $data['checkout_id'] = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : null;
+        $data['order_id'] = $order_id;
+        $data['payment_method'] = $order->get_payment_method();
+        
+        @setcookie('mailerlite_checkout_email', null, -1, '/');
+        @setcookie('mailerlite_checkout_token', null, -1, '/');
+
+        mailerlite_wp_add_subscriber_and_save_order($data, 'order_processing');
     }
 }

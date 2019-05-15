@@ -502,7 +502,7 @@ if (! function_exists('mailerlite_wp_send_cart')) :
 endif;
 
 if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
-    function mailerlite_wp_add_subscriber_and_save_order($data)
+    function mailerlite_wp_add_subscriber_and_save_order($data, $event)
     {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
@@ -516,14 +516,20 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
             $shop_url = site_url();
             $data['shop_url'] = $shop_url;
             $data['order_url'] = $shop_url."/wp-admin/post.php?post=".$data['order_id']."&action=edit";
+
+            if ($event === 'order_created') {
+                $result = $wooCommerceApi->sendSubscriberData($data);
             
-            $result = $wooCommerceApi->sendSubscriberData($data);
-            
-            if (isset($result->added_to_group) && isset($result->updated_fields)) {
-                return $result;
+                if (isset($result->added_to_group) && isset($result->updated_fields)) {
+                    return $result;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                $wooCommerceApi->sendOrderProcessingData($data);
+                return true;
             }
+            
         } catch (Exception $e) {
             return false;
         }

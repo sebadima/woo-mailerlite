@@ -66,4 +66,13 @@ class WooCommerce extends ApiAbstract
             return false;
         }
     }
+
+    public function sendOrderProcessingData($data) {
+        $endpoint = 'woocommerce/order_processing';
+
+        $params = array_merge($this->prepareParams(), ['data'=>$data] );
+        $this->restClient->post( $endpoint, $params );
+
+        return true;
+    }
 }
