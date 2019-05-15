@@ -55,8 +55,12 @@ function woo_ml_email_cookie() {
         try{
             $email = isset($_POST['email']) ? $_POST['email'] : null;
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                
                 //setting email cookie for a day
-                @setcookie('mailerlite_checkout_email', $email, time()+86400, '/');
+                @setcookie('mailerlite_checkout_email', $email, time()+172800, '/');
+                if (! isset($_COOKIE['mailerlite_checkout_token'])) {
+                    @setcookie('mailerlite_checkout_token', md5($email), time()+172800, '/');
+                }
                 woo_ml_send_cart($email);
             }
         }catch(\Exception $e) {

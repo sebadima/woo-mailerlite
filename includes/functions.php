@@ -104,6 +104,8 @@ function woo_ml_process_order_subscription( $order_id ) {
         $data['fields'] = $subscriber_fields;
 
     $subscriber_result = mailerlite_wp_add_subscriber_and_save_order($data);
+    @setcookie('mailerlite_checkout_email', null, -1, '/');
+    @setcookie('mailerlite_checkout_token', null, -1, '/');
 
     if (isset($subscriber_result->added_to_group))
         woo_ml_complete_order_customer_subscribed( $order_id );
@@ -734,7 +736,7 @@ function woo_ml_send_cart($cookie_email = null)
             $line_items[] = $value;
         }
 
-        $checkout_id = md5($customer_email);
+        $checkout_id = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : md5($customer_email);
 
         $shop_checkout_url = wc_get_checkout_url();
         $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
