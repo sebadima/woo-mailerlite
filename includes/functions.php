@@ -96,10 +96,13 @@ function woo_ml_process_order_subscription( $order_id ) {
     $data['type'] = ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed';
     $data['checked_sub_to_mailist'] = $subscribe;
     $data['group_id'] = $group;
-    $data['checkout_id'] = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : md5($customer_data['email']);
+    $data['checkout_id'] = $_COOKIE['mailerlite_checkout_token'];
     $data['order_id'] = $order_id;
     $data['payment_method'] = $order->get_payment_method();
-
+    if ($data['payment_method'] == 'bacs' || $data['payment_method'] == 'cheque') {
+        @setcookie('mailerlite_checkout_email', null, -1, '/');
+        @setcookie('mailerlite_checkout_token', null, -1, '/');
+    }
     $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
     if ( sizeof( $subscriber_fields ) > 0 )
         $data['fields'] = $subscriber_fields;
@@ -703,8 +706,6 @@ function woo_ml_send_completed_order($order_id)
 
     $customer_email = $order->get_billing_email('view');
 
-    $order_data['order']['checkout_id'] = $checkout_id;
-
     foreach ($order_items as $key => $value) {
         $order_data['order']['line_items'][$key] = $value->get_data();
     }
@@ -737,7 +738,7 @@ function woo_ml_send_cart($cookie_email = null)
         }
 
         if (! isset($_COOKIE['mailerlite_checkout_token'])) {
-            $checkout_id = md5($customer_email);
+            $checkout_id = md5(uniqid(rand(), true));            ;
             @setcookie('mailerlite_checkout_token', $checkout_id, time()+172800, '/');
         } else {
             $checkout_id = $_COOKIE['mailerlite_checkout_token'];
@@ -758,7 +759,7 @@ function woo_ml_send_cart($cookie_email = null)
 function woo_ml_payment_status_processing($order_id)
 {
     $order = wc_get_order($order_id);
-    file_put_contents('status.txt', $order->get_status());
+
     if ($order->get_status() === 'processing') {
         $data = [];
         $data['checkout_id'] = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : null;
