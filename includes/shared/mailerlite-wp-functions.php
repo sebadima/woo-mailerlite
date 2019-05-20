@@ -417,7 +417,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $mailerliteClient = new \MailerLiteApi\MailerLite( $apiKey );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            $store = site_url();
+            $store = home_url();
             $currency = get_option('woocommerce_currency');
             if (strpos($store, 'https://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
@@ -455,7 +455,7 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
-            $store = site_url();
+            $store = home_url();
             $wooCommerceApi->saveOrder($order_data, $store);
             
         } catch (Exception $e) {
@@ -481,7 +481,7 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
-            $store = site_url();
+            $store = home_url();
             $result =$wooCommerceApi->toggleShopConnection($store, $active_state);
         } catch (Exception $e) {
             
