@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Functions inside this file are being used in different Mailerlite related WordPress plugins
  */
@@ -22,7 +23,6 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
             $groups = $mailerliteClient->groups();
             $response = $groups->get();
             $results = $response->toArray();
-
             //woo_ml_debug( $response, 'mailerlite_wp_api_key_validation >> $response' );
             //woo_ml_debug( $results, 'mailerlite_wp_api_key_validation >> $results' );
 
@@ -74,7 +74,6 @@ if ( ! function_exists( 'mailerlite_wp_get_groups') ) :
             $groupsApi = $mailerliteClient->groups();
             $results = $groupsApi->get();
             $results = $results->toArray();
-
             if ( is_array( $results ) && ! isset( $results[0]->error->message ) ) {
 
                 if ( sizeof( $results ) > 0 ) {
@@ -114,7 +113,6 @@ if ( ! function_exists( 'mailerlite_wp_get_subscriber_by_email') ) :
 
             $subscribersApi = $mailerliteClient->subscribers();
             $subscriber = $subscribersApi->find( $email ); // returns object of subscriber by its email
-
             if ( isset( $subscriber->id ) ) {
                 //woo_ml_debug( $subscriber );
                 return $subscriber;
@@ -171,7 +169,6 @@ if ( ! function_exists( 'mailerlite_wp_add_subscriber') ) :
             $groupsApi = $mailerliteClient->groups();
 
             $addedSubscriber = $groupsApi->addSubscriber( $group_id, $subscriber ); // returns added subscriber
-
             if ( isset( $addedSubscriber->id ) ) {
                 //woo_ml_debug( $addedSubscriber );
                 return $addedSubscriber;
@@ -212,7 +209,6 @@ if ( ! function_exists( 'mailerlite_wp_update_subscriber') ) :
             $subscribersApi = $mailerliteClient->subscribers();
 
             $subscriber_updated =$subscribersApi->update( $subscriber_email, $subscriber_data ); // returns updated subscriber
-
             if ( isset( $subscriber_updated->id ) ) {
                 //woo_ml_debug( $addedSubscriber );
                 return $subscriber_updated;
@@ -246,7 +242,6 @@ if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
 
             $settingsApi = $mailerliteClient->settings();
             $result = $settingsApi->setDoubleOptin( $status );
-            
             //woo_ml_debug_log( $result );
 
             if ( isset( $result->enabled ) ) {
@@ -276,7 +271,6 @@ if ( ! function_exists('mailerlite_wp_get_double_optin') ) :
 
             $settingsApi = $mailerliteClient->settings();
             $result = $settingsApi->getDoubleOptin();
-
             if ( isset( $result->enabled ) ) {
                 $double_optin = $result->enabled == true ? 'yes' : 'no';
                 update_option('double_optin', $double_optin );
@@ -348,7 +342,6 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
             $fieldsApi = $mailerliteClient->fields();
 
             $fields = $fieldsApi->getAccountFields();
-
             return $fields;
 
         } catch (Exception $e) {
@@ -386,7 +379,6 @@ if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
                 ),
                 'body' => $data
             ));
-
             //woo_ml_debug( $response );
 
             if ( is_wp_error( $response ) ) {
@@ -421,7 +413,6 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $currency = get_option('woocommerce_currency');
             if (strpos($store, 'https://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
-
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);
@@ -457,7 +448,6 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
             
             $store = home_url();
             $wooCommerceApi->saveOrder($order_data, $store);
-            
         } catch (Exception $e) {
             return false;
         }
@@ -489,3 +479,59 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
         }
     }
 endif; 
+
+if (! function_exists('mailerlite_wp_send_cart')) :
+    function mailerlite_wp_send_cart($cart_data) {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        $api_key = woo_ml_get_option( 'api_key' );
+
+        try {
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            
+            $shop_url = home_url();
+            
+            $wooCommerceApi->sendCartData($shop_url, $cart_data);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;
+
+if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
+    function mailerlite_wp_add_subscriber_and_save_order($data, $event)
+    {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        $api_key = woo_ml_get_option( 'api_key' );
+        try {
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            
+            $shop_url = site_url();
+            $data['shop_url'] = home_url();
+            $data['order_url'] = $shop_url."/wp-admin/post.php?post=".$data['order_id']."&action=edit";
+
+            if ($event === 'order_created') {
+                $result = $wooCommerceApi->sendSubscriberData($data);
+            
+                if (isset($result->added_to_group) && isset($result->updated_fields)) {
+                    return $result;
+                } else {
+                    return false;
+                }
+            } else {
+                $wooCommerceApi->sendOrderProcessingData($data);
+                return true;
+            }
+            
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;

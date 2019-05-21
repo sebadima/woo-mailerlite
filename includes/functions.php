@@ -84,77 +84,37 @@ function woo_ml_validate_api_key( $api_key ) {
  * @param $order_id
  */
 function woo_ml_process_order_subscription( $order_id ) {
-
     $order = wc_get_order( $order_id );
-
     $customer_data = woo_ml_get_customer_data_from_order( $order_id );
 
-    /*
-     * Step 1: Maybe subscribe customer to group with email address only
-     */
     $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
+    $group = woo_ml_get_option('group' );
+    $double_option = woo_ml_get_option('double_optin', false );
 
-    if ( ! empty( $subscribe ) ) {
-
-        $group = woo_ml_get_option('group' );
-        $double_option = woo_ml_get_option('double_optin', false );
-
-        woo_ml_debug_log( 'Subscribing ' . $customer_data['email'] . ' to group id #' . $group . ' via double optin? ' . $double_option  );
-
-        $new_subscriber_data = array(
-            'email' => $customer_data['email'],
-            'type' => ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed' // subscribed, active, unconfirmed
-        );
-
-        $subscriber_added = mailerlite_wp_add_subscriber( $group, $new_subscriber_data );
-
-        woo_ml_debug_log( '>> $subscriber_added <<' );
-        woo_ml_debug_log( $subscriber_added );
-        woo_ml_debug_log( '-----------------------' );
-
-        if ( $subscriber_added ) {
-            woo_ml_complete_order_customer_subscribed( $order_id );
-        }
+    $data = [];
+    $data['email'] = $customer_data['email'];
+    $data['type'] = ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed';
+    $data['checked_sub_to_mailist'] = $subscribe;
+    $data['group_id'] = $group;
+    $data['checkout_id'] = $_COOKIE['mailerlite_checkout_token'];
+    $data['order_id'] = $order_id;
+    $data['payment_method'] = $order->get_payment_method();
+    if ($data['payment_method'] == 'bacs' || $data['payment_method'] == 'cheque') {
+        @setcookie('mailerlite_checkout_email', null, -1, '/');
+        @setcookie('mailerlite_checkout_token', null, -1, '/');
     }
+    $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
+    if ( sizeof( $subscriber_fields ) > 0 )
+        $data['fields'] = $subscriber_fields;
 
-    /*
-     * Step 2: Maybe updating subscriber with customer details
-     */
-    $ml_subscriber_obj = ( ! empty( $subscriber_added ) ) ? $subscriber_added : mailerlite_wp_get_subscriber_by_email( $customer_data['email'] );
+    $subscriber_result = mailerlite_wp_add_subscriber_and_save_order($data, 'order_created');
 
-    // Customer exists in MailerLite
-    if ( $ml_subscriber_obj ) {
-
-        // Collecting data
-        $subscriber_data = array();
-
-        if ( ! empty( $customer_data['name'] ) )
-            $subscriber_data['name'] = $customer_data['name'];
-
-        // Collecting fields
-        $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
-
-        if ( sizeof( $subscriber_fields ) > 0 )
-            $subscriber_data['fields'] = $subscriber_fields;
-
-        woo_ml_debug_log( '>> $subscriber_data <<' );
-        woo_ml_debug_log( $subscriber_data );
-        woo_ml_debug_log( '-----------------------' );
-
-        // Update subscriber basic data
-        if ( sizeof( $subscriber_data ) > 0 ) {
-
-            $subscriber_updated = mailerlite_wp_update_subscriber( $customer_data['email'], $subscriber_data );
-
-            woo_ml_debug_log( '>> $subscriber_updated <<' );
-            woo_ml_debug_log( $subscriber_updated );
-            woo_ml_debug_log( '-----------------------' );
-
-            if ( $subscriber_updated ) {
-                woo_ml_complete_order_subscriber_updated( $order_id );
-            }
-        }
-    }
+    if (isset($subscriber_result->added_to_group))
+        woo_ml_complete_order_customer_subscribed( $order_id );
+        
+    if ( isset($subscriber_result->updated_fields) )
+        woo_ml_complete_order_subscriber_updated( $order_id );
+     
 }
 
 /**
@@ -724,7 +684,7 @@ function mailerlite_universal_woo_commerce()
         _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
 
         var ml_account = ml('accounts', '<?php echo get_option("account_id"); ?>', '<?php echo get_option("account_subdomain"); ?>');
-        ml('ecommerce', 'visitor', 'woocommerce');
+        ml('ecommerce', 'visitor', 'woocommerce');  
         </script>
         <!-- End MailerLite Universal -->
     <?php 
@@ -744,10 +704,13 @@ function woo_ml_send_completed_order($order_id)
     $order_data['order'] = $order->get_data();
     $order_items = $order->get_items();
 
+    $customer_email = $order->get_billing_email('view');
+
     foreach ($order_items as $key => $value) {
         $order_data['order']['line_items'][$key] = $value->get_data();
     }
-    
+    @setcookie('mailerlite_checkout_email', null, -1, '/');
+    @setcookie('mailerlite_checkout_token', null, -1, '/');
     mailerlite_wp_send_order($order_data);
 }
 
@@ -757,4 +720,55 @@ function woo_ml_get_double_optin()
         return mailerlite_wp_get_double_optin();
     }
     return get_option('double_optin');
+}
+
+function woo_ml_send_cart($cookie_email = null)
+{
+    $cart = WC()->cart;
+    $cart_items = $cart->get_cart();
+    $customer = $cart->get_customer();
+    $customer_email = $customer->get_email();
+    if (! $customer_email) {
+        $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : $cookie_email;
+    }
+    if (! empty($customer_email)) {
+        $line_items = [];
+        foreach($cart_items as $key => $value) {
+            $line_items[] = $value;
+        }
+
+        if (! isset($_COOKIE['mailerlite_checkout_token'])) {
+            $checkout_id = md5(uniqid(rand(), true));            ;
+            @setcookie('mailerlite_checkout_token', $checkout_id, time()+172800, '/');
+        } else {
+            $checkout_id = $_COOKIE['mailerlite_checkout_token'];
+        }
+            
+        $shop_checkout_url = wc_get_checkout_url();
+        $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
+        
+        $cart_data = [
+            'id' => $checkout_id,
+            'email' => $customer_email,
+            'line_items' => $line_items,
+            'abandoned_checkout_url' => $checkout_url
+        ];
+        mailerlite_wp_send_cart($cart_data);
+    }
+}
+function woo_ml_payment_status_processing($order_id)
+{
+    $order = wc_get_order($order_id);
+
+    if ($order->get_status() === 'processing') {
+        $data = [];
+        $data['checkout_id'] = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : null;
+        $data['order_id'] = $order_id;
+        $data['payment_method'] = $order->get_payment_method();
+        
+        @setcookie('mailerlite_checkout_email', null, -1, '/');
+        @setcookie('mailerlite_checkout_token', null, -1, '/');
+
+        mailerlite_wp_add_subscriber_and_save_order($data, 'order_processing');
+    }
 }

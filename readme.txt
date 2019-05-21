@@ -3,9 +3,9 @@ Contributors: mailerlite, flowdee
 Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
-Tested up to: 5.1
+Tested up to: 5.1.1
 Requires PHP: 5.6.0
-Stable tag: 1.2.5
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,6 +29,7 @@ This plugin allows you to easily connect WooCommerce with MailerLite. Track sale
 * Setup order tracking MailerLite custom fields
 * Setup order related MailerLite segments
 * Set up automation triggered by recent purchases
+* Abandoned cart emails
 * Regular updates and improvements: Check out the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
 
 = Quickstart =
@@ -84,6 +85,9 @@ Yes of course.
 6. Dashboard e-commerce performance
 
 == Changelog ==
+= 1.3.0 (20th May 2019) =
+* Update: abandoned carts feature
+* Minor fixes and updates
 
 = 1.2.4 & 1.2.5 (19th March 2019) =
 * Fix: creating custom fields wasn't working properly

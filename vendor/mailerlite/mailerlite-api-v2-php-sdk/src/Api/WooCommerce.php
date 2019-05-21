@@ -35,7 +35,6 @@ class WooCommerce extends ApiAbstract
         $endpoint = 'woocommerce/alternative_save_order';
 
         $params = array_merge($this->prepareParams(), ['order_data' => $orderData, 'shop' => $shop] );
-
         return $this->restClient->post( $endpoint, $params );
     }
 
@@ -46,5 +45,34 @@ class WooCommerce extends ApiAbstract
 
         $params = array_merge($this->prepareParams(), ['active_state' => $activeState, 'shop' => $shopName] );
         return $this->restClient->post( $endpoint, $params );
+    }
+
+    public function sendCartData($shopUrl, $cartData) {
+        $endpoint = 'woocommerce/save_cart';
+
+        $params = array_merge($this->prepareParams(), ['cart_data' => $cartData, 'shop' => $shopUrl] );
+        return $this->restClient->post( $endpoint, $params );
+    } 
+
+    public function sendSubscriberData($data) {
+        $endpoint = 'woocommerce/save_subscriber';
+
+        $params = array_merge($this->prepareParams(), ['data'=>$data] );
+        $response = $this->restClient->post( $endpoint, $params );
+        
+        if (isset($response['body'])){
+            return $response['body'];
+        } else {
+            return false;
+        }
+    }
+
+    public function sendOrderProcessingData($data) {
+        $endpoint = 'woocommerce/order_processing';
+
+        $params = array_merge($this->prepareParams(), ['data'=>$data] );
+        $this->restClient->post( $endpoint, $params );
+
+        return true;
     }
 }
