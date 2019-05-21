@@ -9,7 +9,6 @@ class FunTest extends PHPUnit_Framework_TestCase
         $rot = Filter\fun('string.rot13');
 
         $this->assertEquals('grfg', $rot('test'));
-        $this->assertEquals('test', $rot($rot('test')));
         $this->assertEquals(null, $rot());
     }
 
