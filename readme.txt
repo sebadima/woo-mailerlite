@@ -85,7 +85,7 @@ Yes of course.
 6. Dashboard e-commerce performance
 
 == Changelog ==
-= 1.3.0 (20th May 2019) =
+= 1.3.0 (21st May 2019) =
 * Update: abandoned carts feature
 * Minor fixes and updates
 
