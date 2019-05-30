@@ -104,7 +104,7 @@ function woo_ml_process_order_subscription( $order_id ) {
         @setcookie('mailerlite_checkout_email', null, -1, '/');
         @setcookie('mailerlite_checkout_token', null, -1, '/');
     } else {
-        $data['checkout_data'] = woo_ml_get_cart_data();
+        $data['checkout_data'] = woo_ml_get_checkout_data();
     }
     $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
     if ( sizeof( $subscriber_fields ) > 0 )
