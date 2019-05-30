@@ -78,8 +78,8 @@ function woo_ml_validate_api_key( $api_key ) {
 
 /**
  * Process order subscription
- * 1.) Maybe add customer to group
- * 2.) Set/update basic subscriber data
+ * Send data to add to group/update subscriber and
+ * check for any triggered abandoned cart automations
  *
  * @param $order_id
  */
@@ -99,9 +99,12 @@ function woo_ml_process_order_subscription( $order_id ) {
     $data['checkout_id'] = $_COOKIE['mailerlite_checkout_token'];
     $data['order_id'] = $order_id;
     $data['payment_method'] = $order->get_payment_method();
+
     if ($data['payment_method'] == 'bacs' || $data['payment_method'] == 'cheque') {
         @setcookie('mailerlite_checkout_email', null, -1, '/');
         @setcookie('mailerlite_checkout_token', null, -1, '/');
+    } else {
+        $data['checkout_data'] = woo_ml_get_checkout_data();
     }
     $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
     if ( sizeof( $subscriber_fields ) > 0 )
@@ -704,8 +707,6 @@ function woo_ml_send_completed_order($order_id)
     $order_data['order'] = $order->get_data();
     $order_items = $order->get_items();
 
-    $customer_email = $order->get_billing_email('view');
-
     foreach ($order_items as $key => $value) {
         $order_data['order']['line_items'][$key] = $value->get_data();
     }
@@ -724,37 +725,10 @@ function woo_ml_get_double_optin()
 
 function woo_ml_send_cart($cookie_email = null)
 {
-    $cart = WC()->cart;
-    $cart_items = $cart->get_cart();
-    $customer = $cart->get_customer();
-    $customer_email = $customer->get_email();
-    if (! $customer_email) {
-        $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : $cookie_email;
-    }
-    if (! empty($customer_email)) {
-        $line_items = [];
-        foreach($cart_items as $key => $value) {
-            $line_items[] = $value;
-        }
-
-        if (! isset($_COOKIE['mailerlite_checkout_token'])) {
-            $checkout_id = md5(uniqid(rand(), true));            ;
-            @setcookie('mailerlite_checkout_token', $checkout_id, time()+172800, '/');
-        } else {
-            $checkout_id = $_COOKIE['mailerlite_checkout_token'];
-        }
-            
-        $shop_checkout_url = wc_get_checkout_url();
-        $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
-        
-        $cart_data = [
-            'id' => $checkout_id,
-            'email' => $customer_email,
-            'line_items' => $line_items,
-            'abandoned_checkout_url' => $checkout_url
-        ];
-        mailerlite_wp_send_cart($cart_data);
-    }
+    $checkout_data = woo_ml_get_checkout_data($cookie_email);
+    if (! empty($checkout_data))
+        mailerlite_wp_send_cart($checkout_data);
+    
 }
 function woo_ml_payment_status_processing($order_id)
 {
@@ -771,4 +745,40 @@ function woo_ml_payment_status_processing($order_id)
 
         mailerlite_wp_add_subscriber_and_save_order($data, 'order_processing');
     }
+}
+
+function woo_ml_get_checkout_data($cookie_email = null)
+{
+    $cart = WC()->cart;
+    $cart_items = $cart->get_cart();
+    $customer = $cart->get_customer();
+    $customer_email = $customer->get_email();
+    if (! $customer_email) {
+        $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : $cookie_email;
+    }
+    $checkout_data = [];
+    if (! empty($customer_email)) {
+        $line_items = [];
+        foreach($cart_items as $key => $value) {
+            $line_items[] = $value;
+        }
+
+        if (! isset($_COOKIE['mailerlite_checkout_token'])) {
+            $checkout_id = md5(uniqid(rand(), true));            ;
+            @setcookie('mailerlite_checkout_token', $checkout_id, time()+172800, '/');
+        } else {
+            $checkout_id = $_COOKIE['mailerlite_checkout_token'];
+        }
+            
+        $shop_checkout_url = wc_get_checkout_url();
+        $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
+        
+        $checkout_data = [
+            'id' => $checkout_id,
+            'email' => $customer_email,
+            'line_items' => $line_items,
+            'abandoned_checkout_url' => $checkout_url
+        ];
+    }
+    return $checkout_data;
 }

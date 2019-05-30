@@ -3,9 +3,9 @@ Contributors: mailerlite, flowdee
 Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
-Tested up to: 5.1.1
+Tested up to: 5.2.1
 Requires PHP: 5.6.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -85,6 +85,9 @@ Yes of course.
 6. Dashboard e-commerce performance
 
 == Changelog ==
+= 1.3.1 (30th May 2019) =
+* Minor fixes and updates
+
 = 1.3.0 (21st May 2019) =
 * Update: abandoned carts feature
 * Minor fixes and updates
