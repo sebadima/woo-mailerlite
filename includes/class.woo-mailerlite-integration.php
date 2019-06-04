@@ -41,6 +41,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
             $this->popups           = $this->get_option('popups', 'no');
             $this->group            = $this->get_option('group', null);
+           // $this->authenticated    = $this->get_option('account_authenticated', null);
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
 
@@ -56,97 +57,110 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          * @return void
          */
         public function init_form_fields() {
-
-            $this->form_fields = array(
-                'api_key' => array(
-                    'title'             => __( 'MailerLite API Key', 'woo-mailerlite' ),
-                    'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'You can find your Developer API key <a href="%s" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/integrations/api/' ) ),
-                    'desc_tip'          => false,
-                    'default'           => '',
-                ),
-                'consumer_key' => array(
-                    'title'             => __( 'Consumer Key', 'woo-mailerlite' ),
-                    'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'Find out how to generate key <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
-                    'desc_tip'          => false,
-                    'default'           => '',
-                ),
-                'consumer_secret' => array(
-                    'title'             => __( 'Consumer Secret', 'woo-mailerlite' ),
-                    'type'              => 'text',
-                    'description'       => sprintf( wp_kses( __( 'Find out how to generate secret <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
-                    'desc_tip'          => false,
-                    'default'           => '',
-                ),
-                'group' => array(
-                    'title' 		=> __( 'Group', 'woo-mailerlite' ),
-                    'type' 			=> 'select',
-                    'class'         => 'wc-enhanced-select',
-                    'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
-                    'default' 		=> '',
-                    'options'		=> woo_ml_settings_get_group_options(),
-                    'desc_tip' => true
-                ),
-                'checkout' => array(
-                    'title'             => __( 'Checkout', 'woo-mailerlite' ),
-                    'type'              => 'checkbox',
-                    'label'             => __( 'Enable list subscription via checkout page', 'woo-mailerlite' ),
-                    'default'           => 'yes'
-                ),
-                'checkout_position' => array(
-                    'title' 		=> __( 'Position', 'woo-mailerlite' ),
-                    'type' 			=> 'select',
-                    'class'         => 'wc-enhanced-select',
-                    'default' 		=> 'checkout_billing',
-                    'options'		=> array(
-                        'checkout_billing' => __( 'After billing details', 'woo-mailerlite' ),
-                        'checkout_shipping' => __( 'After shipping details', 'woo-mailerlite' ),
-                        'checkout_after_customer_details' => __( 'After customer details', 'woo-mailerlite' ),
-                        'review_order_before_submit' => __( 'Before submit button', 'woo-mailerlite' )
+            
+            if (get_option('ml_account_authenticated') || $this->get_option( 'api_status')) {
+                $this->form_fields = array(
+                    'api_key' => array(
+                        'title'             => __( 'MailerLite API Key', 'woo-mailerlite' ),
+                        'type'              => 'text',
+                        'description'       => sprintf( wp_kses( __( 'You can find your Developer API key <a href="%s" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/integrations/api/' ) ),
+                        'desc_tip'          => false,
+                        'default'           => '',
                     ),
-                ),
-                'checkout_preselect' => array(
-                    'title'             => __( 'Pre-select checkbox', 'woo-mailerlite' ),
-                    'type'              => 'checkbox',
-                    'label'             => __( 'Check in order to pre-select the signup checkbox by default', 'woo-mailerlite' ),
-                    'default'           => 'yes'
-                ),
-                'checkout_hide' => array(
-                    'title'             => __( 'Hide checkbox', 'woo-mailerlite' ),
-                    'type'              => 'checkbox',
-                    'label'             => __( 'Check in order to hide the checkbox. All customers will be subscribed automatically', 'woo-mailerlite' ),
-                    'default'           => 'yes'
-                ),
-                'checkout_label' => array(
-                    'title'             => __( 'Checkbox label', 'woo-mailerlite' ),
-                    'type'              => 'text',
-                    'description'       => __( 'The text which will be shown besides the checkbox', 'woo-mailerlite' ),
-                    'default'           => __( 'Yes, I want to receive your newsletter.', 'woo-mailerlite' ),
-                    'desc_tip' => true
-                ),
-                'double_optin' => array(
-                    'title'             => __( 'Double Opt-In', 'woo-mailerlite' ),
-                    'type'              => 'checkbox',
-                    'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
-                    'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
-                    'default'           => 'yes',
-                    'desc_tip'          => true
-                ),
-                'popups' => array(
-                    'title'             => __( 'Popups', 'woo-mailerlite' ),
-                    'type'              => 'checkbox',
-                    'label'       => __( 'Enable popups in your shop.', 'woo-mailerlite' ),
-                    'default'           => 'yes',
-                    'desc_tip'          => true
-                ),
-                'order_tracking_sync' => array(
-                    'title'             => 'Synchronize Orders',
-                    'type'              => 'woo_ml_sync_orders',
-                    'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite yet.", 'woo-mailerlite' ),
-                    'desc_tip'          => true,
-                )
-            );
+                    'consumer_key' => array(
+                        'title'             => __( 'Consumer Key', 'woo-mailerlite' ),
+                        'type'              => 'text',
+                        'description'       => sprintf( wp_kses( __( 'Find out how to generate key <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                        'desc_tip'          => false,
+                        'default'           => '',
+                    ),
+                    'consumer_secret' => array(
+                        'title'             => __( 'Consumer Secret', 'woo-mailerlite' ),
+                        'type'              => 'text',
+                        'description'       => sprintf( wp_kses( __( 'Find out how to generate secret <a href="https://docs.woocommerce.com/document/woocommerce-rest-api/" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ) ),
+                        'desc_tip'          => false,
+                        'default'           => '',
+                    ),
+                    'group' => array(
+                        'title' 		=> __( 'Group', 'woo-mailerlite' ),
+                        'type' 			=> 'select',
+                        'class'         => 'wc-enhanced-select',
+                        'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
+                        'default' 		=> '',
+                        'options'		=> woo_ml_settings_get_group_options(),
+                        'desc_tip' => true
+                    ),
+                    'checkout' => array(
+                        'title'             => __( 'Checkout', 'woo-mailerlite' ),
+                        'type'              => 'checkbox',
+                        'label'             => __( 'Enable list subscription via checkout page', 'woo-mailerlite' ),
+                        'default'           => 'yes'
+                    ),
+                    'checkout_position' => array(
+                        'title' 		=> __( 'Position', 'woo-mailerlite' ),
+                        'type' 			=> 'select',
+                        'class'         => 'wc-enhanced-select',
+                        'default' 		=> 'checkout_billing',
+                        'options'		=> array(
+                            'checkout_billing' => __( 'After billing details', 'woo-mailerlite' ),
+                            'checkout_shipping' => __( 'After shipping details', 'woo-mailerlite' ),
+                            'checkout_after_customer_details' => __( 'After customer details', 'woo-mailerlite' ),
+                            'review_order_before_submit' => __( 'Before submit button', 'woo-mailerlite' )
+                        ),
+                    ),
+                    'checkout_preselect' => array(
+                        'title'             => __( 'Pre-select checkbox', 'woo-mailerlite' ),
+                        'type'              => 'checkbox',
+                        'label'             => __( 'Check in order to pre-select the signup checkbox by default', 'woo-mailerlite' ),
+                        'default'           => 'yes'
+                    ),
+                    'checkout_hide' => array(
+                        'title'             => __( 'Hide checkbox', 'woo-mailerlite' ),
+                        'type'              => 'checkbox',
+                        'label'             => __( 'Check in order to hide the checkbox. All customers will be subscribed automatically', 'woo-mailerlite' ),
+                        'default'           => 'yes'
+                    ),
+                    'checkout_label' => array(
+                        'title'             => __( 'Checkbox label', 'woo-mailerlite' ),
+                        'type'              => 'text',
+                        'description'       => __( 'The text which will be shown besides the checkbox', 'woo-mailerlite' ),
+                        'default'           => __( 'Yes, I want to receive your newsletter.', 'woo-mailerlite' ),
+                        'desc_tip' => true
+                    ),
+                    'double_optin' => array(
+                        'title'             => __( 'Double Opt-In', 'woo-mailerlite' ),
+                        'type'              => 'checkbox',
+                        'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
+                        'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
+                        'default'           => 'yes',
+                        'desc_tip'          => true
+                    ),
+                    'popups' => array(
+                        'title'             => __( 'Popups', 'woo-mailerlite' ),
+                        'type'              => 'checkbox',
+                        'label'       => __( 'Enable popups in your shop.', 'woo-mailerlite' ),
+                        'default'           => 'yes',
+                        'desc_tip'          => true
+                    ),
+                    'order_tracking_sync' => array(
+                        'title'             => 'Synchronize Orders',
+                        'type'              => 'woo_ml_sync_orders',
+                        'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite yet.", 'woo-mailerlite' ),
+                        'desc_tip'          => true,
+                    )
+                );
+            } else {
+                $this->form_fields = array(
+                    'api_key' => array(
+                        'title'             => __( 'MailerLite API Key', 'woo-mailerlite' ),
+                        'type'              => 'text',
+                        'description'       => sprintf( wp_kses( __( 'You can find your Developer API key <a href="%s" target="_blank">here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array(), 'target' => array() ) ) ), esc_url( 'https://app.mailerlite.com/integrations/api/' ) ),
+                        'desc_tip'          => false,
+                        'default'           => '',
+                    )
+                    );
+            }
+            
         }
 
         /**

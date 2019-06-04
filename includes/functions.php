@@ -75,14 +75,10 @@ function woo_ml_process_order_subscription( $order_id ) {
     $customer_data = woo_ml_get_customer_data_from_order( $order_id );
 
     $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
-    $group = woo_ml_get_option('group' );
-    $double_option = woo_ml_get_option('double_optin', false );
 
     $data = [];
     $data['email'] = $customer_data['email'];
-    $data['type'] = ( 'yes' === $double_option ) ? 'unconfirmed' : 'subscribed';
     $data['checked_sub_to_mailist'] = $subscribe;
-    $data['group_id'] = $group;
     $data['checkout_id'] = $_COOKIE['mailerlite_checkout_token'];
     $data['order_id'] = $order_id;
     $data['payment_method'] = $order->get_payment_method();
@@ -391,7 +387,6 @@ function woo_ml_sync_untracked_orders() {
                 continue;
 
             $order_id = $order_post->ID;
-            //echo 'tracking order #' . $order_id . ' data<br>';
 
             $order_email = woo_ml_get_customer_email_from_order($order_id);
 

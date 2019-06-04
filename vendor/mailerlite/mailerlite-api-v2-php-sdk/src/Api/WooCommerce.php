@@ -89,4 +89,10 @@ class WooCommerce extends ApiAbstract
         
         return $this->restClient->get( $endpoint);
     }
+
+    public function validateAccount()
+    {
+        $endpoint = 'woocommerce/initial_account_settings';
+        return $this->restClient->get($endpoint);
+    }
 }

@@ -20,12 +20,21 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
 
             $mailerliteClient = new \MailerLiteApi\MailerLite( $api_key );
 
-            $groups = $mailerliteClient->groups();
-            $response = $groups->get();
-            $results = $response->toArray();
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            $result = $wooCommerceApi->validateAccount($api_key);
 
-            if ( is_array( $results ) && ! isset( $results[0]->error->message ) )
-                return true;
+            if ( isset( $result ) && ! isset( $result['errors'] ) ) {
+                update_option('double_optin', $result['body']->double_optin );
+                update_option('ml_account_authenticated', true);
+                $groupsArray = [];
+                $groups = $result['body']->groups;
+                if ( sizeof( $groups ) > 0 ) {
+                    foreach ( $groups as $group ) {
+                        $groupsArray[] = (array) $group;
+                    }
+                }
+                set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
+            }
 
         } catch (Exception $e) {
             return false;
