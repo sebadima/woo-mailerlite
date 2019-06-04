@@ -58,21 +58,17 @@ function woo_ml_settings_get_group_options( $force_refresh = false ) {
  * @return bool
  */
 function woo_ml_validate_api_key( $api_key ) {
-
     if ( empty( $api_key ) )
         return false;
 
-    $validation = mailerlite_wp_api_key_validation( $api_key );
-
-    return $validation;
+    return mailerlite_wp_api_key_validation( $api_key );
 }
 
 /**
- * Process order subscription
- * 1.) Maybe add customer to group
- * 2.) Set/update basic subscriber data
+ * Process order create and subscription to newsletter
  *
  * @param $order_id
+ * @return void
  */
 function woo_ml_process_order_subscription( $order_id ) {
     $order = wc_get_order( $order_id );
@@ -104,8 +100,7 @@ function woo_ml_process_order_subscription( $order_id ) {
         woo_ml_complete_order_customer_subscribed( $order_id );
         
     if ( isset($subscriber_result->updated_fields) )
-        woo_ml_complete_order_subscriber_updated( $order_id );
-     
+        woo_ml_complete_order_subscriber_updated( $order_id );    
 }
 
 /**
@@ -152,15 +147,7 @@ function woo_ml_process_order_tracking( $order_id ) {
             )
         );
 
-        woo_ml_debug_log( '>> $subscriber_data <<' );
-        woo_ml_debug_log( $subscriber_data );
-        woo_ml_debug_log( '-----------------------' );
-
         $subscriber_updated = mailerlite_wp_update_subscriber( $customer_data['email'], $subscriber_data );
-
-        woo_ml_debug_log( '>> $subscriber_updated <<' );
-        woo_ml_debug_log( $subscriber_updated );
-        woo_ml_debug_log( '-----------------------' );
 
         if ( $subscriber_updated )
             woo_ml_complete_order_data_submitted( $order_id );
@@ -209,10 +196,6 @@ function woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_o
         }
     }
 
-    woo_ml_debug_log( '>> $ml_tracking_data <<' );
-    woo_ml_debug_log( $ml_tracking_data );
-    woo_ml_debug_log( '-----------------------' );
-
     /*
      * Step 2: Merge order tracking data with the one on MailerLite
      */
@@ -246,23 +229,17 @@ function woo_ml_get_order_tracking_data( $order_ids ) {
     );
 
     if ( sizeof( $order_ids ) > 0 ) {
-
         foreach ( $order_ids as $order_id ) {
-
             $order = wc_get_order( $order_id );
 
             $tracking_data['orders_count']++;
 
             $order_total = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_total() : $order->total;
-            woo_ml_debug_log( '$order_total >> ' . $order_total );
             $order_total = intval( $order_total );
-
             $tracking_data['total_spent'] += $order_total;
 
             $order_date = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_date_created() : $order->date_created;
-            woo_ml_debug_log( '$order_date >> ' . $order_date );
             $order_date = date( 'Y-m-d', strtotime( $order_date ) );
-
             $tracking_data['last_order'] = $order_date;
         }
     }
@@ -406,8 +383,6 @@ function woo_ml_sync_untracked_orders() {
     // Get orders
     $order_posts = woo_ml_get_untracked_orders( array( 'numberposts' => WOO_ML_SYNC_UNTRACKED_ORDERS_CYCLE ) );
 
-    //echo 'Order posts found: ' . sizeof( $order_posts ) . '<br>';
-
     if ( is_array( $order_posts ) && sizeof( $order_posts ) > 0 ) {
 
         foreach ($order_posts as $order_post) {
@@ -427,8 +402,6 @@ function woo_ml_sync_untracked_orders() {
             }
         }
     }
-
-    //woo_ml_debug( $data, '$data' );
 
     if ( sizeof( $data ) == 0 )
         return true;
@@ -467,24 +440,17 @@ function woo_ml_sync_untracked_orders() {
 
             $subscriber_data['fields'] = $subscriber_fields;
 
-            //woo_ml_debug( $subscriber_data, $customer_email . ' >> $subscriber_data' );
-
             $subscriber_updated = mailerlite_wp_update_subscriber($customer_email, $subscriber_data);
 
-            //echo 'Subscriber ' . $customer_email . ' updated with ' . sizeof( $order_ids ) . ' orders.<br>';
-
             if ( $subscriber_updated ) {
-
                 foreach ( $order_ids as $order_id ) {
                     // Mark order customer data as being updated
                     woo_ml_complete_order_subscriber_updated( $order_id );
-
                     // Mark order data as being submitted
                     woo_ml_complete_order_data_submitted( $order_id );
                 }
             }
         }
-
         // Mark order tracking as completed
         foreach ( $order_ids as $order_id ) {
             woo_ml_complete_order_tracking( $order_id );
@@ -589,7 +555,6 @@ function woo_ml_complete_order_data_submitted( $order_id ) {
  * @return bool
  */
 function woo_ml_order_tracking_completed( $order_id ) {
-
     $order_tracked = get_post_meta( $order_id, '_woo_ml_order_tracked', true );
 
     return ( '1' == $order_tracked ) ? true : false;
@@ -612,7 +577,6 @@ function woo_ml_complete_order_tracking( $order_id ) {
  * @return null
  */
 function woo_ml_get_option( $key, $default = null ) {
-
     $settings = get_option( 'woocommerce_mailerlite_settings' );
 
     return ( isset( $settings[$key] ) ) ? $settings[$key] : $default;
@@ -624,7 +588,6 @@ function woo_ml_get_option( $key, $default = null ) {
  * @return bool
  */
 function woo_ml_is_plugin_admin_area() {
-
     $screen = get_current_screen();
 
     return ( strpos( $screen->id, 'wc-settings') !== false ) ? true : false;
@@ -662,7 +625,10 @@ function woo_ml_debug_log( $message ) {
     }
 }
 
-//mailerlite universal script for tracking visits
+/**
+* MailerLite universal script for tracking visits
+* @return void
+*/
 function mailerlite_universal_woo_commerce()
 {
     ?>
@@ -688,6 +654,9 @@ if (get_option('account_id') && get_option('account_subdomain'))
 /**
  * Gets triggered on completed order event. Fetches order data
  * and passes it along to api
+ * 
+ * @param Integer $order_id
+ * @return void
  */
 function woo_ml_send_completed_order($order_id)
 {
@@ -704,7 +673,11 @@ function woo_ml_send_completed_order($order_id)
     @setcookie('mailerlite_checkout_token', null, -1, '/');
     mailerlite_wp_send_order($order_data);
 }
-
+/**
+ * Sending cart data on updated cart contents event (add or remove from cart)
+ * @param $cookie_email
+ * @return void
+ */
 function woo_ml_send_cart($cookie_email = null)
 {
     $cart = WC()->cart;
@@ -739,6 +712,12 @@ function woo_ml_send_cart($cookie_email = null)
         mailerlite_wp_send_cart($cart_data);
     }
 }
+
+/**
+ * On change of order status to processing send order data
+ * @param Integer $order_id
+ * @return void 
+ */
 function woo_ml_payment_status_processing($order_id)
 {
     $order = wc_get_order($order_id);

@@ -130,9 +130,6 @@ if ( ! function_exists( 'mailerlite_wp_update_subscriber') ) :
 
         if ( empty( $subscriber_email ) )
             return false;
-
-        //woo_ml_debug( $subscriber );
-
         try {
 
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
@@ -204,9 +201,6 @@ if ( ! function_exists( 'mailerlite_wp_create_custom_field') ) :
 
             $fieldsApi = $mailerliteClient->fields();
             $field_added = $fieldsApi->create( $field_data );
-            //woo_ml_debug_log( $field_added );
-            //woo_ml_debug( $field_added, '$field_added' );
-
             if ( isset( $field_added->id ) ) {
                 return $field_added;
             } else {
@@ -214,7 +208,6 @@ if ( ! function_exists( 'mailerlite_wp_create_custom_field') ) :
             }
 
         } catch (Exception $e) {
-            //echo 'Exception caught: ',  $e->getMessage(), "\n";
             return false;
         }
     }
@@ -276,7 +269,6 @@ if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
                 ),
                 'body' => $data
             ));
-            //woo_ml_debug( $response );
 
             if ( is_wp_error( $response ) ) {
                 return false;
@@ -287,7 +279,6 @@ if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
             }
 
         } catch (Exception $e) {
-            //echo 'Exception caught: ',  $e->getMessage(), "\n";
             return false;
         }
     }
@@ -296,6 +287,12 @@ endif;
 /**
  * Sends to api shop data needed to make back and forth connection with woo commerce
  * Api returns account id and subdomain used to for universal script
+ * 
+ * @param string $consumerKey
+ * @param string $consumerSecret
+ * @param string $apiKey
+ * 
+ * @return array|bool
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
     function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey) {
@@ -329,6 +326,10 @@ endif;
 
 /**
  * Sends completed order data to api to be evaluated and saved and/if trigger automations
+ * 
+ * @param array $order_data
+ * 
+ * @return bool|void
  */
 if ( ! function_exists( 'mailerlite_wp_send_order') ) :
     function mailerlite_wp_send_order($order_data)
@@ -354,6 +355,10 @@ endif;
 /**
  * Get triggered on deactivate plugin event. Sends store name to api
  * to toggle its active status
+ * 
+ * @param bool $active_state
+ * 
+ * @return bool|void
  */
 if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
     function mailerlite_wp_toggle_shop_connection($active_state)
@@ -378,6 +383,10 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
 endif; 
 /**
  * Sending cart data on cart update
+ * 
+ * @param bool $cart_data
+ * 
+ * @return bool|void
  */
 if (! function_exists('mailerlite_wp_send_cart')) :
     function mailerlite_wp_send_cart($cart_data) {
@@ -401,7 +410,11 @@ if (! function_exists('mailerlite_wp_send_cart')) :
 endif;
 
 /**
- *Sending order data on creation of order and/or order status change to processing 
+ * Sending order data on creation of order and/or order status change to processing 
+ * @param array $data
+ * @param string $event
+ * 
+ * @return bool
  */
 if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
     function mailerlite_wp_add_subscriber_and_save_order($data, $event)
@@ -440,6 +453,8 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
 endif;
 /**
  * API call to get all shop settings from the MailerLite side
+ * 
+ * @return array|bool
  */
 if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
     function mailerlite_wp_get_shop_settings_from_db()
