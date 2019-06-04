@@ -705,14 +705,6 @@ function woo_ml_send_completed_order($order_id)
     mailerlite_wp_send_order($order_data);
 }
 
-function woo_ml_get_double_optin()
-{
-    if (get_option('double_optin') === null) {
-        return mailerlite_wp_get_double_optin();
-    }
-    return get_option('double_optin');
-}
-
 function woo_ml_send_cart($cookie_email = null)
 {
     $cart = WC()->cart;
