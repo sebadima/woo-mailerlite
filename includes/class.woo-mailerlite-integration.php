@@ -136,9 +136,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'desc_tip'          => true
                     ),
                     'popups' => array(
-                        'title'             => __( 'Popups', 'woo-mailerlite' ),
+                        'title'             => __( 'MailerLite Pop-ups', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
-                        'label'       => __( 'Enable popups in your shop.', 'woo-mailerlite' ),
+                        'label'       => __( 'Check in order to enable popup subscribe forms created within MailerLite.', 'woo-mailerlite' ),
                         'default'           => 'yes',
                         'desc_tip'          => true
                     ),
