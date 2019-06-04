@@ -24,6 +24,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->method_title       = __( 'MailerLite', 'woo-mailerlite' );
             $this->method_description = __( 'MailerLite integration for WooCommerce', 'woo-mailerlite' );
 
+            $request = $_REQUEST;
+            //making a request only on load of the integrations page
+            if (isset($request['page']) && isset($request['tab'])
+                && $request['page'] == 'wc-settings'
+                && $request['tab'] == 'integration') {
+                    $this->getShopSettingsFromDb();
+            }
             // Load the settings.
             $this->init_form_fields();
             $this->init_settings();
@@ -32,7 +39,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_key          = $this->get_option( 'api_key' );
             $this->api_status       = $this->get_option( 'api_status', false );
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
-
+            $this->popups           = $this->get_option('popups', 'no');
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
 
@@ -125,6 +132,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'default'           => 'yes',
                     'desc_tip'          => true
                 ),
+                'popups' => array(
+                    'title'             => __( 'Popups', 'woo-mailerlite' ),
+                    'type'              => 'checkbox',
+                    'label'       => __( 'Enable popups in your shop.', 'woo-mailerlite' ),
+                    'default'           => 'yes',
+                    'desc_tip'          => true
+                ),
                 'order_tracking_sync' => array(
                     'title'             => 'Synchronize Orders',
                     'type'              => 'woo_ml_sync_orders',
@@ -204,6 +218,24 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             return ob_get_clean();
         }
 
+        /**
+         * Getting groups, selected group, double optiin and popups 
+         * settings from MailerLite, only on load of the integrations page.
+         */
+        public function getShopSettingsFromDb()
+        {
+            $settings = mailerlite_wp_get_shop_settings_from_db();
+            $this->update_option('double_optin', $settings->double_optin);
+            $groupsArray = [];
+            $groups = $settings->groups;
+            if ( sizeof( $groups ) > 0 ) {
+                foreach ( $groups as $group ) {
+                    $groupsArray[] = (array) $group;
+                }
+            }
+            set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
+            $this->update_option('popups', $settings->popups);
+        }
 
         /**
          * Santize our settings

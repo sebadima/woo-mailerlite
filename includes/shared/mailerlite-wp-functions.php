@@ -479,7 +479,9 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
         }
     }
 endif; 
-
+/**
+ * Sending cart data on cart update
+ */
 if (! function_exists('mailerlite_wp_send_cart')) :
     function mailerlite_wp_send_cart($cart_data) {
         if ( ! mailerlite_wp_api_key_exists() )
@@ -501,6 +503,9 @@ if (! function_exists('mailerlite_wp_send_cart')) :
     }
 endif;
 
+/**
+ *Sending order data on creation of order and/or order status change to processing 
+ */
 if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
     function mailerlite_wp_add_subscriber_and_save_order($data, $event)
     {
@@ -516,7 +521,8 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
             $shop_url = site_url();
             $data['shop_url'] = home_url();
             $data['order_url'] = $shop_url."/wp-admin/post.php?post=".$data['order_id']."&action=edit";
-
+            //order_created case also takes care of processing sub if they have ticked the box to
+            //receive newsletters
             if ($event === 'order_created') {
                 $result = $wooCommerceApi->sendSubscriberData($data);
             
@@ -530,6 +536,32 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
                 return true;
             }
             
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;
+/**
+ * API call to get all shop settings from the MailerLite side
+ */
+if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
+    function mailerlite_wp_get_shop_settings_from_db()
+    {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        $api_key = woo_ml_get_option( 'api_key' );
+        try {
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerceApi = $mailerliteClient->woocommerce();
+            $result = $wooCommerceApi->getShopSettings(home_url());
+            if (isset($result['body']->settings)) {
+                return $result['body']->settings;
+            } else {
+                return false;
+            }
+
         } catch (Exception $e) {
             return false;
         }

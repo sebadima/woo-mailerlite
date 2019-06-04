@@ -28,31 +28,22 @@ function woo_ml_settings_get_api_key_status() {
  * @return array
  */
 function woo_ml_settings_get_group_options( $force_refresh = false ) {
-
     $options = array();
-
     $groups = get_transient( 'woo_ml_groups' );
 
-    if ( $force_refresh || empty( $groups ) ) {
+    if ($force_refresh) {
         $groups = mailerlite_wp_get_groups();
 
         if ( ! empty( $groups ) )
             set_transient( 'woo_ml_groups', $groups, 60 * 60 * 24 ); // 24 hours
     }
-
-    // Groups found
     if ( is_array( $groups ) && sizeof( $groups ) > 0 ) {
-
         $options[''] = __('Please select...', 'woo-mailerlite' );
-
         foreach ( $groups as $group ) {
-
             if ( isset( $group['id'] ) &&  isset( $group['name'] ) ) {
                 $options[$group['id']] = $group['name'];
             }
         }
-
-    // No groups found
     } else {
         $options[''] = __('No groups found', 'woo-mailerlite' );
     }

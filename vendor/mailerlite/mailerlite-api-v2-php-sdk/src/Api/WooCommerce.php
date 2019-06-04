@@ -75,4 +75,11 @@ class WooCommerce extends ApiAbstract
 
         return true;
     }
+
+    public function getShopSettings($shopUrl) {
+        $shopName = parse_url($shopUrl, PHP_URL_HOST);
+        $endpoint = 'woocommerce/settings/'.$shopName;
+        
+        return $this->restClient->get( $endpoint);
+    }
 }
