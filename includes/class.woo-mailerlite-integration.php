@@ -40,6 +40,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_status       = $this->get_option( 'api_status', false );
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
             $this->popups           = $this->get_option('popups', 'no');
+            $this->group            = $this->get_option('group', null);
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
 
@@ -235,6 +236,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             }
             set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
             $this->update_option('popups', $settings->popups);
+            $this->update_option('group', $settings->group_id);
         }
 
         /**
@@ -298,8 +300,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             // save shop to our db for e commerce tracking
             // hiding the ck and cs values once save performed as we don't need to have them saved here anyway
             // we only need them for backwards connection  from api to plugin to get products and categories.
-            if (! empty($settings['consumer_key']) && ! empty($settings['consumer_secret'])) {
-                    $result = mailerlite_wp_set_consumer_data( $settings['consumer_key'], $settings['consumer_secret'], $settings['api_key']);
+            if ( isset($settings['consumer_key']) && isset($settings['consumer_secret'])) {
+                    $result = mailerlite_wp_set_consumer_data( 
+                                    $settings['consumer_key'], 
+                                    $settings['consumer_secret'], 
+                                    $settings['api_key'],
+                                    $settings['popups'],
+                                    $settings['group']);
 
                     if (isset($result['errors']))  {
                         $settings['consumer_key']  = '';

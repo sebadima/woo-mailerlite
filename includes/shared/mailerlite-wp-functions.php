@@ -295,7 +295,7 @@ endif;
  * @return array|bool
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
-    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey) {
+    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey, $popups, $group) {
         if ( ! mailerlite_wp_api_key_exists() && empty($apiKey))
             return false;
 
@@ -306,7 +306,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $store = home_url();
             $currency = get_option('woocommerce_currency');
             if (strpos($store, 'https://') !== false ) {
-                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency);
+                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency, $popups, $group);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);
