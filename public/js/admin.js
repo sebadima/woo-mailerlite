@@ -50,9 +50,7 @@ jQuery(document).ready(function(a) {
             console.log("loop finished!"), d.hide(), j.hide(), a("#woo-ml-sync-untracked-orders-success").show();
         }
     });
-    /**
-     * Validate key button
-     */
+    
     var field = a("#woocommerce_mailerlite_api_key");
     a('<button id="woo-ml-validate-key" class="button-primary">Validate Key</button>').insertAfter(field);
     a(document).on("click", "#woo-ml-validate-key", function(b) {
@@ -72,4 +70,6 @@ jQuery(document).ready(function(a) {
             })
         }
     });
+    a('#woocommerce_mailerlite_group').select2();
+    
 });
