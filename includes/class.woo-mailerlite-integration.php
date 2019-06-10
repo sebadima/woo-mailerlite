@@ -39,7 +39,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_key          = $this->get_option( 'api_key' );
             $this->api_status       = $this->get_option( 'api_status', false );
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
-            $this->popups           = $this->get_option('popups', 'no');
+            $this->popups           = get_option('mailerlite_popups_disabled') ? 'no' : 'yes';
             $this->group            = $this->get_option('group', null);
            // $this->authenticated    = $this->get_option('account_authenticated', null);
             // Actions.
@@ -251,9 +251,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     }
                 }
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
-                $this->update_option('popups', $settings->popups);
                 $this->update_option('group', $settings->group_id);
             }
+            $this->update_option('popups', get_option('mailerlite_popups_disabled'));
         }
 
         /**
@@ -321,7 +321,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                     $settings['consumer_key'], 
                                     $settings['consumer_secret'], 
                                     $settings['api_key'],
-                                    $settings['popups'],
                                     $settings['group']);
 
                     if (isset($result['errors']))  {
@@ -334,6 +333,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
                         $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
                     }
+            }
+
+            if($settings['popups'] !== $this->popups) {
+                $popups_disabled = $settings['popups'] === 'no' ? 1: 0;
+                update_option('mailerlite_popups_disabled', $popups_disabled);
             }
 
             // Handle integration setup

@@ -626,7 +626,7 @@ function woo_ml_debug_log( $message ) {
 */
 function mailerlite_universal_woo_commerce()
 {
-    $popups_enabled = woo_ml_get_option('popups');
+    $popups_enabled = get_option('mailerlite_popups_disabled');
     $load = '';
     if ($popups_enabled)
         $load = 'load';
