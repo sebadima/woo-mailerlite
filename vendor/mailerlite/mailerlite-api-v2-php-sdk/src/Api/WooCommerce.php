@@ -11,7 +11,6 @@ class WooCommerce extends ApiAbstract
 
     public function setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency, $popups, $group_id )
     {
-
         $endpoint = $this->endpoint . '/consumer_data';
 
         $params = array_merge($this->prepareParams(), 
@@ -26,15 +25,6 @@ class WooCommerce extends ApiAbstract
         $response = $this->restClient->post( $endpoint, $params );
 
         return $response['body'];
-    }
-
-    public function setWebhooks($shop)
-    {
-        $endpoint = $this->endpoint.'/webhooks';
-
-        $params = array_merge($this->prepareParams(), ['shop' => $shop] );
-
-        return $this->restClient->post( $endpoint, $params );
     }
 
     public function saveOrder($orderData, $shop)
@@ -54,14 +44,16 @@ class WooCommerce extends ApiAbstract
         return $this->restClient->post( $endpoint, $params );
     }
 
-    public function sendCartData($shopUrl, $cartData) {
+    public function sendCartData($shopUrl, $cartData) 
+    {
         $endpoint = 'woocommerce/save_cart';
 
         $params = array_merge($this->prepareParams(), ['cart_data' => $cartData, 'shop' => $shopUrl] );
         return $this->restClient->post( $endpoint, $params );
     } 
 
-    public function sendSubscriberData($data) {
+    public function sendSubscriberData($data) 
+    {
         $endpoint = 'woocommerce/save_subscriber';
 
         $params = array_merge($this->prepareParams(), ['data'=>$data] );
@@ -74,7 +66,8 @@ class WooCommerce extends ApiAbstract
         }
     }
 
-    public function sendOrderProcessingData($data) {
+    public function sendOrderProcessingData($data) 
+    {
         $endpoint = 'woocommerce/order_processing';
 
         $params = array_merge($this->prepareParams(), ['data'=>$data] );
@@ -83,7 +76,8 @@ class WooCommerce extends ApiAbstract
         return true;
     }
 
-    public function getShopSettings($shopUrl) {
+    public function getShopSettings($shopUrl) 
+    {
         $shopName = parse_url($shopUrl, PHP_URL_HOST);
         $endpoint = 'woocommerce/settings/'.$shopName;
         

@@ -729,3 +729,14 @@ function woo_ml_payment_status_processing($order_id)
         mailerlite_wp_add_subscriber_and_save_order($data, 'order_processing');
     }
 }
+
+function woo_ml_toggle_shop_connection($active_status)
+{
+    if (! $active_status) {
+        delete_option('woocommerce_mailerlite_settings');
+        delete_option('double_optin');
+        mailerlite_wp_toggle_shop_connection($active_status);
+    } else {
+        update_option('ml_account_authenticated', false);
+    }
+}

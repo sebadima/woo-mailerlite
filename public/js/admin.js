@@ -56,7 +56,7 @@ jQuery(document).ready(function(a) {
     var field = a("#woocommerce_mailerlite_api_key");
     a('<button id="woo-ml-validate-key" class="button-primary">Validate Key</button>').insertAfter(field);
     a(document).on("click", "#woo-ml-validate-key", function(b) {
-        
+        if (b.preventDefault(), !e) {
             var key = a("#woocommerce_mailerlite_api_key").val();
             jQuery.ajax({
                 url: woo_ml_post.ajax_url,
@@ -65,10 +65,11 @@ jQuery(document).ready(function(a) {
                     action: "post_woo_ml_validate_key",
                     key:key
                 },
+                async: !1,
                 success: function(a) {
                     location.reload()
                 }
             })
-        
+        }
     });
 });

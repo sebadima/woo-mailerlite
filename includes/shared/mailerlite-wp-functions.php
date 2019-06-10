@@ -22,10 +22,17 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $result = $wooCommerceApi->validateAccount($api_key);
-
+            
             if ( isset( $result ) && ! isset( $result['errors'] ) ) {
-                update_option('double_optin', $result['body']->double_optin );
+                $settings = get_option('woocommerce_mailerlite_settings');
+                $settings['double_optin'] = $result['body']->double_optin;
+                $settings['api_key'] = $api_key;
+                $settings['api_status'] = true;
+                
+                update_option('woocommerce_mailerlite_settings', $settings);
+                update_option('double_optin', $result['body']->double_optin);
                 update_option('ml_account_authenticated', true);
+
                 $groupsArray = [];
                 $groups = $result['body']->groups;
                 if ( sizeof( $groups ) > 0 ) {

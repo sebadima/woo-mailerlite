@@ -139,7 +139,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'title'             => __( 'MailerLite Pop-ups', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
                         'label'       => __( 'Check in order to enable popup subscribe forms created within MailerLite.', 'woo-mailerlite' ),
-                        'default'           => 'yes',
+                        'default'           => 'no',
                         'desc_tip'          => true
                     ),
                     'order_tracking_sync' => array(
@@ -240,17 +240,20 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         public function getShopSettingsFromDb()
         {
             $settings = mailerlite_wp_get_shop_settings_from_db();
-            $this->update_option('double_optin', $settings->double_optin);
-            $groupsArray = [];
-            $groups = $settings->groups;
-            if ( sizeof( $groups ) > 0 ) {
-                foreach ( $groups as $group ) {
-                    $groupsArray[] = (array) $group;
+
+            if ($settings) {
+                $this->update_option('double_optin', $settings->double_optin);
+                $groupsArray = [];
+                $groups = $settings->groups;
+                if ( sizeof( $groups ) > 0 ) {
+                    foreach ( $groups as $group ) {
+                        $groupsArray[] = (array) $group;
+                    }
                 }
+                set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
+                $this->update_option('popups', $settings->popups);
+                $this->update_option('group', $settings->group_id);
             }
-            set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
-            $this->update_option('popups', $settings->popups);
-            $this->update_option('group', $settings->group_id);
         }
 
         /**
@@ -258,10 +261,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          * @see process_admin_options()
          */
         public function sanitize_settings( $settings ) {
-
             $setup_integration = false;
             $revoke_integration_setup = false;
-
+            
             if ( isset( $settings['api_key'] ) ) {
 
                 $reset_groups = false;
@@ -314,7 +316,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             // save shop to our db for e commerce tracking
             // hiding the ck and cs values once save performed as we don't need to have them saved here anyway
             // we only need them for backwards connection  from api to plugin to get products and categories.
-            if ( isset($settings['consumer_key']) && isset($settings['consumer_secret'])) {
+            if ( ! empty($settings['consumer_key']) && ! empty($settings['consumer_secret'])) {
                     $result = mailerlite_wp_set_consumer_data( 
                                     $settings['consumer_key'], 
                                     $settings['consumer_secret'], 
