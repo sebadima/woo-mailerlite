@@ -239,9 +239,10 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
          */
         public function getShopSettingsFromDb()
         {
-            $settings = mailerlite_wp_get_shop_settings_from_db();
-
-            if ($settings) {
+            $result = mailerlite_wp_get_shop_settings_from_db();
+           
+            if (!empty($result) && isset($result->settings)) {
+                $settings = $result->settings;
                 $this->update_option('double_optin', $settings->double_optin);
                 $groupsArray = [];
                 $groups = $settings->groups;
@@ -252,6 +253,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 }
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
                 $this->update_option('group', $settings->group_id);
+            } else if (isset($result->active_state)) {
+                update_option('ml_shop_not_active', true);
             }
             $this->update_option('popups', get_option('mailerlite_popups_disabled'));
         }

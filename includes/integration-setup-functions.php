@@ -440,3 +440,8 @@ function woo_ml_old_integration()
 {
     return ! get_option('new_plugin_enabled');
 }
+
+function woo_ml_shop_not_active()
+{
+    return get_option('ml_shop_not_active');
+}

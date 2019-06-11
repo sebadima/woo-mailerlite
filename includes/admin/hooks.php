@@ -30,14 +30,14 @@ function woo_ml_admin_notices() {
     }
     
     //message to be displayed for users who are only using the old functionalities just now
-    /*if (woo_ml_is_active() && woo_ml_old_integration()) {
+    if (woo_ml_is_active() && woo_ml_shop_not_active()) {
         $notices[] = array(
-            'type' => 'warning',
+            'type' => 'error',
             'dismiss' => false,
             'force' => true,
-            'message' => sprintf( wp_kses( __( 'We updated our integration for campaign e-commerce tracking, check it out.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( woo_ml_get_complete_integration_setup_url() ) )
+            'message' =>  __( 'Your shop is currently not active. Please reconnect to MailerLite.', 'woo-mailerlite' )
         );
-    }*/
+    }
 
     // Integration setup completed
     if ( 'integration_setup_completed' === $admin_notice ) {
