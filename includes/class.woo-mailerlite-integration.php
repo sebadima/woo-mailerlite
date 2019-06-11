@@ -32,6 +32,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     $this->getShopSettingsFromDb();
             }
             // Load the settings.
+            $this->update_selected_group();
             $this->init_form_fields();
             $this->init_settings();
 
@@ -232,6 +233,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             return ob_get_clean();
         }
 
+        public function update_selected_group()
+        {
+            if (! get_option('ml_account_authenticated')) {
+                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'));
+                update_option('ml_account_authenticated', true);
+            }
+        }
         /**
          * Getting groups, selected group, double optiin and popups 
          * settings from MailerLite, only on load of the integrations page.
@@ -323,7 +331,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     $result = mailerlite_wp_set_consumer_data( 
                                     $settings['consumer_key'], 
                                     $settings['consumer_secret'], 
-                                    $settings['api_key'],
                                     $settings['group']);
 
                     if (isset($result['errors']))  {

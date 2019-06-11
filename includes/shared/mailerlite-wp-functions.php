@@ -311,10 +311,11 @@ endif;
  * @return array|bool
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
-    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $apiKey, $group) {
+    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $group) {
         if ( ! mailerlite_wp_api_key_exists() && empty($apiKey))
             return false;
 
+        $api_key = woo_ml_get_option( 'api_key' );
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( $apiKey );
 
@@ -325,7 +326,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
                 return ['errors' => 'Please select a group.'];
             }
             if (strpos($store, 'https://') !== false ) {
-                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency, $group);
+                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);

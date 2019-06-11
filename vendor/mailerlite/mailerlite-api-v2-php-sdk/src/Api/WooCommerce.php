@@ -9,15 +9,14 @@ class WooCommerce extends ApiAbstract
 {
     protected $endpoint = 'woocommerce';
 
-    public function setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency, $group_id )
+    public function setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group_id )
     {
         $endpoint = $this->endpoint . '/consumer_data';
 
         $params = array_merge($this->prepareParams(), 
                                 ['consumer_key' => $consumerKey, 
                                 'consumer_secret' => $consumerSecret, 
-                                'store' => $store, 
-                                'api_key' => $apiKey, 
+                                'store' => $store,
                                 'currency' => $currency,
                                 'group_id' => $group_id] );
 
