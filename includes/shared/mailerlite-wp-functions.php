@@ -330,6 +330,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);
                     update_option('new_plugin_enabled', true);
+                    update_option('ml_shop_not_active', false);
                 } else if (isset($result->errors)) {
                     return ['errors' => $result->errors];
                 }
