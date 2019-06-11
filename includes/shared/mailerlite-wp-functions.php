@@ -321,6 +321,9 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $store = home_url();
             $currency = get_option('woocommerce_currency');
+            if (empty($group)) {
+                return ['errors' => 'Please select a group.'];
+            }
             if (strpos($store, 'https://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $apiKey, $currency, $group);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
@@ -484,8 +487,8 @@ if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $result = $wooCommerceApi->getShopSettings(home_url());
-            if (isset($result['body']->settings)) {
-                return $result['body']->settings;
+            if (isset($result['body'])) {
+                return $result['body'];
             } else {
                 return false;
             }
