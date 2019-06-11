@@ -41,7 +41,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
             $this->popups           = get_option('mailerlite_popups_disabled') ? 'no' : 'yes';
             $this->group            = $this->get_option('group', null);
-           // $this->authenticated    = $this->get_option('account_authenticated', null);
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
 
