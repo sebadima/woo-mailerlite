@@ -39,11 +39,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->api_key          = $this->get_option( 'api_key' );
             $this->api_status       = $this->get_option( 'api_status', false );
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
-            $this->popups           = get_option('mailerlite_popups_disabled') ? 'no' : 'yes';
+            $this->popups           = $this->get_option('popups', 'no');
             $this->group            = $this->get_option('group', null);
+
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
-
             // Filters.
             add_filter( 'woocommerce_settings_api_sanitized_fields_' . $this->id, array( $this, 'sanitize_settings' ) );
 
@@ -255,7 +255,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             } else if (isset($result->active_state)) {
                 update_option('ml_shop_not_active', true);
             }
-            $this->update_option('popups', get_option('mailerlite_popups_disabled'));
+            $popups_disabled = get_option('mailerlite_popups_disabled');
+            $this->update_option('popups', $popups_disabled ? 'no' : 'yes');
         }
 
         /**
