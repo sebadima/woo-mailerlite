@@ -135,18 +135,18 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'default'           => 'yes',
                         'desc_tip'          => true
                     ),
+                    'order_tracking_sync' => array(
+                        'title'             => 'Synchronize Orders',
+                        'type'              => 'woo_ml_sync_orders',
+                        'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite yet.", 'woo-mailerlite' ),
+                        'desc_tip'          => true,
+                    ),
                     'popups' => array(
                         'title'             => __( 'MailerLite Pop-ups', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
                         'label'       => __( 'Check in order to enable popup subscribe forms created within MailerLite.', 'woo-mailerlite' ),
                         'default'           => 'no',
                         'desc_tip'          => true
-                    ),
-                    'order_tracking_sync' => array(
-                        'title'             => 'Synchronize Orders',
-                        'type'              => 'woo_ml_sync_orders',
-                        'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite yet.", 'woo-mailerlite' ),
-                        'desc_tip'          => true,
                     )
                 );
             } else {

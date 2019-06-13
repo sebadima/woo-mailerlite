@@ -72,4 +72,18 @@ jQuery(document).ready(function(a) {
     });
     a('#woocommerce_mailerlite_group').select2();
     
+    var cs_field = a('#woocommerce_mailerlite_consumer_secret');
+    if (0 !== cs_field.length) {
+        var field_desc = cs_field.next(".description");
+        field_desc.closest('tr').after(
+                                    '<h2>Integration Details</h2>\
+                                    <span class="section-description"><p>Customize MailerLite integration for WooCommerce.</p></span>');
+    }
+
+    var tracking_field = a('#woocommerce_mailerlite_popups');
+    
+    tracking_field.closest('tr').before(
+                                        '<h2>Popups</h2>\
+                                        <span class="section-description"><p>Display popup subscribe forms created within MailerLite</p></span>')
+    
 });
