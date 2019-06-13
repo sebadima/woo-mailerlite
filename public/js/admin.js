@@ -77,13 +77,13 @@ jQuery(document).ready(function(a) {
         var field_desc = cs_field.next(".description");
         field_desc.closest('tr').after(
                                     '<h2>Integration Details</h2>\
-                                    <span class="section-description"><p>Customize MailerLite integration for WooCommerce.</p></span>');
+                                    <p class="section-description">Customize MailerLite integration for WooCommerce</p>');
     }
 
     var tracking_field = a('#woocommerce_mailerlite_popups');
     
     tracking_field.closest('tr').before(
                                         '<h2>Popups</h2>\
-                                        <span class="section-description"><p>Display popup subscribe forms created within MailerLite</p></span>')
+                                        <p class="section-description">Display pop-up subscribe forms created within MailerLite</p>')
     
 });

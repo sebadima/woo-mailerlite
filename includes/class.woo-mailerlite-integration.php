@@ -22,7 +22,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             $this->id                 = 'mailerlite';
             $this->method_title       = __( 'MailerLite', 'woo-mailerlite' );
-            $this->method_description = __( 'MailerLite integration for WooCommerce', 'woo-mailerlite' );
+            $this->method_description = __( 'Connect WooCommerce with Mailerlite', 'woo-mailerlite' );
 
             $request = $_REQUEST;
             //making a request only on load of the integrations page
@@ -109,28 +109,28 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         ),
                     ),
                     'checkout_preselect' => array(
-                        'title'             => __( 'Pre-select checkbox', 'woo-mailerlite' ),
+                        'title'             => __( 'Preselect checkbox', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
-                        'label'             => __( 'Check in order to pre-select the signup checkbox by default', 'woo-mailerlite' ),
+                        'label'             => __( 'Check to preselect the signup checkbox by default', 'woo-mailerlite' ),
                         'default'           => 'yes'
                     ),
                     'checkout_hide' => array(
                         'title'             => __( 'Hide checkbox', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
-                        'label'             => __( 'Check in order to hide the checkbox. All customers will be subscribed automatically', 'woo-mailerlite' ),
+                        'label'             => __( 'Check to hide the checkbox. All customers will be subscribed automatically', 'woo-mailerlite' ),
                         'default'           => 'yes'
                     ),
                     'checkout_label' => array(
                         'title'             => __( 'Checkbox label', 'woo-mailerlite' ),
                         'type'              => 'text',
-                        'description'       => __( 'The text which will be shown besides the checkbox', 'woo-mailerlite' ),
+                        'description'       => __( 'Text shown beside the checkbox.', 'woo-mailerlite' ),
                         'default'           => __( 'Yes, I want to receive your newsletter.', 'woo-mailerlite' ),
                         'desc_tip' => true
                     ),
                     'double_optin' => array(
                         'title'             => __( 'Double Opt-In', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
-                        'label'             => __( 'Check in order to force email confirmation before being added to your list', 'woo-mailerlite' ),
+                        'label'             => __( 'Check to enforce email confirmation before being added to your list', 'woo-mailerlite' ),
                         'description'       => __( 'Changing this setting will automatically update your double opt-in setting for your MailerLite account.', 'woo-mailerlite' ),
                         'default'           => 'yes',
                         'desc_tip'          => true
@@ -138,13 +138,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     'order_tracking_sync' => array(
                         'title'             => 'Synchronize Orders',
                         'type'              => 'woo_ml_sync_orders',
-                        'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite yet.", 'woo-mailerlite' ),
+                        'description'       => __( "Synchronizing orders whose customer and order data haven't been submitted to MailerLite.", 'woo-mailerlite' ),
                         'desc_tip'          => true,
                     ),
                     'popups' => array(
                         'title'             => __( 'MailerLite Pop-ups', 'woo-mailerlite' ),
                         'type'              => 'checkbox',
-                        'label'       => __( 'Check in order to enable popup subscribe forms created within MailerLite.', 'woo-mailerlite' ),
+                        'label'       => __( 'Enable MailerLite subscribe pop-ups', 'woo-mailerlite' ),
                         'default'           => 'no',
                         'desc_tip'          => true
                     )
