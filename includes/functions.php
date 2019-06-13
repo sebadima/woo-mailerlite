@@ -82,9 +82,12 @@ function woo_ml_process_order_subscription( $order_id ) {
     $data['checkout_id'] = $_COOKIE['mailerlite_checkout_token'];
     $data['order_id'] = $order_id;
     $data['payment_method'] = $order->get_payment_method();
+
     if ($data['payment_method'] == 'bacs' || $data['payment_method'] == 'cheque') {
         @setcookie('mailerlite_checkout_email', null, -1, '/');
         @setcookie('mailerlite_checkout_token', null, -1, '/');
+    } else {
+        $data['checkout_data'] = woo_ml_get_checkout_data();
     }
     $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data( $customer_data );
     if ( sizeof( $subscriber_fields ) > 0 )
@@ -664,8 +667,6 @@ function woo_ml_send_completed_order($order_id)
     $order_data['order'] = $order->get_data();
     $order_items = $order->get_items();
 
-    $customer_email = $order->get_billing_email('view');
-
     foreach ($order_items as $key => $value) {
         $order_data['order']['line_items'][$key] = $value->get_data();
     }
@@ -680,6 +681,14 @@ function woo_ml_send_completed_order($order_id)
  */
 function woo_ml_send_cart($cookie_email = null)
 {
+    $checkout_data = woo_ml_get_checkout_data($cookie_email);
+    if (! empty($checkout_data))
+        mailerlite_wp_send_cart($checkout_data);
+    
+}
+
+function woo_ml_get_checkout_data($cookie_email = null)
+{
     $cart = WC()->cart;
     $cart_items = $cart->get_cart();
     $customer = $cart->get_customer();
@@ -687,6 +696,7 @@ function woo_ml_send_cart($cookie_email = null)
     if (! $customer_email) {
         $customer_email = isset($_COOKIE['mailerlite_checkout_email']) ? $_COOKIE['mailerlite_checkout_email'] : $cookie_email;
     }
+    $checkout_data = [];
     if (! empty($customer_email)) {
         $line_items = [];
         foreach($cart_items as $key => $value) {
@@ -703,13 +713,14 @@ function woo_ml_send_cart($cookie_email = null)
         $shop_checkout_url = wc_get_checkout_url();
         $checkout_url = $shop_checkout_url.'?ml_checkout='.$checkout_id;
         
-        $cart_data = [
+        $checkout_data = [
             'id' => $checkout_id,
             'email' => $customer_email,
             'line_items' => $line_items,
             'abandoned_checkout_url' => $checkout_url
         ];
-        mailerlite_wp_send_cart($cart_data);
+
+        return $checkout_data;
     }
 }
 
@@ -744,4 +755,5 @@ function woo_ml_toggle_shop_connection($active_status)
     } else {
         update_option('ml_account_authenticated', false);
     }
+    
 }
