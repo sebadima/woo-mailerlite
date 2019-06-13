@@ -312,7 +312,7 @@ endif;
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
     function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $group) {
-        if ( ! mailerlite_wp_api_key_exists() && empty($apiKey))
+        if ( ! mailerlite_wp_api_key_exists())
             return false;
 
         $api_key = woo_ml_get_option( 'api_key' );
