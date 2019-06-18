@@ -9,7 +9,7 @@ class WooCommerce extends ApiAbstract
 {
     protected $endpoint = 'woocommerce';
 
-    public function setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group_id )
+    public function setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group_id, $resubscribe )
     {
         $endpoint = $this->endpoint . '/consumer_data';
 
@@ -18,8 +18,8 @@ class WooCommerce extends ApiAbstract
                                 'consumer_secret' => $consumerSecret, 
                                 'store' => $store,
                                 'currency' => $currency,
-                                'group_id' => $group_id] );
-
+                                'group_id' => $group_id,
+                                'resubscribe' => $resubscribe]);
         $response = $this->restClient->post( $endpoint, $params );
 
         return $response['body'];

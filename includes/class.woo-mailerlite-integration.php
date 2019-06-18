@@ -42,7 +42,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->double_optin     = $this->get_option( 'double_optin', 'no' );
             $this->popups           = $this->get_option('popups', 'no');
             $this->group            = $this->get_option('group', null);
-
+            $this->resubscribe      = $this->get_option('resubscribe', 'no');
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
             // Filters.
@@ -89,6 +89,12 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'default' 		=> '',
                         'options'		=> woo_ml_settings_get_group_options(),
                         'desc_tip' => true
+                    ),
+                    'resubscribe' => array(
+                        'title'         => __('Resubscribe', 'woo-mailerlite'),
+                        'type'          => 'checkbox',
+                        'label'         => __('Check in order to resubscribe inactive subscribers once they subscribe via the checkout page'),
+                        'default'       => 'no'
                     ),
                     'checkout' => array(
                         'title'             => __( 'Checkout', 'woo-mailerlite' ),
@@ -251,6 +257,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             if (!empty($result) && isset($result->settings)) {
                 $settings = $result->settings;
                 $this->update_option('double_optin', $settings->double_optin);
+                $resubscribe = $settings->resubscribe ? 'yes' : 'no';
+                $this->update_option('resubscribe', $resubscribe);
                 $groupsArray = [];
                 $groups = $settings->groups;
                 if ( sizeof( $groups ) > 0 ) {
@@ -328,21 +336,23 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             // hiding the ck and cs values once save performed as we don't need to have them saved here anyway
             // we only need them for backwards connection  from api to plugin to get products and categories.
             if ( ! empty($settings['consumer_key']) && ! empty($settings['consumer_secret'])) {
-                    $result = mailerlite_wp_set_consumer_data( 
-                                    $settings['consumer_key'], 
-                                    $settings['consumer_secret'], 
-                                    $settings['group']);
+                $resubscribe = $settings['resubscribe'] === 'yes' ? 1 : 0;
+                $result = mailerlite_wp_set_consumer_data( 
+                                $settings['consumer_key'], 
+                                $settings['consumer_secret'], 
+                                $settings['group'],
+                                $resubscribe);
 
-                    if (isset($result['errors']))  {
-                        $settings['consumer_key']  = '';
-                        $settings['consumer_secret'] = ''; 
-                        echo '<div class="error">
-                                <p>'.$result['errors'].'</p>
-                            </div> ';   
-                    } else {
-                        $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
-                        $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
-                    }
+                if (isset($result['errors']))  {
+                    $settings['consumer_key']  = '';
+                    $settings['consumer_secret'] = ''; 
+                    echo '<div class="error">
+                            <p>'.$result['errors'].'</p>
+                        </div> ';   
+                } else {
+                    $settings['consumer_key']  = '....'.substr($settings['consumer_key'], -4);
+                    $settings['consumer_secret'] = '....'.substr($settings['consumer_secret'], -4);
+                }
             }
 
             if($settings['popups'] !== $this->popups) {
