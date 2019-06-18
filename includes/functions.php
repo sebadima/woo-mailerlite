@@ -95,10 +95,15 @@ function woo_ml_process_order_subscription( $order_id ) {
 
     $subscriber_result = mailerlite_wp_add_subscriber_and_save_order($data, 'order_created');
 
-    if (isset($subscriber_result->added_to_group))
-        woo_ml_complete_order_customer_subscribed( $order_id );
+    if (isset($subscriber_result->added_to_group)) {
+        if ($subscriber_result->added_to_group) {
+            woo_ml_complete_order_customer_subscribed($order_id);
+        } else {
+            woo_ml_complete_order_customer_already_subscribed($order_id);
+        }
+    }
         
-    if ( isset($subscriber_result->updated_fields) )
+    if (isset($subscriber_result->updated_fields) && $subscriber_result->updated_fields)
         woo_ml_complete_order_subscriber_updated( $order_id );    
 }
 
@@ -493,6 +498,13 @@ function woo_ml_order_customer_subscribed( $order_id ) {
     return ( '1' == $subscribed ) ? true : false;
 }
 
+function woo_ml_order_customer_already_subscribed( $order_id ) {
+
+    $already_subscribed = get_post_meta( $order_id, '_woo_ml_already_subscribed', true );
+
+    return ( '1' == $already_subscribed ) ? true : false;
+}
+
 /**
  * Mark order as "customer subscribed via API"
  *
@@ -500,6 +512,10 @@ function woo_ml_order_customer_subscribed( $order_id ) {
  */
 function woo_ml_complete_order_customer_subscribed( $order_id ) {
     add_post_meta( $order_id, '_woo_ml_subscribed', true );
+}
+
+function woo_ml_complete_order_customer_already_subscribed( $order_id ) {
+    add_post_meta( $order_id, '_woo_ml_already_subscribed', true );
 }
 
 /**

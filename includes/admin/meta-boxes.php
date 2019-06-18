@@ -35,6 +35,10 @@ function woo_ml_order_meta_box_output( $post ) {
     <p>
         <?php _e('Subscribed  to mailing list:', 'woo-mailerlite' ); ?> <?php echo ( $subscribed ) ? $icon_yes : $icon_no; ?>
     </p>
+    <?php $already_subscribed = woo_ml_order_customer_already_subscribed( $order_id ); ?>
+    <p>
+        <?php _e('Already in the subscriber list:', 'woo-mailerlite' ); ?> <?php echo ( $already_subscribed ) ? $icon_yes : $icon_no; ?>
+    </p>
     <?php $subscriber_updated = woo_ml_order_subscriber_updated( $order_id ); ?>
     <p>
         <?php _e('Updated subscriber data:', 'woo-mailerlite' ); ?> <?php echo ( $subscriber_updated ) ? $icon_yes : $icon_no; ?>
