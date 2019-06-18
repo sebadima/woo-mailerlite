@@ -84,6 +84,13 @@ jQuery(document).ready(function(a) {
     
     tracking_field.closest('tr').before(
                                         '<h2>Popups</h2>\
-                                        <p class="section-description">Display pop-up subscribe forms created within MailerLite</p>')
+                                        <p class="section-description">Display pop-up subscribe forms created within MailerLite</p>');
+
+    var button = a('[name="save"]');
+    if (field.length !== 0 && cs_field.length === 0) {
+        button.hide();
+    } else {
+        button.show();
+    }
     
 });

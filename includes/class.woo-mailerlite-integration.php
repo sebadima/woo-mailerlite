@@ -242,8 +242,9 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         public function update_selected_group()
         {
             if (! get_option('ml_account_authenticated')) {
-                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'));
-                update_option('ml_account_authenticated', true);
+                $result = mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),0);
+                if ($result)
+                    update_option('ml_account_authenticated', true);
             }
         }
         /**

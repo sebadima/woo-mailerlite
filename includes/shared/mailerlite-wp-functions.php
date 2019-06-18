@@ -19,7 +19,7 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
         try {
 
             $mailerliteClient = new \MailerLiteApi\MailerLite( $api_key );
-
+            
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $result = $wooCommerceApi->validateAccount($api_key);
             
@@ -41,6 +41,7 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
                     }
                 }
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
+                return true;
             }
 
         } catch (Exception $e) {
@@ -325,7 +326,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             if (empty($group)) {
                 return ['errors' => 'Please select a group.'];
             }
-            if (strpos($store, 'https://') !== false ) {
+            if (strpos($store, 'http://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group, $resubscribe);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
