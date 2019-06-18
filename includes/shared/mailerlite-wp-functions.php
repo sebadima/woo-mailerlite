@@ -326,7 +326,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             if (empty($group)) {
                 return ['errors' => 'Please select a group.'];
             }
-            if (strpos($store, 'http://') !== false ) {
+            if (strpos($store, 'https://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group, $resubscribe);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
