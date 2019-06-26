@@ -782,6 +782,7 @@ function woo_ml_toggle_shop_connection($active_status)
         woo_ml_drop_mailerlite_checkouts_table();
         mailerlite_wp_toggle_shop_connection($active_status);
     } else {
+        woo_ml_create_mailerlite_checkouts_table();
         update_option('ml_account_authenticated', false);
     }
 }
@@ -830,6 +831,10 @@ function woo_ml_save_or_update_checkout($checkout_id, $customer_email, $cart)
 {
     global $wpdb;
     $table = $wpdb->prefix . 'mailerlite_checkouts';
+    
+    if($wpdb->get_var("SHOW TABLES LIKE '$table'") != $table) {
+        woo_ml_create_mailerlite_checkouts_table();
+    }
 
     $checkout = woo_ml_get_saved_checkout($checkout_id);
     if (!empty($checkout) && !empty($cart)) {
