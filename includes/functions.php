@@ -767,7 +767,9 @@ function woo_ml_payment_status_processing($order_id)
     }
 }
 /**
- * Clears ml specific options from the database and sends api request
+ * Clears ml specific options from the database,
+ * Drops mailerlite_checkouts table,
+ * Sends api request
  * 
  * @param Bool $active_status
  * @return void
@@ -777,11 +779,11 @@ function woo_ml_toggle_shop_connection($active_status)
     if (! $active_status) {
         delete_option('woocommerce_mailerlite_settings');
         delete_option('double_optin');
+        woo_ml_drop_mailerlite_checkouts_table();
         mailerlite_wp_toggle_shop_connection($active_status);
     } else {
         update_option('ml_account_authenticated', false);
     }
-    
 }
 /**
  * Intial creation of mailerlite_checkouts table
@@ -808,7 +810,16 @@ function woo_ml_create_mailerlite_checkouts_table()
 	dbDelta( $sql );
 }
 /**
- * Inser/update/delete checkout entry from the table
+ * @return void
+ */
+function woo_ml_drop_mailerlite_checkouts_table()
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'mailerlite_checkouts';
+    $wpdb->query("DROP TABLE IF EXISTS $table");
+}
+/**
+ * Insert/update/delete checkout entry from the table
  * 
  * @param string $checkout_id
  * @param string $customer_email
