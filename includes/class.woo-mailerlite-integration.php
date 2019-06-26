@@ -239,12 +239,15 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             return ob_get_clean();
         }
 
+        
         public function update_selected_group()
         {
             if (! get_option('ml_account_authenticated')) {
                 $result = mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),0);
-                if ($result)
+                if ($result){
                     update_option('ml_account_authenticated', true);
+                    woo_ml_create_mailerlite_checkouts_table();
+                }
             }
         }
         /**

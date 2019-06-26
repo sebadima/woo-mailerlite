@@ -241,3 +241,10 @@ function activate()
     woo_ml_toggle_shop_connection(1);
 }
 register_activation_hook( __FILE__, 'activate' );
+
+function reload_checkout()
+{
+    require_once 'includes/functions.php';
+    woo_ml_reload_checkout();
+}
+add_action('init', 'reload_checkout');

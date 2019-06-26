@@ -702,7 +702,11 @@ function woo_ml_send_cart($cookie_email = null)
         mailerlite_wp_send_cart($checkout_data);
     
 }
-
+/**
+ * Preparing checkout data for api
+ * @param $cookie_email
+ * @return array
+ */
 function woo_ml_get_checkout_data($cookie_email = null)
 {
     $cart = WC()->cart;
@@ -735,7 +739,8 @@ function woo_ml_get_checkout_data($cookie_email = null)
             'line_items' => $line_items,
             'abandoned_checkout_url' => $checkout_url
         ];
-
+        
+        woo_ml_save_or_update_checkout($checkout_id, $customer_email, $cart_items );
         return $checkout_data;
     }
 }
@@ -761,7 +766,12 @@ function woo_ml_payment_status_processing($order_id)
         mailerlite_wp_add_subscriber_and_save_order($data, 'order_processing');
     }
 }
-
+/**
+ * Clears ml specific options from the database and sends api request
+ * 
+ * @param Bool $active_status
+ * @return void
+ */
 function woo_ml_toggle_shop_connection($active_status)
 {
     if (! $active_status) {
@@ -772,4 +782,90 @@ function woo_ml_toggle_shop_connection($active_status)
         update_option('ml_account_authenticated', false);
     }
     
+}
+/**
+ * Intial creation of mailerlite_checkouts table
+ * 
+ * @return void
+ */
+function woo_ml_create_mailerlite_checkouts_table()
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'mailerlite_checkouts';
+	
+	$charset_collate = $wpdb->get_charset_collate();
+
+	$sql = "CREATE TABLE $table(
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		checkout_id varchar(55) NOT NULL,
+		email text NOT NULL,
+		cart_content text DEFAULT '' NOT NULL,
+		PRIMARY KEY  (id)
+	) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+}
+/**
+ * Inser/update/delete checkout entry from the table
+ * 
+ * @param string $checkout_id
+ * @param string $customer_email
+ * @param array $cart
+ * @return void
+ */
+function woo_ml_save_or_update_checkout($checkout_id, $customer_email, $cart)
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'mailerlite_checkouts';
+
+    $checkout = woo_ml_get_saved_checkout($checkout_id);
+    if (!empty($checkout) && !empty($cart)) {
+        $wpdb->query( $wpdb->prepare("UPDATE $table 
+                SET email = %s, cart_content = %s
+                WHERE checkout_id = %s",$customer_email, serialize($cart), $checkout_id)
+        );
+    } else if(!empty($checkout) && empty($cart)) {
+        $wpdb->query('DELETE FROM'.$table.'WHERE checkout_id = '.$checkout_id);
+    } else {
+        $wpdb->insert( 
+            $table, 
+            array( 
+                'time' => current_time( 'mysql' ), 
+                'checkout_id' => $checkout_id, 
+                'email' => $customer_email, 
+                'cart_content' => serialize($cart)
+            ) 
+        );
+    }
+}
+/**
+ * @param string $checkout_id
+ * @return array
+ */
+function woo_ml_get_saved_checkout($checkout_id)
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'mailerlite_checkouts';
+
+    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE checkout_id = %s", $checkout_id));
+}
+/**
+ * Sets checkout for user session when clicking on Return to checkout email
+ * 
+ * @return void
+ */
+function woo_ml_reload_checkout()
+{    
+    if ( ! is_object( WC()->session ) )
+        return false;
+    
+    if (isset($_GET['ml_checkout'])) {
+        $checkout = woo_ml_get_saved_checkout($_GET['ml_checkout']);
+        
+        WC()->session->set('cart', unserialize($checkout->cart_content));
+        @setcookie('mailerlite_checkout_token', $checkout->checkout_id, time()+172800, '/');
+        @setcookie('mailerlite_checkout_email', $checkout->email, time()+172800, '/');
+    }
 }
