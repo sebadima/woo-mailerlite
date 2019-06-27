@@ -831,7 +831,7 @@ function woo_ml_save_or_update_checkout($checkout_id, $customer_email, $cart)
 {
     global $wpdb;
     $table = $wpdb->prefix . 'mailerlite_checkouts';
-    
+
     if($wpdb->get_var("SHOW TABLES LIKE '$table'") != $table) {
         woo_ml_create_mailerlite_checkouts_table();
     }
@@ -878,7 +878,8 @@ function woo_ml_reload_checkout()
         return false;
     
     if (isset($_GET['ml_checkout'])) {
-        $checkout = woo_ml_get_saved_checkout($_GET['ml_checkout']);
+        $checkout_id = substr($_GET['ml_checkout'], 0, strpos($_GET['ml_checkout'], "?"));
+        $checkout = woo_ml_get_saved_checkout($checkout_id);
         
         WC()->session->set('cart', unserialize($checkout->cart_content));
         @setcookie('mailerlite_checkout_token', $checkout->checkout_id, time()+172800, '/');
