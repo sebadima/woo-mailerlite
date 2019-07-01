@@ -174,6 +174,7 @@ function woo_ml_get_integration_custom_fields() {
         'woo_orders_count' => array( 'title' => 'Woo Orders Count', 'type' => 'NUMBER' ),
         'woo_total_spent' => array( 'title' => 'Woo Total Spent', 'type' => 'NUMBER' ),
         'woo_last_order' => array( 'title' => 'Woo Last Order', 'type' => 'DATE' ),
+        'woo_last_order_id' => array('title' => 'Woo Last Order ID', 'type' => 'NUMBER')
     );
 }
 

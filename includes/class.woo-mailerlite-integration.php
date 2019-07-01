@@ -244,6 +244,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         {
             if (! get_option('ml_account_authenticated')) {
                 $result = mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),0);
+                mailerlite_wp_create_custom_field(['woo_last_order_id'=>['title' => 'Woo Last Order ID', 'type' => 'NUMBER']]);
                 if ($result)
                     update_option('ml_account_authenticated', true);
             }

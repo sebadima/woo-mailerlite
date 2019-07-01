@@ -147,7 +147,8 @@ function woo_ml_process_order_tracking( $order_id ) {
             'fields' => array(
                 'woo_orders_count' => $tracking_data['orders_count'],
                 'woo_total_spent' => $tracking_data['total_spent'],
-                'woo_last_order' => $tracking_data['last_order']
+                'woo_last_order' => $tracking_data['last_order'],
+                'woo_last_order_id' => $order_id
             )
         );
 
