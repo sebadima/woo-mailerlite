@@ -58,23 +58,20 @@ function woo_ml_setup_integration() {
  *
  * @return bool
  */
-function woo_ml_setup_integration_custom_fields() {
+function woo_ml_setup_integration_custom_fields($fields = null) {
     $ml_fields = mailerlite_wp_get_custom_fields();
-    $fields = woo_ml_get_integration_custom_fields();
+    if (! $fields)
+        $fields = woo_ml_get_integration_custom_fields();
 
-    // Loop remote fields
-    if ( is_array( $ml_fields ) ) {
-        foreach ( $ml_fields as $ml_field ) {
-            // If field already exists, kick it out
-            if ( isset( $ml_field->key ) && isset( $fields[$ml_field->key] ) )
-                unset( $fields[$ml_field->key] );
+    if (is_array($ml_fields)) {
+        foreach ($ml_fields as $ml_field) {
+            if (isset($ml_field->key ) && isset( $fields[$ml_field->key]))
+                unset($fields[$ml_field->key]);
         }
     }
-    // Loop fields left
-    if ( sizeof( $fields ) > 0 ) {
-        foreach ( $fields as $field_data ) {
-            // Finally create missing custom fields
-            mailerlite_wp_create_custom_field( $field_data );
+    if ( sizeof($fields) > 0 ) {
+        foreach ($fields as $field_data) {
+            mailerlite_wp_create_custom_field($field_data);
         }
     }
 
