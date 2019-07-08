@@ -356,7 +356,7 @@ function woo_ml_get_subscriber_fields_from_customer_data( $customer_data ) {
  * @param array $args
  * @return array
  */
-function woo_ml_get_untracked_orders( $args = array() ) {
+function woo_ml_get_untracked_orders($args = array()) {
 
     $defaults = array(
         'numberposts' => -1,
@@ -368,9 +368,9 @@ function woo_ml_get_untracked_orders( $args = array() ) {
     );
 
     $args = wp_parse_args( $args, $defaults );
-
+    
     $order_posts = get_posts( $args );
-
+    
     return $order_posts;
 }
 
@@ -886,4 +886,16 @@ function woo_ml_reload_checkout()
         @setcookie('mailerlite_checkout_token', $checkout->checkout_id, time()+172800, '/');
         @setcookie('mailerlite_checkout_email', $checkout->email, time()+172800, '/');
     }
+}
+
+function woo_ml_set_to_tracked_orders($order)
+{
+    if ($order->post_status === 'wc-completed') {
+        woo_ml_complete_order_data_submitted( $order->ID );
+        woo_ml_complete_order_tracking( $order->ID );
+        
+        return true;
+    }
+
+    return false;
 }

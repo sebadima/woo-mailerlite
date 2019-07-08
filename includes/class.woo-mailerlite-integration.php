@@ -43,6 +43,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $this->popups           = $this->get_option('popups', 'no');
             $this->group            = $this->get_option('group', null);
             $this->resubscribe      = $this->get_option('resubscribe', 'no');
+            
             // Actions.
             add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
             // Filters.
@@ -191,7 +192,21 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             $data = wp_parse_args( $data, $defaults );
 
-            $untracked_orders = woo_ml_get_untracked_orders();
+            $untracked_orders_all = woo_ml_get_untracked_orders();
+            $untracked_orders = [];
+            
+            $last_tracked_order_id = get_option('woo_ml_last_manually_tracked_order_id');
+            foreach($untracked_orders_all as $order) {
+                if ($order->ID <= $last_tracked_order_id) {
+                    $tracked = woo_ml_set_to_tracked_orders($order);
+                    if (! $tracked)
+                        $untracked_orders[] = $order;
+                    
+                    continue;
+                }
+                $untracked_orders[] = $order;
+            }
+            
             $untracked_orders_count = ( is_array( $untracked_orders ) ) ? sizeof( $untracked_orders ) : 0;
 
             ob_start();
@@ -271,6 +286,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 }
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
                 $this->update_option('group', $settings->group_id);
+                update_option('woo_ml_last_manually_tracked_order_id', $settings->last_tracked_order_id);    
             } else if (isset($result->active_state)) {
                 update_option('ml_shop_not_active', true);
             }
