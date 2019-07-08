@@ -30,7 +30,12 @@ class WooCommerce extends ApiAbstract
         $endpoint = 'woocommerce/alternative_save_order';
 
         $params = array_merge($this->prepareParams(), ['order_data' => $orderData, 'shop' => $shop] );
-        return $this->restClient->post( $endpoint, $params );
+        $response = $this->restClient->post( $endpoint, $params );
+        if (isset($response['body'])){
+            return $response['body'];
+        } else {
+            return true;
+        }
     }
 
     public function toggleShopConnection($shop, $activeState)
@@ -47,7 +52,12 @@ class WooCommerce extends ApiAbstract
         $endpoint = 'woocommerce/save_cart';
 
         $params = array_merge($this->prepareParams(), ['cart_data' => $cartData, 'shop' => $shopUrl] );
-        return $this->restClient->post( $endpoint, $params );
+        $response = $this->restClient->post( $endpoint, $params );
+        if (isset($response['body'])){
+            return $response['body'];
+        } else {
+            return true;
+        }
     } 
 
     public function sendSubscriberData($data) 
@@ -69,9 +79,13 @@ class WooCommerce extends ApiAbstract
         $endpoint = 'woocommerce/order_processing';
 
         $params = array_merge($this->prepareParams(), ['data'=>$data] );
-        $this->restClient->post( $endpoint, $params );
+        $response = $this->restClient->post( $endpoint, $params );
 
-        return true;
+        if (isset($response['body'])){
+            return $response['body'];
+        } else {
+            return true;
+        }
     }
 
     public function getShopSettings($shopUrl) 

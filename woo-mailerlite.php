@@ -248,3 +248,13 @@ function reload_checkout()
     woo_ml_reload_checkout();
 }
 add_action('init', 'reload_checkout');
+
+function woo_ml_deactivate_woo_ml_plugin($deactivate = false)
+{
+    if ($deactivate) {
+        deactivate();
+        
+        require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        deactivate_plugins(plugin_basename( __FILE__ ), true);
+    }
+}

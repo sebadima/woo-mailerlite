@@ -367,7 +367,10 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
             $store = home_url();
-            $wooCommerceApi->saveOrder($order_data, $store);
+            $result = $wooCommerceApi->saveOrder($order_data, $store);
+            if (isset($result->deactivate) && $result->deactivate) {
+                woo_ml_deactivate_woo_ml_plugin(true);
+            }
         } catch (Exception $e) {
             return false;
         }
@@ -424,7 +427,10 @@ if (! function_exists('mailerlite_wp_send_cart')) :
             
             $shop_url = home_url();
             
-            $wooCommerceApi->sendCartData($shop_url, $cart_data);
+            $result = $wooCommerceApi->sendCartData($shop_url, $cart_data);
+            if (isset($result->deactivate) && $result->deactivate) {
+                woo_ml_deactivate_woo_ml_plugin(true);
+            }
         } catch (Exception $e) {
             return false;
         }
@@ -460,11 +466,17 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
             
                 if (isset($result->added_to_group) && isset($result->updated_fields)) {
                     return $result;
+                } else if (isset($result->deactivate) && $result->deactivate){
+                    woo_ml_deactivate_woo_ml_plugin(true);
+                    return false;
                 } else {
                     return false;
                 }
             } else {
-                $wooCommerceApi->sendOrderProcessingData($data);
+                $result = $wooCommerceApi->sendOrderProcessingData($data);
+                if (isset($result->deactivate) && $result->deactivate) {
+                    woo_ml_deactivate_woo_ml_plugin(true);
+                }
                 return true;
             }
             
@@ -491,7 +503,12 @@ if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $result = $wooCommerceApi->getShopSettings(home_url());
             if (isset($result['body'])) {
-                return $result['body'];
+                
+                if (isset($result['body']->deactivate) && $result['body']->deactivate) {
+                    woo_ml_deactivate_woo_ml_plugin(true);
+                } else {
+                    return $result['body'];
+                }
             } else {
                 return false;
             }
