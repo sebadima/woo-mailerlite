@@ -207,7 +207,8 @@ function woo_ml_get_merged_order_tracking_data( $tracking_data, $ml_subscriber_o
     $tracking_data = array(
         'orders_count' => $ml_tracking_data['orders_count'] + $tracking_data['orders_count'],
         'total_spent' => $ml_tracking_data['total_spent'] + $tracking_data['total_spent'],
-        'last_order' => $tracking_data['last_order']
+        'last_order' => $tracking_data['last_order'],
+        'last_order_id' => $tracking_data['last_order_id']
     );
 
     return $tracking_data;
@@ -230,7 +231,8 @@ function woo_ml_get_order_tracking_data( $order_ids ) {
     $tracking_data = array(
         'orders_count' => 0,
         'total_spent' => 0,
-        'last_order' => ''
+        'last_order' => '',
+        'last_order_id' => 0
     );
 
     if ( sizeof( $order_ids ) > 0 ) {
@@ -246,6 +248,7 @@ function woo_ml_get_order_tracking_data( $order_ids ) {
             $order_date = ( method_exists( $order, 'get_date_created' ) ) ? $order->get_date_created() : $order->date_created;
             $order_date = date( 'Y-m-d', strtotime( $order_date ) );
             $tracking_data['last_order'] = $order_date;
+            $tracking_data['last_order_id'] = $order_id;
         }
     }
 
@@ -441,6 +444,7 @@ function woo_ml_sync_untracked_orders() {
             $subscriber_fields['woo_orders_count'] = $tracking_data['orders_count'];
             $subscriber_fields['woo_total_spent'] = $tracking_data['total_spent'];
             $subscriber_fields['woo_last_order'] = $tracking_data['last_order'];
+            $subscriber_fields['woo_last_order_id'] = $tracking_data['last_order_id'];
 
             $subscriber_data['fields'] = $subscriber_fields;
 
