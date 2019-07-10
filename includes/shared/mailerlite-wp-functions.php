@@ -41,6 +41,7 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
                     }
                 }
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
+                woo_ml_setup_integration_custom_fields();
                 return true;
             }
 
