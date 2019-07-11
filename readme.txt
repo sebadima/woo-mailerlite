@@ -3,19 +3,30 @@ Contributors: mailerlite, flowdee
 Donate link: Donate link: https://www.mailerlite.com/
 Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce, shop
 Requires at least: 3.0.1
-Tested up to: 5.2.1
+Tested up to: 5.2.2
 Requires PHP: 5.6.0
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Official MailerLite integration for WooCommerce. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
+Welcome to the Official MailerLite integration for WooCommerce. MailerLite is the email marketing tool that makes it super easy to design beautiful newsletters and to set up automated e-commerce email campaigns. 
+ 
+Stay connected with your customers, promote new products and win back lost sales. MailerLite offers the same advanced tools and integrations of other email tools, yet they manage to keep it simple, inexpensive and fun to use for people of all skill levels.
+ 
+MailerLite’s popular 24/7 customer support staffed with real people is always ready to answer your questions and help you succeed with email marketing.
+ 
+And the best part – you can start using MailerLite now with a Forever Free plan, which includes up to 1,000 unique subscribers. MailerLite is used by more than 630,000 customers globally. Most of them are small businesses like you.
 
 == Description ==
 
 ==== Official MailerLite Integration for WooCommerce ====
 
-This plugin allows you to easily connect WooCommerce with MailerLite. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
+The plugin lets you easily connect WooCommerce to MailerLite, giving you access to a suite of e-commerce features to help you grow your business.
+ 
+Track sales and campaign ROI, import products details, automate emails based on purchases and re-engage customers who abandoned their carts.
+ 
+Here’s a complete list of all the bells and whistles:
+
 = Features =
 
 * Checkout integration
@@ -30,6 +41,7 @@ This plugin allows you to easily connect WooCommerce with MailerLite. Track sale
 * Setup order related MailerLite segments
 * Set up automation triggered by recent purchases
 * Abandoned cart emails
+* Subscribe pop-ups
 * Regular updates and improvements: Check out the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
 
 = Quickstart =
@@ -41,7 +53,7 @@ This plugin allows you to easily connect WooCommerce with MailerLite. Track sale
 
 = Credits =
 
-* This plugin is made by using the official [MailerLite API](https://developers.mailerlite.com/docs).
+* Plugin created with the official [MailerLite API](https://developers.mailerlite.com/docs).
 
 == Installation ==
 
@@ -85,6 +97,15 @@ Yes of course.
 6. Dashboard e-commerce performance
 
 == Changelog ==
+= 1.4.0 (11th July 2019) =
+* New: Resubscribe option for inactive users
+* New: Popups option
+* Improvement: Abandoned cart process changes
+* Improvement: Layout design change and fixes
+* Improvement: Disabling and enabling plugin processes updates
+* Improvement: Changes to allow some settings to be updated through the MailerLite app
+* Minor fixes and updates
+
 = 1.3.1 (30th May 2019) =
 * Minor fixes and updates
 

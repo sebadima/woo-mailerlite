@@ -3,7 +3,7 @@
  * Plugin Name:     WooCommerce - MailerLite
  * Plugin URI:      https://wordpress.org/plugins/woo-mailerlite/
  * Description:     Official MailerLite integration for WooCommerce. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
- * Version:         1.3.1
+ * Version:         1.4.0
  * Author:          MailerLite
  * Author URI:      https://mailerlite.com
  * Text Domain:     woo-mailerlite
@@ -230,14 +230,31 @@ add_action( 'plugins_loaded', 'woo_ml_load' );
 
 function deactivate()
 {
-    require_once 'includes/shared/mailerlite-wp-functions.php';
-    mailerlite_wp_toggle_shop_connection(0);
+    require_once 'includes/functions.php';
+    woo_ml_toggle_shop_connection(0);
 }
 register_deactivation_hook( __FILE__, 'deactivate' );
 
-/*function activate()
+function activate()
 {
-    require_once 'includes/shared/mailerlite-wp-functions.php';
-    mailerlite_wp_toggle_shop_connection(1);
+    require_once 'includes/functions.php';
+    woo_ml_toggle_shop_connection(1);
 }
-register_activation_hook( __FILE__, 'activate' );*/
+register_activation_hook( __FILE__, 'activate' );
+
+function reload_checkout()
+{
+    require_once 'includes/functions.php';
+    woo_ml_reload_checkout();
+}
+add_action('init', 'reload_checkout');
+
+function woo_ml_deactivate_woo_ml_plugin($deactivate = false)
+{
+    if ($deactivate) {
+        deactivate();
+        
+        require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        deactivate_plugins(plugin_basename( __FILE__ ), true);
+    }
+}

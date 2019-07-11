@@ -43,3 +43,11 @@
   border-radius: 6px;
   transition: width 1s ease;
 }
+
+.section-description {
+  width: 1000px;
+}
+
+#woo-ml-validate-key {
+  margin-left: 5px;
+}

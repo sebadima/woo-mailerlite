@@ -50,4 +50,47 @@ jQuery(document).ready(function(a) {
             console.log("loop finished!"), d.hide(), j.hide(), a("#woo-ml-sync-untracked-orders-success").show();
         }
     });
+    
+    var field = a("#woocommerce_mailerlite_api_key");
+    a('<button id="woo-ml-validate-key" class="button-primary">Validate Key</button>').insertAfter(field);
+    a(document).on("click", "#woo-ml-validate-key", function(b) {
+        if (b.preventDefault(), !e) {
+            var key = a("#woocommerce_mailerlite_api_key").val();
+            jQuery.ajax({
+                url: woo_ml_post.ajax_url,
+                type:"post",
+                data: {
+                    action: "post_woo_ml_validate_key",
+                    key:key
+                },
+                async: !1,
+                success: function(a) {
+                    location.reload()
+                }
+            })
+        }
+    });
+    a('#woocommerce_mailerlite_group').select2();
+    
+    var cs_field = a('#woocommerce_mailerlite_consumer_secret');
+    if (0 !== cs_field.length) {
+        var field_desc = cs_field.next(".description");
+        field_desc.closest('tr').after(
+                                    '<h2>Integration Details</h2>\
+                                    <p class="section-description">Customize MailerLite integration for WooCommerce</p>');
+    }
+
+    var tracking_field = a('#woocommerce_mailerlite_popups');
+    
+    tracking_field.closest('tr').before(
+                                        '<h2>Popups</h2>\
+                                        <p class="section-description">Display pop-up subscribe forms created within MailerLite</p>');
+
+    var button = a('[name="save"]');
+    if (field.length !== 0 && cs_field.length === 0) {
+        button.hide();
+    } else {
+        button.show();
+    }
+    
 });
