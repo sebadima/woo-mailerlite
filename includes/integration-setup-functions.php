@@ -58,35 +58,22 @@ function woo_ml_setup_integration() {
  *
  * @return bool
  */
-function woo_ml_setup_integration_custom_fields() {
-
+function woo_ml_setup_integration_custom_fields($fields = null) {
     $ml_fields = mailerlite_wp_get_custom_fields();
+    if (! $fields)
+        $fields = woo_ml_get_integration_custom_fields();
 
-    $fields = woo_ml_get_integration_custom_fields();
-
-    //$fields_created = mailerlite_wp_create_custom_fields( $fields );
-
-    // Loop remote fields
-    if ( is_array( $ml_fields ) ) {
-        foreach ( $ml_fields as $ml_field ) {
-
-            // If field already exists, kick it out
-            if ( isset( $ml_field->key ) && isset( $fields[$ml_field->key] ) )
-                unset( $fields[$ml_field->key] );
+    if (is_array($ml_fields)) {
+        foreach ($ml_fields as $ml_field) {
+            if (isset($ml_field->key ) && isset( $fields[$ml_field->key]))
+                unset($fields[$ml_field->key]);
         }
     }
-
-    // Loop fields left
-    if ( sizeof( $fields ) > 0 ) {
-
-        foreach ( $fields as $field_data ) {
-            // Finally create missing custom fields
-            mailerlite_wp_create_custom_field( $field_data );
+    if ( sizeof($fields) > 0 ) {
+        foreach ($fields as $field_data) {
+            mailerlite_wp_create_custom_field($field_data);
         }
     }
-
-    //woo_ml_debug( $ml_fields );
-    //woo_ml_debug( $fields );
 
     return true;
 }
@@ -101,14 +88,12 @@ function woo_ml_setup_integration_custom_fields() {
  * @return bool
  */
 function woo_ml_setup_integration_segments() {
-
     $group_id = woo_ml_get_option( 'group' );
 
     if ( empty( $group_id ) )
         return false;
 
-    $ml_fields = mailerlite_wp_get_custom_fields(); // Re-fetching in order to get latest fields
-    //woo_ml_debug( $ml_fields, '$ml_fields refetched' );
+    $ml_fields = mailerlite_wp_get_custom_fields(); 
 
     if ( ! $ml_fields )
         return false;
@@ -120,20 +105,15 @@ function woo_ml_setup_integration_segments() {
 
     foreach ( $ml_fields as $ml_field ) {
         $ml_field = (array) $ml_field;
-        //$account_fields_by_key[$ml_field['id']] = $ml_field;
         $account_fields_by_key[$ml_field['key']] = $ml_field;
     }
-
-    //woo_ml_debug( $account_fields_by_key, '$account_fields_by_key' );
 
     /*
      * Prepare segments data
      */
     $segments = woo_ml_get_integration_segments();
-    //woo_ml_debug( $segments, '$segments' );
 
     foreach ( $segments as $segment_key => $segment_data ) {
-
         if (!empty($segment_data['filter'])) {
             $data = [
                 "title" => $segment_data["title"],
@@ -142,23 +122,15 @@ function woo_ml_setup_integration_segments() {
 
             foreach ($data['filter']['rules'] as $rule_set_key => $rule_set) {
                 foreach ($rule_set as $rule_key => $rule) {
-
-                    //woo_ml_debug( $rule, '$rule' );
-
                     if ($rule['args'][0] === 'group_id') {
                         $value = $group_id;
                     } else {
-
-                        //echo 'rule[args][0] >> ' . $rule['args'][0] . '<br>';
-
                         if ( ! isset( $account_fields_by_key[$rule['args'][0]] ) )
                             continue;
 
                         $field_array = $account_fields_by_key[$rule['args'][0]];
-
                         $value = $field_array['id'];
                     }
-
                     $data['filter']['rules'][$rule_set_key][$rule_key]['args'][0] = $value;
                 }
             }
@@ -181,11 +153,7 @@ function woo_ml_setup_integration_segments() {
             }
 
             $data['filter']['conditionSets'] = json_encode($data['filter']['conditionSets']);
-            //woo_ml_debug( $data, 'woo_ml_setup_integration_segments >> $data' );
-
-            //$response = createNewSegment($data, $shop['api_key']);
             $segment = mailerlite_wp_create_segment( $data );
-            //woo_ml_debug( $segment, '$segment' );
         }
     }
 
@@ -203,6 +171,7 @@ function woo_ml_get_integration_custom_fields() {
         'woo_orders_count' => array( 'title' => 'Woo Orders Count', 'type' => 'NUMBER' ),
         'woo_total_spent' => array( 'title' => 'Woo Total Spent', 'type' => 'NUMBER' ),
         'woo_last_order' => array( 'title' => 'Woo Last Order', 'type' => 'DATE' ),
+        'woo_last_order_id' => array('title' => 'Woo Last Order ID', 'type' => 'NUMBER')
     );
 }
 
@@ -468,4 +437,9 @@ function woo_ml_get_integration_segments() {
 function woo_ml_old_integration()
 {
     return ! get_option('new_plugin_enabled');
+}
+
+function woo_ml_shop_not_active()
+{
+    return get_option('ml_shop_not_active');
 }
