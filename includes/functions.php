@@ -75,8 +75,14 @@ function woo_ml_process_order_subscription( $order_id ) {
     $customer_data = woo_ml_get_customer_data_from_order( $order_id );
 
     $subscribe = get_post_meta( $order_id, '_woo_ml_subscribe', true );
-    if (! isset($subscribe)) 
+
+    if ($subscribe === "") {
         $subscribe = woo_ml_get_option('checkout_preselect') === 'yes' && woo_ml_get_option('checkout_hide') === 'yes';
+        
+        if ($subscribe)
+            woo_ml_set_order_customer_subscribe($order_id);
+    }
+        
 
     $data = [];
     $data['email'] = $customer_data['email'];
