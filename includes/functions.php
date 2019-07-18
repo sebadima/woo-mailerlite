@@ -722,6 +722,9 @@ function woo_ml_send_cart($cookie_email = null)
  */
 function woo_ml_get_checkout_data($cookie_email = null)
 {
+    if (!function_exists('WC')) 
+        return false;
+
     $cart = WC()->cart;
     $cart_items = $cart->get_cart();
     $customer = $cart->get_customer();
@@ -793,6 +796,8 @@ function woo_ml_toggle_shop_connection($active_status)
         delete_option('woocommerce_mailerlite_settings');
         delete_option('double_optin');
         woo_ml_drop_mailerlite_checkouts_table();
+        if (!function_exists('WC')) 
+            return false;
         mailerlite_wp_toggle_shop_connection($active_status);
     } else {
         woo_ml_create_mailerlite_checkouts_table();
@@ -886,8 +891,11 @@ function woo_ml_get_saved_checkout($checkout_id)
  * @return void
  */
 function woo_ml_reload_checkout()
-{    
-    if ( ! is_object( WC()->session ) )
+{
+    if (!function_exists('WC')) 
+        return false;
+
+    if (! is_object( WC()->session))
         return false;
     
     if (isset($_GET['ml_checkout'])) {
