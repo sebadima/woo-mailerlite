@@ -368,6 +368,9 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
             $store = home_url();
+
+            $shop_url = site_url();
+            $order_data['order_url'] = $shop_url."/wp-admin/post.php?post=".$order_data['order']['id']."&action=edit";
             $result = $wooCommerceApi->saveOrder($order_data, $store);
             if (isset($result->deactivate) && $result->deactivate) {
                 woo_ml_deactivate_woo_ml_plugin(true);
