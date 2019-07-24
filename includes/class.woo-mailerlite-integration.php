@@ -33,6 +33,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             }
             // Load the settings.
             $this->update_selected_group();
+            $this->create_new_initial_segments();
             $this->init_form_fields();
             $this->init_settings();
 
@@ -264,6 +265,14 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     update_option('ml_account_authenticated', true);
             }
         }
+
+        public function create_new_initial_segments()
+        {
+            if (! get_option('ml_new_group_segments')) {
+                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),$this->get_option('resubscribe'), true);
+                update_option('ml_new_group_segments', true);
+            }
+        }
         /**
          * Getting groups, selected group, double optiin and popups 
          * settings from MailerLite, only on load of the integrations page.
@@ -291,7 +300,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 update_option('ml_shop_not_active', true);
             }
             $popups_disabled = get_option('mailerlite_popups_disabled');
-            $this->update_option('popups', $popups_disabled ? 'no' : 'yes');
+            update_option('popups', $popups_disabled ? 'no' : 'yes');
         }
 
         /**
