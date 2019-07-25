@@ -296,11 +296,12 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
                 $this->update_option('group', $settings->group_id);
                 update_option('woo_ml_last_manually_tracked_order_id', $settings->last_tracked_order_id);    
+                $popups_disabled = get_option('mailerlite_popups_disabled');
+                $this->update_option('popups', $popups_disabled ? 'no' : 'yes');
             } else if (isset($result->active_state)) {
                 update_option('ml_shop_not_active', true);
             }
-            $popups_disabled = get_option('mailerlite_popups_disabled');
-            update_option('popups', $popups_disabled ? 'no' : 'yes');
+            
         }
 
         /**
