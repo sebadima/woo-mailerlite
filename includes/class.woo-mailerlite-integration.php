@@ -92,6 +92,15 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'options'		=> woo_ml_settings_get_group_options(),
                         'desc_tip' => true
                     ),
+                    'ignore_product_list' =>array(
+                        'title' 		=> __( 'Ignore Products', 'woo-mailerlite' ),
+                        'type' 			=> 'multiselect',
+                        'class'         => 'wc-enhanced-select',
+                        'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
+                        'default' 		=> '',
+                        'options'		=> woo_ml_get_product_list(),
+                        'desc_tip' => true
+                    ),
                     'resubscribe' => array(
                         'title'         => __('Resubscribe', 'woo-mailerlite'),
                         'type'          => 'checkbox',
@@ -269,7 +278,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         public function create_new_initial_segments()
         {
             if (! get_option('ml_new_group_segments')) {
-                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),$this->get_option('resubscribe'), true);
+                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),$this->get_option('resubscribe'), [], true);
                 update_option('ml_new_group_segments', true);
             }
         }
@@ -370,7 +379,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 $settings['consumer_key'], 
                                 $settings['consumer_secret'], 
                                 $settings['group'],
-                                $resubscribe);
+                                $resubscribe,
+                                $settings['ignore_product_list']);
 
                 if (isset($result['errors']))  {
                     $settings['consumer_key']  = '';

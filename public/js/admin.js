@@ -74,6 +74,9 @@ jQuery(document).ready(function(a) {
         a('#woocommerce_mailerlite_group').select2();
     }
 
+    if (a('#woocommerce_mailerlite_ignore_product_list').length > 0) {
+        a('#woocommerce_mailerlite_ignore_product_list').select2();
+    }
     
     var cs_field = a('#woocommerce_mailerlite_consumer_secret');
     if (0 !== cs_field.length) {
