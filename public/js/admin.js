@@ -99,4 +99,11 @@ jQuery(document).ready(function(a) {
         button.show();
     }
     
+    var ignored_p_field = a('#woocommerce_mailerlite_ignore_product_list');
+    if (ignored_p_field.length !== 0) {
+        ignored_p_field.closest('tr').before(
+            '<h2>E-commerce Automations</h2>\
+            <p class="section-description">Customize settings for your e-commerce automations created in MailerLite </p>'
+        )
+    }
 });

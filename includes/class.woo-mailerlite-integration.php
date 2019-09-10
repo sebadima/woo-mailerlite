@@ -30,6 +30,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 && $request['page'] == 'wc-settings'
                 && $request['tab'] == 'integration') {
                     $this->getShopSettingsFromDb();
+                    $this->setWooCommerceProducts();
             }
             // Load the settings.
             $this->update_selected_group();
@@ -90,15 +91,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
                         'default' 		=> '',
                         'options'		=> woo_ml_settings_get_group_options(),
-                        'desc_tip' => true
-                    ),
-                    'ignore_product_list' =>array(
-                        'title' 		=> __( 'Ignore Products', 'woo-mailerlite' ),
-                        'type' 			=> 'multiselect',
-                        'class'         => 'wc-enhanced-select',
-                        'description' => __( 'The default group which will be taken for new subscribers', 'woo-mailerlite' ),
-                        'default' 		=> '',
-                        'options'		=> woo_ml_get_product_list(),
                         'desc_tip' => true
                     ),
                     'resubscribe' => array(
@@ -164,6 +156,15 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'label'       => __( 'Enable MailerLite subscribe pop-ups', 'woo-mailerlite' ),
                         'default'           => 'no',
                         'desc_tip'          => true
+                    ),
+                    'ignore_product_list' =>array(
+                        'title' 		=> __( 'Ignore Products', 'woo-mailerlite' ),
+                        'type' 			=> 'multiselect',
+                        'class'         => 'wc-enhanced-select',
+                        'description' => __( 'Select products that you do not wish to trigger any e-commerce automations', 'woo-mailerlite' ),
+                        'default' 		=> '',
+                        'options'		=> woo_ml_get_product_list(),
+                        'desc_tip' => true
                     )
                 );
             } else {
@@ -311,6 +312,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 update_option('ml_shop_not_active', true);
             }
             
+        }
+
+        public function setWooCommerceProducts()
+        {
+            woo_ml_set_product_list();
         }
 
         /**

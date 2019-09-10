@@ -947,21 +947,25 @@ function woo_ml_set_to_tracked_orders($order)
     return false;
 }
 
-function woo_ml_get_product_list()
+function woo_ml_set_product_list()
 {
     $products = array();
-    
     $args = array(
         'posts_per_page'   => -1,
         'offset'           => 0,
-        'orderby'          => 'date',
+        'orderby'          => 'title',
         'order'            => 'ASC',
         'post_type'        => 'product',
   
-      );
-  $productPosts = get_posts( $args );
+    );
+
+    $productPosts = get_posts( $args );
     foreach($productPosts as $product) {
         $products[$product->ID] = $product->post_title;
     }
-    return $products;
+    update_option('ml_latest_wc_products', $products);
+}
+
+function woo_ml_get_product_list() {
+    return get_option('ml_latest_wc_products');
 }
