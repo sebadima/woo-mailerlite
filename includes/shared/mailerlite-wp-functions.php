@@ -281,7 +281,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             $store = home_url();
             $currency = get_option('woocommerce_currency');
             if (empty($group)) {
-                return ['errors' => 'Please select a group.'];
+                return ['errors' => 'WooCommerce - MailerLite: Please select a group.'];
             }
             if (strpos($store, 'https://') !== false ) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group, $resubscribe, $ignoreList,$create_segments);
@@ -295,7 +295,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
                 }
                 return true;
             } else {
-                return ['errors' => 'Your shop url does not have the right security protocol'];
+                return ['errors' => 'WooCommerce - MailerLite: Your shop url does not have the right security protocol'];
             }
         } catch (Exception $e) {
             return false;
