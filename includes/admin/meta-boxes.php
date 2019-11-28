@@ -49,7 +49,7 @@ function woo_ml_order_meta_box_output( $post ) {
     </p>
     <?php $order_tracking_completed = woo_ml_order_tracking_completed( $order_id ); ?>
     <p>
-        <?php echo _e('Order tracking completed', 'woo-mailerlite' ).wc_help_tip("Tracking data for this order is now available in MailerLite.");?> <?php echo ( $order_tracking_completed ) ? $icon_yes : $icon_no; ?>
+        <?php echo _e('Order tracking completed', 'woo-mailerlite' ).wc_help_tip("All stages of the tracking process on this order have been completed.");?> <?php echo ( $order_tracking_completed ) ? $icon_yes : $icon_no; ?>
     </p>
     <?php
 }
