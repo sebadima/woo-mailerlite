@@ -73,8 +73,8 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
 
             // API Key
             if ( ! defined( 'MAILERLITE_WP_API_KEY' ) ) {
-                $settings = get_option( 'woocommerce_mailerlite_settings' );
-                $api_key = ( ! empty( $settings['api_key'] ) ) ? $settings['api_key'] : '';
+                $option_value = get_option('woo_ml_key');
+                $api_key = $option_value ? $option_value : '';
                 define( 'MAILERLITE_WP_API_KEY', $api_key );
             }
 

@@ -280,7 +280,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         public function getShopSettingsFromDb()
         {
             $result = mailerlite_wp_get_shop_settings_from_db();
-           
+            $api_key = get_option('woo_ml_key');
+            if(!$api_key) {
+                if (! empty($this->get_option( 'api_key' ))) {
+                    update_option('woo_ml_key', $this->get_option( 'api_key' ));
+                    $this->update_option('api_key', "********************************");
+                }
+            }
             if (!empty($result) && isset($result->settings)) {
                 $settings = $result->settings;
                 $this->update_option('double_optin', $settings->double_optin);
@@ -332,8 +338,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     $reset_groups = true;
                     $refresh_groups = true;
 
-                    if ( $api_status )
+                    if ( $api_status ) {
                         $setup_integration = true;
+                        update_option('woo_ml_key', $settings['api_key']);
+                    }
+                    $settings['api_key'] = "********************************";
                 }
 
                 // Store API validation
