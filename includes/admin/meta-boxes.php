@@ -24,8 +24,8 @@ function woo_ml_order_meta_box_output( $post ) {
 
     $order_id = $post->ID;
 
-    $icon_yes = '<span class="dashicons dashicons-yes" style="color: #00A153;"></span>';
-    $icon_no = '<span class="dashicons dashicons-no-alt" style="color: #a00;"></span>';
+    $icon_yes = '<span class="dashicons dashicons-yes" style="color: #00A153;right: 7px;position: absolute;"></span>';
+    $icon_no = '<span class="dashicons dashicons-no-alt" style="color: #a00;right: 7px;position: absolute;"></span>';
     ?>
     <?php $subscribe = woo_ml_order_customer_subscribe( $order_id ); ?>
     <p>
