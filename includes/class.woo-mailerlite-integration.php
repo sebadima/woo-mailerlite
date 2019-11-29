@@ -30,9 +30,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 && $request['page'] == 'wc-settings'
                 && $request['tab'] == 'integration') {
                     $this->getShopSettingsFromDb();
+                    $this->setWooCommerceProducts();
             }
             // Load the settings.
             $this->update_selected_group();
+            $this->create_new_initial_segments();
             $this->init_form_fields();
             $this->init_settings();
 
@@ -154,6 +156,15 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'label'       => __( 'Enable MailerLite subscribe pop-ups', 'woo-mailerlite' ),
                         'default'           => 'no',
                         'desc_tip'          => true
+                    ),
+                    'ignore_product_list' =>array(
+                        'title' 		=> __( 'Ignore Products', 'woo-mailerlite' ),
+                        'type' 			=> 'multiselect',
+                        'class'         => 'wc-enhanced-select',
+                        'description' => __( 'Select products that you do not wish to trigger any e-commerce automations', 'woo-mailerlite' ),
+                        'default' 		=> '',
+                        'options'		=> woo_ml_get_product_list(),
+                        'desc_tip' => true
                     )
                 );
             } else {
@@ -264,6 +275,14 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     update_option('ml_account_authenticated', true);
             }
         }
+
+        public function create_new_initial_segments()
+        {
+            if (! get_option('ml_new_group_segments')) {
+                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),$this->get_option('resubscribe'), [], true);
+                update_option('ml_new_group_segments', true);
+            }
+        }
         /**
          * Getting groups, selected group, double optiin and popups 
          * settings from MailerLite, only on load of the integrations page.
@@ -271,7 +290,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         public function getShopSettingsFromDb()
         {
             $result = mailerlite_wp_get_shop_settings_from_db();
-           
+            $api_key = get_option('woo_ml_key');
+            if(!$api_key) {
+                if (! empty($this->get_option( 'api_key' ))) {
+                    update_option('woo_ml_key', $this->get_option( 'api_key' ));
+                    $this->update_option('api_key', "********************************");
+                }
+            }
             if (!empty($result) && isset($result->settings)) {
                 $settings = $result->settings;
                 $this->update_option('double_optin', $settings->double_optin);
@@ -287,11 +312,17 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 set_transient( 'woo_ml_groups', $groupsArray, 60 * 60 * 24 );
                 $this->update_option('group', $settings->group_id);
                 update_option('woo_ml_last_manually_tracked_order_id', $settings->last_tracked_order_id);    
+                $popups_disabled = get_option('mailerlite_popups_disabled');
+                $this->update_option('popups', $popups_disabled ? 'no' : 'yes');
             } else if (isset($result->active_state)) {
                 update_option('ml_shop_not_active', true);
             }
-            $popups_disabled = get_option('mailerlite_popups_disabled');
-            $this->update_option('popups', $popups_disabled ? 'no' : 'yes');
+            
+        }
+
+        public function setWooCommerceProducts()
+        {
+            woo_ml_set_product_list();
         }
 
         /**
@@ -322,8 +353,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     $reset_groups = true;
                     $refresh_groups = true;
 
-                    if ( $api_status )
+                    if ( $api_status ) {
                         $setup_integration = true;
+                        update_option('woo_ml_key', $settings['api_key']);
+                    }
+                    $settings['api_key'] = "********************************";
                 }
 
                 // Store API validation
@@ -360,7 +394,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 $settings['consumer_key'], 
                                 $settings['consumer_secret'], 
                                 $settings['group'],
-                                $resubscribe);
+                                $resubscribe,
+                                $settings['ignore_product_list']);
 
                 if (isset($result['errors']))  {
                     $settings['consumer_key']  = '';

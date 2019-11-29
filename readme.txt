@@ -5,7 +5,7 @@ Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce
 Requires at least: 3.0.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.0
-Stable tag: 1.4.3
+Stable tag: 1.4.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -97,6 +97,16 @@ Yes of course.
 6. Dashboard e-commerce performance
 
 == Changelog ==
+= 1.4.6 (29th November 2019) =
+* Minor fixes and updates
+
+= 1.4.5 (11th September 2019) =
+* Update: Ignore products option added
+
+= 1.4.4 (25th July 2019) =
+* Fix: Abandoned cart triggering issues
+* Fix: Segment update on group change
+
 = 1.4.3 (18th July 2019) =
 * Fix: WC not found handling
 

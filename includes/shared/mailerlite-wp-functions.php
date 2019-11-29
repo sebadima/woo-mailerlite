@@ -259,49 +259,6 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
     }
 endif;
 
-if ( ! function_exists( 'mailerlite_wp_create_segment') ) :
-    /**
-     * Create segment in MailerLite
-     *
-     * @param array $segment_data
-     * @return bool
-     */
-    function mailerlite_wp_create_segment( $segment_data ) {
-
-        if ( ! mailerlite_wp_api_key_exists() )
-            return false;
-
-        $api_key = woo_ml_get_option( 'api_key' );
-
-        $data = json_encode( $segment_data );
-
-        try {
-
-            // TODO: As soon as the segments route is officially added to the API docs, we're using our library instead
-
-            $response = wp_remote_post( 'https://api.mailerlite.com/api/v2/segments', array(
-                'headers' => array(
-                    'Cache-Control' => 'no-cache',
-                    'Content-Type' => 'application/json' ,
-                    'x-mailerlite-apikey' => $api_key
-                ),
-                'body' => $data
-            ));
-
-            if ( is_wp_error( $response ) ) {
-                return false;
-            } else {
-                $segment_added = json_decode( wp_remote_retrieve_body( $response ), false );
-
-                return ( isset( $segment_added->id ) ) ? $segment_added : false;
-            }
-
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-endif;
-
 /**
  * Sends to api shop data needed to make back and forth connection with woo commerce
  * Api returns account id and subdomain used to for universal script
@@ -313,22 +270,21 @@ endif;
  * @return array|bool
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
-    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $group, $resubscribe) {
-        if ( ! mailerlite_wp_api_key_exists())
+    function mailerlite_wp_set_consumer_data($consumerKey, $consumerSecret, $group, $resubscribe, $ignoreList = [], $create_segments = false) {
+        if (!mailerlite_wp_api_key_exists())
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( $api_key );
+            $mailerliteClient = new \MailerLiteApi\MailerLite(MAILERLITE_WP_API_KEY);
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $store = home_url();
             $currency = get_option('woocommerce_currency');
             if (empty($group)) {
-                return ['errors' => 'Please select a group.'];
+                return ['errors' => 'WooCommerce - MailerLite: Please select a group.'];
             }
             if (strpos($store, 'https://') !== false ) {
-                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group, $resubscribe);
+                $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group, $resubscribe, $ignoreList,$create_segments);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
                     update_option('account_subdomain', $result->account_subdomain);
@@ -339,7 +295,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
                 }
                 return true;
             } else {
-                return ['errors' => 'Your shop url does not have the right security protocol'];
+                return ['errors' => 'WooCommerce - MailerLite: Your shop url does not have the right security protocol'];
             }
         } catch (Exception $e) {
             return false;
@@ -360,14 +316,15 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
-
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             
             $store = home_url();
+
+            $shop_url = site_url();
+            $order_data['order_url'] = $shop_url."/wp-admin/post.php?post=".$order_data['order']['id']."&action=edit";
             $result = $wooCommerceApi->saveOrder($order_data, $store);
             if (isset($result->deactivate) && $result->deactivate) {
                 woo_ml_deactivate_woo_ml_plugin(true);
@@ -391,8 +348,6 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
     {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
-
-        $api_key = woo_ml_get_option( 'api_key' );
 
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
@@ -418,8 +373,6 @@ if (! function_exists('mailerlite_wp_send_cart')) :
     function mailerlite_wp_send_cart($cart_data) {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
-
-        $api_key = woo_ml_get_option( 'api_key' );
 
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
@@ -451,7 +404,6 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
@@ -497,7 +449,6 @@ if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 

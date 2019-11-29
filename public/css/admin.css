@@ -51,3 +51,7 @@
 #woo-ml-validate-key {
   margin-left: 5px;
 }
+
+#woo-ml-order .woocommerce-help-tip {
+  margin: 0px !important;
+}
