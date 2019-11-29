@@ -274,9 +274,9 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
         if (!mailerlite_wp_api_key_exists())
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( $api_key );
+            $mailerliteClient = new \MailerLiteApi\MailerLite(MAILERLITE_WP_API_KEY);
+
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $store = home_url();
             $currency = get_option('woocommerce_currency');
@@ -316,8 +316,6 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
-
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
@@ -351,8 +349,6 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
-
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
@@ -377,8 +373,6 @@ if (! function_exists('mailerlite_wp_send_cart')) :
     function mailerlite_wp_send_cart($cart_data) {
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
-
-        $api_key = woo_ml_get_option( 'api_key' );
 
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
@@ -410,7 +404,6 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
@@ -456,7 +449,6 @@ if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
         if ( ! mailerlite_wp_api_key_exists() )
             return false;
 
-        $api_key = woo_ml_get_option( 'api_key' );
         try {
             $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 

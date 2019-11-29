@@ -810,6 +810,7 @@ function woo_ml_toggle_shop_connection($active_status)
         if (!function_exists('WC')) 
             return false;
         mailerlite_wp_toggle_shop_connection($active_status);
+        delete_option('woo_ml_key');
     } else {
         woo_ml_create_mailerlite_checkouts_table();
         update_option('ml_account_authenticated', false);

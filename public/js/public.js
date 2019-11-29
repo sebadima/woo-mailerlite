@@ -1,4 +1,4 @@
-window.onload = function() {
+jQuery(document).ready(function(a) {
     var email = document.querySelector('#billing_email');
     if (email !== null) {
         email.addEventListener('blur', (event) => {
@@ -12,4 +12,4 @@ window.onload = function() {
             })
         });
     }
-}
+});
