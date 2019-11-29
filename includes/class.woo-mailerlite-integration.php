@@ -30,6 +30,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 && $request['page'] == 'wc-settings'
                 && $request['tab'] == 'integration') {
                     $this->getShopSettingsFromDb();
+                    $this->setWooCommerceProducts();
             }
             // Load the settings.
             $this->update_selected_group();
@@ -155,6 +156,15 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         'label'       => __( 'Enable MailerLite subscribe pop-ups', 'woo-mailerlite' ),
                         'default'           => 'no',
                         'desc_tip'          => true
+                    ),
+                    'ignore_product_list' =>array(
+                        'title' 		=> __( 'Ignore Products', 'woo-mailerlite' ),
+                        'type' 			=> 'multiselect',
+                        'class'         => 'wc-enhanced-select',
+                        'description' => __( 'Select products that you do not wish to trigger any e-commerce automations', 'woo-mailerlite' ),
+                        'default' 		=> '',
+                        'options'		=> woo_ml_get_product_list(),
+                        'desc_tip' => true
                     )
                 );
             } else {
@@ -269,7 +279,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
         public function create_new_initial_segments()
         {
             if (! get_option('ml_new_group_segments')) {
-                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),$this->get_option('resubscribe'), true);
+                mailerlite_wp_set_consumer_data("....", "....", $this->get_option('group'),$this->get_option('resubscribe'), [], true);
                 update_option('ml_new_group_segments', true);
             }
         }
@@ -308,6 +318,11 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                 update_option('ml_shop_not_active', true);
             }
             
+        }
+
+        public function setWooCommerceProducts()
+        {
+            woo_ml_set_product_list();
         }
 
         /**
@@ -379,7 +394,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 $settings['consumer_key'], 
                                 $settings['consumer_secret'], 
                                 $settings['group'],
-                                $resubscribe);
+                                $resubscribe,
+                                $settings['ignore_product_list']);
 
                 if (isset($result['errors']))  {
                     $settings['consumer_key']  = '';
