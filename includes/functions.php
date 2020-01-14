@@ -87,10 +87,12 @@ function woo_ml_process_order_subscription( $order_id ) {
     $data = [];
     $data['email'] = $customer_data['email'];
     $data['checked_sub_to_mailist'] = $subscribe;
-    $data['checkout_id'] = $_COOKIE['mailerlite_checkout_token'];
+    $checkout_id = isset($_COOKIE['mailerlite_checkout_token']) ? $_COOKIE['mailerlite_checkout_token'] : woo_ml_get_saved_checkout_id_by_email($customer_data['email']);
+
+    $data['checkout_id'] = $checkout_id;
     $data['order_id'] = $order_id;
     $data['payment_method'] = $order->get_payment_method();
-
+    
     if ($data['payment_method'] == 'bacs' || $data['payment_method'] == 'cheque') {
         @setcookie('mailerlite_checkout_email', null, -1, '/');
         @setcookie('mailerlite_checkout_token', null, -1, '/');
@@ -705,6 +707,7 @@ function woo_ml_send_completed_order($order_id)
     }
     @setcookie('mailerlite_checkout_email', null, -1, '/');
     @setcookie('mailerlite_checkout_token', null, -1, '/');
+
     mailerlite_wp_send_order($order_data);
 
     if (! empty($saved_checkout))
@@ -906,6 +909,15 @@ function woo_ml_get_saved_checkout_by_email($email)
     return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE email = %s ORDER BY time DESC LIMIT 1", $email));
 }
 
+function woo_ml_get_saved_checkout_id_by_email($email)
+{
+    $checkout = woo_ml_get_saved_checkout_by_email($email);
+    if (!empty($checkout)) 
+        return $checkout->checkout_id;
+    
+    return null;
+}
+
 function woo_ml_remove_checkout($email) 
 {
     global $wpdb;
@@ -930,9 +942,11 @@ function woo_ml_reload_checkout()
         $checkout_id = substr($_GET['ml_checkout'], 0, strpos($_GET['ml_checkout'], "?"));
         $checkout = woo_ml_get_saved_checkout($checkout_id);
         
-        WC()->session->set('cart', unserialize($checkout->cart_content));
-        @setcookie('mailerlite_checkout_token', $checkout->checkout_id, time()+172800, '/');
-        @setcookie('mailerlite_checkout_email', $checkout->email, time()+172800, '/');
+        if ($checkout && !empty($checkout->cart_content)) {
+            WC()->session->set('cart', unserialize($checkout->cart_content));
+            @setcookie('mailerlite_checkout_token', $checkout->checkout_id, time()+172800, '/');
+            @setcookie('mailerlite_checkout_email', $checkout->email, time()+172800, '/');
+        }
     }
 }
 

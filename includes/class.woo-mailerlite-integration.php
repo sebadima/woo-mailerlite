@@ -294,8 +294,10 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             if(!$api_key) {
                 if (! empty($this->get_option( 'api_key' ))) {
                     update_option('woo_ml_key', $this->get_option( 'api_key' ));
-                    $this->update_option('api_key', "********************************");
+                    $this->update_option('api_key', "....".substr($api_key, -4));
                 }
+            } else if ($api_key && $this->get_option( 'api_key' ) === '********************************') {
+                $this->update_option('api_key', "....".substr($api_key, -4));
             }
             if (!empty($result) && isset($result->settings)) {
                 $settings = $result->settings;
@@ -357,7 +359,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                         $setup_integration = true;
                         update_option('woo_ml_key', $settings['api_key']);
                     }
-                    $settings['api_key'] = "********************************";
+                    $settings['api_key'] = "....".substr($settings['api_key'], -4);
                 }
 
                 // Store API validation
