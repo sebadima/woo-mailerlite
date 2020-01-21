@@ -10,6 +10,11 @@ function woo_ml_is_active() {
     return $api_status;
 }
 
+function woo_ml_sync_failed()
+{
+    return get_option('woo_ml_order_sync_failed');
+}
+
 /**
  * Get settings api key status
  *
@@ -477,10 +482,12 @@ function woo_ml_sync_untracked_orders() {
             }
         }
         delete_transient('woo_ml_order_sync_in_progress');
+        update_option('woo_ml_order_sync_failed', 0);
         return true;
     } catch(\Exception $e) {
         delete_transient('woo_ml_order_sync_in_progress');
-        return $synced_so_far;
+        update_option('woo_ml_order_sync_failed', 1);
+        return $e;
     }
 }
 

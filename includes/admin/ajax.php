@@ -35,7 +35,7 @@ function woo_ml_admin_ajax_sync_untracked_orders() {
             $orders_synced = woo_ml_sync_untracked_orders();
             if ( is_bool($orders_synced) ) {
                 $response = true;
-            } else if (is_numeric($orders_synced)) {
+            } else {
                 $response = $orders_synced;
             }
 

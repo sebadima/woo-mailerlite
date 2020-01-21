@@ -49,6 +49,15 @@ function woo_ml_admin_notices() {
         );
     }
 
+    if (woo_ml_sync_failed()) {
+        $notices[] = array(
+            'type' => 'error',
+            'dismiss' => true,
+            'force' => true,
+            'message' =>  __( 'We did not manage to sync all of your orders. Please try again.', 'woo-mailerlite' )
+        );
+    }
+
     // Hook
     $notices = apply_filters( 'woo_ml_admin_notices', $notices );
 
