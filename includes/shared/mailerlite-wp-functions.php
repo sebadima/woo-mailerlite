@@ -166,6 +166,32 @@ if ( ! function_exists( 'mailerlite_wp_update_subscriber') ) :
     }
 endif;
 
+if (! function_exists( 'mailerlite_wp_sync_customer')) :
+    function mailerlite_wp_sync_customer($email, $fields)
+    {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        if ( empty( $email ) )
+            return false;
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerce = $mailerliteClient->woocommerce();
+            $store = home_url();
+            $subscriber_updated = $woocommerce->syncCustomer( $email, $fields, $store ); 
+            if ( isset( $subscriber_updated->updated_subscriber) ) {
+                return $subscriber_updated;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;
+
 if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
     /**
      * Set Mailerlite double opt in status

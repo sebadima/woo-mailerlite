@@ -104,4 +104,18 @@ class WooCommerce extends ApiAbstract
         $endpoint = 'woocommerce/initial_account_settings';
         return $this->restClient->get($endpoint);
     }
+
+    public function syncCustomer($email, $fields, $shopUrl)
+    {
+        $endpoint = 'woocommerce/sync_customer';
+        $params = array_merge($this->prepareParams(), ['email' => $email, 'fields' => $fields, 'shop' => $shopUrl] );
+
+        $response = $this->restClient->post( $endpoint, $params );
+
+        if (isset($response['body'])) {
+            return $response['body'];
+        } else {
+            return true;
+        }
+    }
 }

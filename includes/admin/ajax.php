@@ -31,12 +31,20 @@ add_action( 'wp_ajax_post_woo_ml_refresh_groups', 'woo_ml_admin_ajax_refresh_gro
 function woo_ml_admin_ajax_sync_untracked_orders() {
     if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
         $response = false;
-        $orders_synced = woo_ml_sync_untracked_orders();
+        try{
+            $orders_synced = woo_ml_sync_untracked_orders();
+            if ( is_bool($orders_synced) ) {
+                $response = true;
+            } else if (is_numeric($orders_synced)) {
+                $response = $orders_synced;
+            }
 
-        if ( $orders_synced )
-            $response = true;
-
-        echo $response;
+            echo $response;
+        } catch(\Exception $e) {
+            return true;
+        }
+    
+        
     }
     exit;
 }

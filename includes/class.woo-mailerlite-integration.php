@@ -202,24 +202,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             );
 
             $data = wp_parse_args( $data, $defaults );
-
-            $untracked_orders_all = woo_ml_get_untracked_orders();
-            $untracked_orders = [];
             
-            $last_tracked_order_id = get_option('woo_ml_last_manually_tracked_order_id');
-            foreach($untracked_orders_all as $order) {
-                if ($order->ID <= $last_tracked_order_id) {
-                    $tracked = woo_ml_set_to_tracked_orders($order);
-                    if (! $tracked)
-                        $untracked_orders[] = $order;
-                    
-                    continue;
-                }
-                $untracked_orders[] = $order;
-            }
-            
-            $untracked_orders_count = ( is_array( $untracked_orders ) ) ? sizeof( $untracked_orders ) : 0;
-
+            $untracked_orders_count = woo_ml_count_untracked_orders_count();
             ob_start();
             ?>
             <tr valign="top">
@@ -237,22 +221,31 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                             <p class="description">
                                 <?php printf( wp_kses( __( 'MailerLite integration setup not completed yet. Please <a href="%s">click here</a>.', 'woo-mailerlite' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( woo_ml_get_complete_integration_setup_url() ) ); ?>
                             </p>
-                        <?php } elseif ( ! empty( $untracked_orders_count ) ) { ?>
+                        <?php } elseif ( ! empty( $untracked_orders_count ) && ! get_transient('woo_ml_order_sync_in_progress')) { ?>
                             <legend class="screen-reader-text">
                                 <span><?php echo wp_kses_post( $data['title'] ); ?></span>
                             </legend>
                             <button id="woo-ml-sync-untracked-orders" class="button-secondary" data-woo-ml-sync-untracked-orders="true"
-                                    data-woo-ml-untracked-orders-count="<?php echo $untracked_orders_count; ?>" data-woo-ml-untracked-orders-left="<?php echo $untracked_orders_count; ?>"
-                                    data-woo-ml-untracked-orders-cycle="<?php echo WOO_ML_SYNC_UNTRACKED_ORDERS_CYCLE; ?>">
-                                <?php printf( esc_html( _n( 'Synchronize %d untracked order', 'Synchronize %d untracked orders', $untracked_orders_count, 'woo-mailerlite'  ) ), $untracked_orders_count ); ?>
+                                    data-woo-ml-untracked-orders-count="<?php echo $untracked_orders_count; ?>" 
+                                    data-woo-ml-untracked-orders-left="<?php echo $untracked_orders_count; ?>">
+                                <?php printf( esc_html( _n( 'Synchronize %d untracked order', 'Synchronize %d untracked orders', $untracked_orders_count  ) ), $untracked_orders_count ); ?>
                             </button>
                             <div id="woo-ml-sync-untracked-orders-progress-bar" class="woo-ml-progress-bar">
-                                <div></div>
+                                <div><?php _e('Syncing in progress. This may take a while.', 'woo-mailerlite'); ?></div>
                             </div>
                             <p id="woo-ml-sync-untracked-orders-success" class="description" style="display: none; color: green; font-style: normal;">
-                                <?php _e('Untracked orders successfully submitted to MailerLite.', 'woo-mailerlite' ); ?>
+                                <?php printf( esc_html('Untracked orders successfully submitted to MailerLite.','woo-mailerlite') ); ?>
+                            </p>
+                            <p id="woo-ml-sync-untracked-orders-fail" class="description" style="display: none; color: red; font-style: normal;">
+                                <?php printf( esc_html('Oops, we did not manage to sync all of your orders, please try again.','woo-mailerlite') ); ?>
                             </p>
                             <?php echo $this->get_description_html( $data ); ?>
+                        <?php } else if (! empty($untracked_orders_count) && get_transient('woo_ml_order_sync_in_progress')) { ?>
+                            <div id="woo-ml-sync-untracked-orders-progress-bar" style="display: block; color: black;" class="woo-ml-progress-bar">
+                            <div>
+                                <?php printf(esc_html(_n('Synchronizing of %d untracked order in progress', 'Synchronizing of %d untracked orders in progress', $untracked_orders_count)), $untracked_orders_count);?>
+                            </div>
+                        </div>
                         <?php } else { ?>
                             <p class="description">
                                 <?php _e('Right now there are no untracked orders.', 'woo-mailerlite' ); ?>
