@@ -463,7 +463,7 @@ function woo_ml_sync_untracked_orders() {
 
                 $subscriber_data['fields'] = $subscriber_fields;
 
-                $subscriber_updated = mailerlite_wp_update_subscriber($customer_email, $subscriber_data);
+                $subscriber_updated = mailerlite_wp_sync_customer($customer_email, $subscriber_data);
 
                 foreach ( $order_ids as $order_id ) {
                     woo_ml_complete_order_tracking( $order_id );
