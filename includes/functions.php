@@ -416,7 +416,7 @@ function woo_ml_sync_untracked_orders() {
     if (get_transient('woo_ml_order_sync_in_progress')) {
         return true;
     } else {
-        set_transient('woo_ml_order_sync_in_progress', 1, 60*60*48);
+        set_transient('woo_ml_order_sync_in_progress', 1, 60*10);
     }
     try {
         for($i = 100; $i < $total_orders + 100; $i+= 100) {
