@@ -289,7 +289,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     update_option('woo_ml_key', $this->get_option( 'api_key' ));
                     $this->update_option('api_key', "....".substr($api_key, -4));
                 }
-            } else if ($api_key && $this->get_option( 'api_key' ) === '********************************') {
+            } else {
                 $this->update_option('api_key', "....".substr($api_key, -4));
             }
             if (!empty($result) && isset($result->settings)) {
@@ -329,7 +329,6 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
             $revoke_integration_setup = false;
             
             if ( isset( $settings['api_key'] ) ) {
-
                 $reset_groups = false;
                 $refresh_groups = false;
 
@@ -340,7 +339,8 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                     $api_status = false;
                     $reset_groups = true;
                     $revoke_integration_setup = true;
-
+                    delete_option('woo_ml_key');
+                    delete_option('ml_account_authenticated');
                 } elseif ( ! empty( $settings['api_key'] ) && $settings['api_key'] != $api_key ) {
                     $validation = woo_ml_validate_api_key( esc_html( $settings['api_key'] ) );
                     $api_status = ( $validation );
