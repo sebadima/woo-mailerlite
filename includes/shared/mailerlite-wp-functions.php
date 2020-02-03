@@ -32,7 +32,7 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
                 update_option('woocommerce_mailerlite_settings', $settings);
                 update_option('double_optin', $result['body']->double_optin);
                 update_option('ml_account_authenticated', true);
-
+                update_option('woo_ml_key', $api_key);
                 $groupsArray = [];
                 $groups = $result['body']->groups;
                 if ( sizeof( $groups ) > 0 ) {
