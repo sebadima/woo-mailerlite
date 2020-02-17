@@ -12,7 +12,7 @@ function woo_ml_is_active() {
 
 function woo_ml_sync_failed()
 {
-    return get_option('woo_ml_order_sync_failed');
+    return get_option('woo_ml_order_sync_failed') || (get_option('woo_ml_sync_active') && !get_transient('woo_ml_order_sync_in_progress'));
 }
 
 /**
@@ -417,6 +417,7 @@ function woo_ml_sync_untracked_orders() {
         return true;
     } else {
         set_transient('woo_ml_order_sync_in_progress', 1, 60*10);
+        update_option('woo_ml_sync_active', 1);
     }
     try {
         for($i = 100; $i < $total_orders + 100; $i+= 100) {
@@ -483,10 +484,12 @@ function woo_ml_sync_untracked_orders() {
         }
         delete_transient('woo_ml_order_sync_in_progress');
         update_option('woo_ml_order_sync_failed', 0);
+        update_option('woo_ml_sync_active', 0);
         return true;
     } catch(\Exception $e) {
         delete_transient('woo_ml_order_sync_in_progress');
         update_option('woo_ml_order_sync_failed', 1);
+        update_option('woo_ml_sync_active', 0);
         return $e;
     }
 }

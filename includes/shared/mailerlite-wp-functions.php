@@ -180,7 +180,7 @@ if (! function_exists( 'mailerlite_wp_sync_customer')) :
 
             $wooCommerce = $mailerliteClient->woocommerce();
             $store = home_url();
-            $subscriber_updated = $woocommerce->syncCustomer( $email, $fields, $store ); 
+            $subscriber_updated = $wooCommerce->syncCustomer( $email, $fields, $store );
             if ( isset( $subscriber_updated->updated_subscriber) ) {
                 return $subscriber_updated;
             } else {
