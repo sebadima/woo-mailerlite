@@ -108,7 +108,7 @@ class WooCommerce extends ApiAbstract
     public function syncCustomer($email, $fields, $shopUrl)
     {
         $endpoint = 'woocommerce/sync_customer';
-        $params = array_merge($this->prepareParams(), ['email' => $email, 'fields' => $fields, 'shop' => $shopUrl] );
+        $params = array_merge($this->prepareParams(), ['email' => $email, 'subscriber_fields' => $fields, 'shop' => $shopUrl] );
 
         $response = $this->restClient->post( $endpoint, $params );
 

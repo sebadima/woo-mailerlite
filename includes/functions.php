@@ -453,11 +453,6 @@ function woo_ml_sync_untracked_orders() {
 
                 $customer_data = woo_ml_get_customer_data_from_order($last_order_id);
 
-                $subscriber_data = array();
-
-                if (!empty($customer_data['name']))
-                    $subscriber_data['name'] = $customer_data['name'];
-
                 $subscriber_fields = woo_ml_get_subscriber_fields_from_customer_data($customer_data);
 
                 $tracking_data = woo_ml_get_order_tracking_data($order_ids);
@@ -467,9 +462,7 @@ function woo_ml_sync_untracked_orders() {
                 $subscriber_fields['woo_last_order'] = $tracking_data['last_order'];
                 $subscriber_fields['woo_last_order_id'] = $tracking_data['last_order_id'];
 
-                $subscriber_data['fields'] = $subscriber_fields;
-
-                $subscriber_updated = mailerlite_wp_sync_customer($customer_email, $subscriber_data);
+                $subscriber_updated = mailerlite_wp_sync_customer($customer_email, $subscriber_fields);
 
                 foreach ( $order_ids as $order_id ) {
                     woo_ml_complete_order_tracking( $order_id );
