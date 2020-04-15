@@ -60,7 +60,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             define( 'WOO_MAILERLITE_NAME', 'WooCommerce - Mailerlite' );
 
             // Plugin version
-            define( 'WOO_MAILERLITE_VER', '1.1.1' );
+            define( 'WOO_MAILERLITE_VER', '1.4.7' );
 
             // Plugin path
             define( 'WOO_MAILERLITE_DIR', plugin_dir_path( __FILE__ ) );
