@@ -31,23 +31,45 @@ jQuery(document).ready(function(a) {
         if (c.preventDefault(), !f) {
             f = !0, console.log("Synchronize untracked orders");
             var d = a(this);
-            for (d.prop("disabled", !0), j.show(), g = d.data("woo-ml-untracked-orders-count"), 
-            h = d.data("woo-ml-untracked-orders-left"), i = d.data("woo-ml-untracked-orders-cycle"), 
-            console.log("untrackedOrdersCount >> " + g), console.log("untrackedOrdersLeft >> " + h), 
-            console.log("untrackedOrdersCycle >> " + i); h > 0; ) console.log("inside the loop!"), 
+            orders_tracked = d.data("woo-ml-untracked-orders-count");
+            all_untracked_orders_left = d.data("woo-ml-untracked-orders-left");
+            i = d.data("woo-ml-untracked-orders-cycle");
+            fail = a('#woo-ml-sync-untracked-orders-fail');
+            success = a("#woo-ml-sync-untracked-orders-success");
+            r = 0;
+            console.log("inside the loop!");
             jQuery.ajax({
-                url: woo_ml_post.ajax_url,
-                type: "post",
-                data: {
-                    action: "post_woo_ml_sync_untracked_orders"
-                },
-                async: !1,
-                success: function(a) {
-                    a.indexOf("success") >= 0 && console.log("done!"), a ? (console.log("Response: True"), 
-                    b()) : console.log("Response: False");
-                }
+                    url: woo_ml_post.ajax_url,
+                    type: "post",
+                    beforeSend: function() {
+                        d.prop("disabled", !0);
+                        j.show();
+                        r++;
+                    },
+                    data: {
+                        action: "post_woo_ml_sync_untracked_orders"
+                    },
+                    async:1,
+                    success: function(a) {
+                        if (a == true) {
+                            console.log("done!");
+                            console.log("Response: True");
+                            d.hide();
+                            j.hide();
+                            fail.hide();
+                            success.show();
+                        } else {
+                            d.prop('disabled', 0);
+                            var count = all_untracked_orders_left - a;
+                            d.data("woo-ml-untracked-orders-count", count);
+                            d.data("woo-ml-untracked-orders-left", count);
+                            d.prop('value', 'Synchronize '+ count + ' remaining untracked orders.');
+                            fail.show();
+                        }
+                    }
             });
-            console.log("loop finished!"), d.hide(), j.hide(), a("#woo-ml-sync-untracked-orders-success").show();
+        
+        
         }
     });
     

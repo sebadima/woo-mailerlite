@@ -32,7 +32,7 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
                 update_option('woocommerce_mailerlite_settings', $settings);
                 update_option('double_optin', $result['body']->double_optin);
                 update_option('ml_account_authenticated', true);
-
+                update_option('woo_ml_key', $api_key);
                 $groupsArray = [];
                 $groups = $result['body']->groups;
                 if ( sizeof( $groups ) > 0 ) {
@@ -156,6 +156,32 @@ if ( ! function_exists( 'mailerlite_wp_update_subscriber') ) :
 
             $subscriber_updated =$subscribersApi->update( $subscriber_email, $subscriber_data ); // returns updated subscriber
             if ( isset( $subscriber_updated->id ) ) {
+                return $subscriber_updated;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+endif;
+
+if (! function_exists( 'mailerlite_wp_sync_customer')) :
+    function mailerlite_wp_sync_customer($email, $fields)
+    {
+        if ( ! mailerlite_wp_api_key_exists() )
+            return false;
+
+        if ( empty( $email ) )
+            return false;
+        try {
+
+            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+
+            $wooCommerce = $mailerliteClient->woocommerce();
+            $store = home_url();
+            $subscriber_updated = $wooCommerce->syncCustomer( $email, $fields, $store );
+            if ( isset( $subscriber_updated->updated_subscriber) ) {
                 return $subscriber_updated;
             } else {
                 return false;
