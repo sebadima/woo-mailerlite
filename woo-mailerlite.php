@@ -7,7 +7,7 @@
  * Author:          MailerLite
  * Author URI:      https://mailerlite.com
  * Text Domain:     woo-mailerlite
- * WC tested up to: 4.1
+ * WC tested up to: 4.6
  * WC requires at least: 3.0.0
  */
 
