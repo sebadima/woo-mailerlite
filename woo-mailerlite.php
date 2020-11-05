@@ -3,11 +3,11 @@
  * Plugin Name:     WooCommerce - MailerLite
  * Plugin URI:      https://wordpress.org/plugins/woo-mailerlite/
  * Description:     Official MailerLite integration for WooCommerce. Track sales and campaign ROI, import products details, automate emails based on purchases and seamlessly add your customers to your email marketing lists via WooCommerce's checkout process.
- * Version:         1.4.9
+ * Version:         1.4.10
  * Author:          MailerLite
  * Author URI:      https://mailerlite.com
  * Text Domain:     woo-mailerlite
- * WC tested up to: 4.6
+ * WC tested up to: 4.5.2
  * WC requires at least: 3.0.0
  */
 
@@ -62,7 +62,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             define( 'WOO_MAILERLITE_NAME', 'WooCommerce - Mailerlite' );
 
             // Plugin version
-            define( 'WOO_MAILERLITE_VER', '1.4.9' );
+            define( 'WOO_MAILERLITE_VER', '1.4.10' );
 
             // Plugin path
             define( 'WOO_MAILERLITE_DIR', plugin_dir_path( __FILE__ ) );
@@ -83,7 +83,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             // Other
             define( 'WOO_MAILERLITE_MIN_PHP_VERSION', '5.6' );
         }
-        
+
         /**
          * Include necessary files
          *
@@ -255,7 +255,7 @@ function woo_ml_deactivate_woo_ml_plugin($deactivate = false)
 {
     if ($deactivate) {
         deactivate();
-        
+
         require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
         deactivate_plugins(plugin_basename( __FILE__ ), true);
     }
