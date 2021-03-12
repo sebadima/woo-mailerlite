@@ -1,15 +1,19 @@
 <?php
 
-
 namespace MailerLiteApi\Api;
 
 use MailerLiteApi\Common\ApiAbstract;
 
+/**
+ * Class WooCommerce
+ *
+ * @package MailerLiteApi\Api
+ */
 class WooCommerce extends ApiAbstract
 {
     protected $endpoint = 'woocommerce';
 
-    public function setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group_id, $resubscribe, $ignoreList, $create_segments)
+    public function setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group_id, $resubscribe )
     {
         $endpoint = $this->endpoint . '/consumer_data';
 
@@ -19,10 +23,7 @@ class WooCommerce extends ApiAbstract
                                 'store' => $store,
                                 'currency' => $currency,
                                 'group_id' => $group_id,
-                                'resubscribe' => $resubscribe,
-                                'ignore_list' => $ignoreList,
-                                'create_segments' => $create_segments]);
-                                
+                                'resubscribe' => $resubscribe]);
         $response = $this->restClient->post( $endpoint, $params );
 
         return $response['body'];
@@ -103,19 +104,5 @@ class WooCommerce extends ApiAbstract
     {
         $endpoint = 'woocommerce/initial_account_settings';
         return $this->restClient->get($endpoint);
-    }
-
-    public function syncCustomer($email, $fields, $shopUrl)
-    {
-        $endpoint = 'woocommerce/sync_customer';
-        $params = array_merge($this->prepareParams(), ['email' => $email, 'subscriber_fields' => $fields, 'shop' => $shopUrl] );
-
-        $response = $this->restClient->post( $endpoint, $params );
-
-        if (isset($response['body'])) {
-            return $response['body'];
-        } else {
-            return true;
-        }
     }
 }
