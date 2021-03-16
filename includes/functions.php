@@ -411,6 +411,9 @@ function woo_ml_count_untracked_orders_count()
  * @return bool
  */
 function woo_ml_sync_untracked_orders() {
+
+    set_time_limit(1800);
+
     $total_orders = woo_ml_count_untracked_orders_count();
    
     if (get_transient('woo_ml_order_sync_in_progress')) {
