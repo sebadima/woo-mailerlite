@@ -973,6 +973,8 @@ function woo_ml_set_to_tracked_orders($order)
 
 function woo_ml_set_product_list()
 {
+    global $wpdb;
+
     $products = array();
     $args = array(
         'posts_per_page'   => -1,
@@ -985,11 +987,98 @@ function woo_ml_set_product_list()
 
     $productPosts = get_posts( $args );
     foreach($productPosts as $product) {
+
         $products[$product->ID] = $product->post_title;
     }
-    update_option('ml_latest_wc_products', $products);
+
+    $mlProductsTableExists = get_option('ml_data_table');
+
+    // use a value in a the ml_data table to store the products
+    // we avoid using the wp_options table because it slows the website down if autoload is used
+    $table = $wpdb->prefix . 'ml_data';
+
+    if ($mlProductsTableExists != 1) {
+
+        woo_create_mailer_data_table();
+
+        update_option('ml_latest_wc_products', '');
+    }
+
+    $productData = json_encode($products);
+
+    $updateQuery = $wpdb->prepare("
+        INSERT INTO $table (data_name, data_value) VALUES ('products', %s) ON DUPLICATE KEY UPDATE data_value = %s
+    ", $productData, $productData);
+
+    $wpdb->query($updateQuery);
+
 }
 
+
 function woo_ml_get_product_list() {
-    return get_option('ml_latest_wc_products');
+    global $wpdb;
+
+    $table = $wpdb->prefix . 'ml_data';
+
+    $tableCreated = get_option('ml_data_table');
+
+    if ($tableCreated != 1) {
+
+        woo_create_mailer_data_table();
+        
+        $products = get_option('ml_latest_wc_products');
+
+        if (empty($products)) {
+
+            return [];
+        }
+
+        $productData = json_encode($products);
+
+        $updateQuery = $wpdb->prepare("
+        INSERT INTO $table (data_name, data_value) VALUES ('products', %s) ON DUPLICATE KEY UPDATE data_value = %s
+        ", $productData, $productData);
+
+        $wpdb->query($updateQuery);
+
+        update_option('ml_latest_wc_products', '');
+
+        return $products;
+    }
+
+    $data = $wpdb->get_row("SELECT * FROM $table WHERE data_name = 'products'");
+
+    if (!empty($data)) {
+
+        return json_decode($data->data_value);
+    } else {
+
+        return [];
+    }
+
+}
+
+
+/**
+ * Creates the ml_data table and sets the ml_data_table option flag
+ */
+function woo_create_mailer_data_table() {
+
+    global $wpdb;
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $table = $wpdb->prefix . 'ml_data';
+
+    $sql = "CREATE TABLE $table (
+            data_name varchar(45) NOT NULL,
+            data_value text NOT NULL,
+            PRIMARY KEY  (data_name)
+        ) $charset_collate;";
+
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
+
+    update_option('ml_data_table', 1);
+
 }
