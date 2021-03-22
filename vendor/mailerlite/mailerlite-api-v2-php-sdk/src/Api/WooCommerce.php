@@ -1,10 +1,14 @@
 <?php
 
-
 namespace MailerLiteApi\Api;
 
 use MailerLiteApi\Common\ApiAbstract;
 
+/**
+ * Class WooCommerce
+ *
+ * @package MailerLiteApi\Api
+ */
 class WooCommerce extends ApiAbstract
 {
     protected $endpoint = 'woocommerce';
@@ -13,16 +17,16 @@ class WooCommerce extends ApiAbstract
     {
         $endpoint = $this->endpoint . '/consumer_data';
 
-        $params = array_merge($this->prepareParams(), 
-                                ['consumer_key' => $consumerKey, 
-                                'consumer_secret' => $consumerSecret, 
-                                'store' => $store,
-                                'currency' => $currency,
-                                'group_id' => $group_id,
-                                'resubscribe' => $resubscribe,
-                                'ignore_list' => $ignoreList,
-                                'create_segments' => $create_segments]);
-                                
+        $params = array_merge($this->prepareParams(),
+            ['consumer_key' => $consumerKey,
+                'consumer_secret' => $consumerSecret,
+                'store' => $store,
+                'currency' => $currency,
+                'group_id' => $group_id,
+                'resubscribe' => $resubscribe,
+                'ignore_list' => $ignoreList,
+                'create_segments' => $create_segments]);
+
         $response = $this->restClient->post( $endpoint, $params );
 
         return $response['body'];
@@ -50,7 +54,7 @@ class WooCommerce extends ApiAbstract
         return $this->restClient->post( $endpoint, $params );
     }
 
-    public function sendCartData($shopUrl, $cartData) 
+    public function sendCartData($shopUrl, $cartData)
     {
         $endpoint = 'woocommerce/save_cart';
 
@@ -61,15 +65,15 @@ class WooCommerce extends ApiAbstract
         } else {
             return true;
         }
-    } 
+    }
 
-    public function sendSubscriberData($data) 
+    public function sendSubscriberData($data)
     {
         $endpoint = 'woocommerce/save_subscriber';
 
         $params = array_merge($this->prepareParams(), ['data'=>$data] );
         $response = $this->restClient->post( $endpoint, $params );
-        
+
         if (isset($response['body'])){
             return $response['body'];
         } else {
@@ -77,7 +81,7 @@ class WooCommerce extends ApiAbstract
         }
     }
 
-    public function sendOrderProcessingData($data) 
+    public function sendOrderProcessingData($data)
     {
         $endpoint = 'woocommerce/order_processing';
 
@@ -91,11 +95,11 @@ class WooCommerce extends ApiAbstract
         }
     }
 
-    public function getShopSettings($shopUrl) 
+    public function getShopSettings($shopUrl)
     {
         $shopName = parse_url($shopUrl, PHP_URL_HOST);
         $endpoint = 'woocommerce/settings/'.$shopName;
-        
+
         return $this->restClient->get( $endpoint);
     }
 

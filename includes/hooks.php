@@ -92,3 +92,9 @@ function woo_ml_order_status_change($order_id) {
         woo_ml_payment_status_processing($order_id);
 }
 add_action('woocommerce_order_status_changed', 'woo_ml_order_status_change');
+
+
+function enqueue_styles(){
+    wp_enqueue_style('related-styles', plugins_url('/../public/css/style.css', __FILE__));
+}
+add_action('wp_enqueue_scripts','enqueue_styles');

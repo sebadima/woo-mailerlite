@@ -4,6 +4,11 @@ namespace MailerLiteApi\Api;
 
 use MailerLiteApi\Common\ApiAbstract;
 
+/**
+ * Class Groups
+ *
+ * @package MailerLiteApi\Api
+ */
 class Groups extends ApiAbstract {
 
     protected $endpoint = 'groups';
@@ -34,12 +39,12 @@ class Groups extends ApiAbstract {
      * Get single subscriber from group
      *
      * @param $groupId
-     * @param $subscriber_id
+     * @param $subscriberId
      * @return mixed
      */
-    public function getSubscriber($groupId, $subscriber_id)
+    public function getSubscriber($groupId, $subscriberId)
     {
-        $endpoint = $this->endpoint . '/' . $groupId . '/subscribers/' . $subscriber_id;
+        $endpoint = $this->endpoint . '/' . $groupId . '/subscribers/' . urlencode($subscriberId);
 
         $response = $this->restClient->get($endpoint);
 
@@ -73,7 +78,7 @@ class Groups extends ApiAbstract {
      */
     public function removeSubscriber($groupId, $subscriberId)
     {
-        $endpoint = $this->endpoint . '/' . $groupId . '/subscribers/' . $subscriberId;
+        $endpoint = $this->endpoint . '/' . $groupId . '/subscribers/' . urlencode($subscriberId);
 
         $response = $this->restClient->delete($endpoint);
 

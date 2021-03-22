@@ -8,6 +8,11 @@ use MailerLiteApi\Common\ApiConstants;
 use MailerLiteApi\Common\RestClient;
 use MailerLiteApi\Exceptions\MailerLiteSdkException;
 
+/**
+ * Class MailerLite
+ *
+ * @package MailerLiteApi
+ */
 class MailerLite {
 
     /**
@@ -89,6 +94,11 @@ class MailerLite {
         return new \MailerLiteApi\Api\Settings($this->restClient);
     }
 
+    public function woocommerce()
+    {
+        return new \MailerLiteApi\Api\WooCommerce($this->restClient);
+    }
+
     /**
      * @return \MailerLiteApi\Api\Segments
      */
@@ -97,9 +107,12 @@ class MailerLite {
         return new \MailerLiteApi\Api\Segments($this->restClient);
     }
 
-    public function woocommerce()
+    /**
+     * @return \MailerLiteApi\Api\Batch
+     */
+    public function batch()
     {
-        return new \MailerLiteApi\Api\WooCommerce($this->restClient);
+        return new \MailerLiteApi\Api\Batch($this->restClient);
     }
 
     /**
