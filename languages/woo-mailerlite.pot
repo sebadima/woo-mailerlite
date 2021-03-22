@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"Project-Id-Version: Woo Mailerlite\n"
+"Project-Id-Version: Woo MailerLite\n"
 "POT-Creation-Date: 2017-12-27 16:57+0100\n"
 "PO-Revision-Date: 2017-05-10 16:10+0200\n"
 "Last-Translator: flowdee <coder@flowdee.de>\n"
@@ -59,15 +59,15 @@ msgid "Order tracking completed:"
 msgstr ""
 
 #: includes/class.woo-mailerlite-integration.php:24
-msgid "Mailerlite"
+msgid "MailerLite"
 msgstr ""
 
 #: includes/class.woo-mailerlite-integration.php:25
-msgid "Mailerlite integration for WooCommerce"
+msgid "MailerLite integration for WooCommerce"
 msgstr ""
 
 #: includes/class.woo-mailerlite-integration.php:54
-msgid "Mailerlite API Key"
+msgid "MailerLite API Key"
 msgstr ""
 
 #: includes/class.woo-mailerlite-integration.php:56

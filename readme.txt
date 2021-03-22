@@ -177,7 +177,7 @@ Yes, WordPress Multisite is supported by this official plugin..
 == Upgrade Notice ==
 
 = 1.2.0 (1st February 2018)
-* New: Product importing in Mailerlite campaign builder
+* New: Product importing in MailerLite campaign builder
 * New: Product and category importing in MailerLite automation workflow builder
 * New: Campaign sales tracking
 

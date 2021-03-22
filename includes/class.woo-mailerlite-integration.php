@@ -22,7 +22,7 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
 
             $this->id                 = 'mailerlite';
             $this->method_title       = __( 'MailerLite', 'woo-mailerlite' );
-            $this->method_description = __( 'Connect WooCommerce with Mailerlite', 'woo-mailerlite' );
+            $this->method_description = __( 'Connect WooCommerce with MailerLite', 'woo-mailerlite' );
 
             $request = $_REQUEST;
             //making a request only on load of the integrations page

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Functions inside this file are being used in different Mailerlite related WordPress plugins
+ * Functions inside this file are being used in different MailerLite related WordPress plugins
  */
 
 if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
     /**
-     * Check Mailerlite API connection
+     * Check MailerLite API connection
      *
      * @param $api_key
      * @return bool
@@ -194,7 +194,7 @@ endif;
 
 if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
     /**
-     * Set Mailerlite double opt in status
+     * Set MailerLite double opt in status
      *
      * @param bool $status
      * @return bool
