@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '2bb9c88ddd43c8d4cd409d0eace1fd1ba2885b02',
+    'reference' => '50f77adb8ba20c7d3d671c8b043b6f05109a3c74',
     'name' => '__root__',
   ),
   'versions' => 
@@ -41,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '2bb9c88ddd43c8d4cd409d0eace1fd1ba2885b02',
+      'reference' => '50f77adb8ba20c7d3d671c8b043b6f05109a3c74',
     ),
     'clue/stream-filter' => 
     array (
@@ -51,6 +51,33 @@ private static $installed = array (
       array (
       ),
       'reference' => 'aeb7d8ea49c7963d3b581378955dbf5bc49aa320',
+    ),
+    'guzzlehttp/guzzle' => 
+    array (
+      'pretty_version' => '6.5.5',
+      'version' => '6.5.5.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9d4290de1cfd701f38099ef7e183b64b4b7b0c5e',
+    ),
+    'guzzlehttp/promises' => 
+    array (
+      'pretty_version' => '1.4.1',
+      'version' => '1.4.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8e7d04f1f6450fef59366c399cfad4b9383aa30d',
+    ),
+    'guzzlehttp/psr7' => 
+    array (
+      'pretty_version' => '1.7.0',
+      'version' => '1.7.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '53330f47520498c0ae1f61f7e2c90f55690c06a3',
     ),
     'mailerlite/mailerlite-api-v2-php-sdk' => 
     array (
@@ -70,6 +97,13 @@ private static $installed = array (
       ),
       'reference' => '23ae1f00fbc6a886cbe3062ca682391b9cc7c37b',
     ),
+    'php-http/async-client-implementation' => 
+    array (
+      'provided' => 
+      array (
+        0 => '1.0',
+      ),
+    ),
     'php-http/client-common' => 
     array (
       'pretty_version' => '2.3.0',
@@ -79,6 +113,13 @@ private static $installed = array (
       ),
       'reference' => 'e37e46c610c87519753135fb893111798c69076a',
     ),
+    'php-http/client-implementation' => 
+    array (
+      'provided' => 
+      array (
+        0 => '1.0',
+      ),
+    ),
     'php-http/discovery' => 
     array (
       'pretty_version' => '1.13.0',
@@ -87,6 +128,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '788f72d64c43dc361e7fcc7464c3d947c64984a7',
+    ),
+    'php-http/guzzle6-adapter' => 
+    array (
+      'pretty_version' => 'v2.0.2',
+      'version' => '2.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9d1a45eb1c59f12574552e81fb295e9e53430a56',
     ),
     'php-http/httplug' => 
     array (
@@ -140,6 +190,13 @@ private static $installed = array (
       ),
       'reference' => '2dfb5f6c5eff0e91e20e913f8c5452ed95b86621',
     ),
+    'psr/http-client-implementation' => 
+    array (
+      'provided' => 
+      array (
+        0 => '1.0',
+      ),
+    ),
     'psr/http-factory' => 
     array (
       'pretty_version' => '1.0.1',
@@ -172,6 +229,15 @@ private static $installed = array (
         0 => '1.0',
       ),
     ),
+    'ralouphie/getallheaders' => 
+    array (
+      'pretty_version' => '3.0.3',
+      'version' => '3.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '120b605dfeb996808c31b6477290a714d356e822',
+    ),
     'symfony/deprecation-contracts' => 
     array (
       'pretty_version' => 'v2.2.0',
@@ -189,6 +255,33 @@ private static $installed = array (
       array (
       ),
       'reference' => '5d0f633f9bbfcf7ec642a2b5037268e61b0a62ce',
+    ),
+    'symfony/polyfill-intl-idn' => 
+    array (
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2d63434d922daf7da8dd863e7907e67ee3031483',
+    ),
+    'symfony/polyfill-intl-normalizer' => 
+    array (
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '43a0283138253ed1d48d352ab6d0bdb3f809f248',
+    ),
+    'symfony/polyfill-php72' => 
+    array (
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'cc6e6f9b39fe8075b3dabfbaf5b5f645ae1340c9',
     ),
     'symfony/polyfill-php73' => 
     array (

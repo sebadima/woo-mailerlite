@@ -1,5 +1,6 @@
 {
     "require": {
-        "mailerlite/mailerlite-api-v2-php-sdk": "^0.3.0"
+        "mailerlite/mailerlite-api-v2-php-sdk": "^0.3.0",
+        "php-http/guzzle6-adapter": "^2.0"
     }
 }
