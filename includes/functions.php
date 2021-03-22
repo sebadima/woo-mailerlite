@@ -690,6 +690,7 @@ function mailerlite_universal_woo_commerce()
         var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
         _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
 
+        window.mlsettings = window.mlsettings || {};
         window.mlsettings.shop = '<?php echo $shopUrl; ?>';
         var ml_account = ml('accounts', '<?php echo get_option("account_id"); ?>', '<?php echo get_option("account_subdomain"); ?>', '<?php echo $load; ?>');
         ml('ecommerce', 'visitor', 'woocommerce');  
