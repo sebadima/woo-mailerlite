@@ -62,7 +62,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             define( 'WOO_MAILERLITE_NAME', 'WooCommerce - MailerLite' );
 
             // Plugin version
-            define( 'WOO_MAILERLITE_VER', '1.5.2' );
+            define( 'WOO_MAILERLITE_VER', '1.5.3' );
 
             // Plugin path
             define( 'WOO_MAILERLITE_DIR', plugin_dir_path( __FILE__ ) );
@@ -81,7 +81,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
             }
 
             // Other
-            define( 'WOO_MAILERLITE_MIN_PHP_VERSION', '5.6' );
+            define( 'WOO_MAILERLITE_MIN_PHP_VERSION', '7.2.5' );
         }
 
         /**
@@ -145,7 +145,7 @@ if( ! class_exists( 'Woo_Mailerlite' ) ) {
                 return $links;
 
             if ( ! $this->check_server_requirements() ) {
-                $info = '<span style="color: red; font-weight: bold;">' . sprintf( esc_html__( 'PHP Version %1$s or newer required', 'woo-mailerlaite' ), WOO_MAILERLITE_MIN_PHP_VERSION ) . '</span>';
+                $info = '<span style="color: #ff0000; font-weight: bold;">' . sprintf( esc_html__( 'PHP Version %1$s or newer required', 'woo-mailerlaite' ), WOO_MAILERLITE_MIN_PHP_VERSION ) . '</span>';
                 array_unshift( $links, $info );
                 return $links;
             }

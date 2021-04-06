@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '50f77adb8ba20c7d3d671c8b043b6f05109a3c74',
+    'reference' => '4433f78051ac47c521e6eb8ca43853f9ebfe610c',
     'name' => '__root__',
   ),
   'versions' => 
@@ -41,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '50f77adb8ba20c7d3d671c8b043b6f05109a3c74',
+      'reference' => '4433f78051ac47c521e6eb8ca43853f9ebfe610c',
     ),
     'clue/stream-filter' => 
     array (
@@ -54,12 +54,12 @@ private static $installed = array (
     ),
     'guzzlehttp/guzzle' => 
     array (
-      'pretty_version' => '6.5.5',
-      'version' => '6.5.5.0',
+      'pretty_version' => '7.3.0',
+      'version' => '7.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9d4290de1cfd701f38099ef7e183b64b4b7b0c5e',
+      'reference' => '7008573787b430c1c1f650e3722d9bba59967628',
     ),
     'guzzlehttp/promises' => 
     array (
@@ -72,12 +72,12 @@ private static $installed = array (
     ),
     'guzzlehttp/psr7' => 
     array (
-      'pretty_version' => '1.7.0',
-      'version' => '1.7.0.0',
+      'pretty_version' => '1.8.1',
+      'version' => '1.8.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '53330f47520498c0ae1f61f7e2c90f55690c06a3',
+      'reference' => '35ea11d335fd638b5882ff1725228b3d35496ab1',
     ),
     'mailerlite/mailerlite-api-v2-php-sdk' => 
     array (
@@ -129,14 +129,14 @@ private static $installed = array (
       ),
       'reference' => '788f72d64c43dc361e7fcc7464c3d947c64984a7',
     ),
-    'php-http/guzzle6-adapter' => 
+    'php-http/guzzle7-adapter' => 
     array (
-      'pretty_version' => 'v2.0.2',
-      'version' => '2.0.2.0',
+      'pretty_version' => '1.0.0',
+      'version' => '1.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9d1a45eb1c59f12574552e81fb295e9e53430a56',
+      'reference' => 'fb075a71dbfa4847cf0c2938c4e5a9c478ef8b01',
     ),
     'php-http/httplug' => 
     array (
@@ -255,33 +255,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '5d0f633f9bbfcf7ec642a2b5037268e61b0a62ce',
-    ),
-    'symfony/polyfill-intl-idn' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2d63434d922daf7da8dd863e7907e67ee3031483',
-    ),
-    'symfony/polyfill-intl-normalizer' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '43a0283138253ed1d48d352ab6d0bdb3f809f248',
-    ),
-    'symfony/polyfill-php72' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'cc6e6f9b39fe8075b3dabfbaf5b5f645ae1340c9',
     ),
     'symfony/polyfill-php73' => 
     array (

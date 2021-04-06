@@ -9,6 +9,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use GuzzleHttp\Client;
 
 class RestClient {
 
@@ -108,9 +109,17 @@ class RestClient {
             $request = $request->withAddedHeader($name, $value);
         }
 
+        // the following is a diversion from the official library.
+        // the issue is that if there is a wordpress plugin that uses an old version
+        // of a Psr 18 client, the sendRequest may fail
+        $client = new Client();
+        $response = $client->sendRequest($request);
+
+        /*
         $response = $this->getHttpClient()->sendRequest(
             $request
         );
+        */
 
         return $this->handleResponse($response);
     }
