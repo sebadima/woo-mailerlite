@@ -5,7 +5,7 @@ Tags: woo, woocommerce, mailerlite, marketing, email, email marketing, ecommerce
 Requires at least: 3.0.1
 Tested up to: 5.7
 Requires PHP: 7.2.5
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -87,7 +87,14 @@ Yes, WordPress Multisite is supported by this official plugin..
 6. Dashboard e-commerce performance
 
 == Changelog ==
-= 1.5.2 (22nd March 2021) =
+
+= 1.5.3 (6th April 2021) =
+* Updated dependencies to reduce conflicts with other plugins
+
+= 1.5.2 (22nd Match 2021) =
+* Version bump
+
+= 1.5.1 (22nd March 2021) =
 * Version bump
 * Updated php requirement to 7.2.5
 
