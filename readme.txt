@@ -88,7 +88,7 @@ Yes, WordPress Multisite is supported by this official plugin..
 
 == Changelog ==
 
-= 1.5.4 =
+= 1.5.4 (19th April 2021) =
 * Usage of php-scoper to add a distinct namespace to all dependencies to resolve conflicts with other plugins
 
 = 1.5.3 (6th April 2021) =
