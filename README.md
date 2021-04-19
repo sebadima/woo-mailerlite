@@ -26,6 +26,11 @@ This plugin allows you to easily connect WooCommerce with MailerLite. Track sale
 *  Set up automation triggered by recent purchases
 *  Regular updates and improvements: Check out the [changelog](https://wordpress.org/plugins/woo-mailerlite/changelog/)
 
+## Building the plugin
+The plugin uses `php-scoper` to add a unique namespace into its dependencies in order to prevent conflicts with other plugins.
+
+To use the plugin, install `php-scoper` in your system and run it in the plugin directory. Then, copy all files except the vendor folder into the generated build directory and run `composer dump-autoload`.
+
 ### Credits
 
 This plugin is made by using the official [MailerLite API](https://developers.mailerlite.com/docs).

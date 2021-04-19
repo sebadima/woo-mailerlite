@@ -18,17 +18,17 @@ if ( ! function_exists( 'mailerlite_wp_api_key_validation') ) :
 
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( $api_key );
-            
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( $api_key );
+
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $result = $wooCommerceApi->validateAccount($api_key);
-            
+
             if ( isset( $result ) && ! isset( $result['errors'] ) ) {
                 $settings = get_option('woocommerce_mailerlite_settings');
                 $settings['double_optin'] = $result['body']->double_optin;
                 $settings['api_key'] = $api_key;
                 $settings['api_status'] = true;
-                
+
                 update_option('woocommerce_mailerlite_settings', $settings);
                 update_option('double_optin', $result['body']->double_optin);
                 update_option('ml_account_authenticated', true);
@@ -83,7 +83,7 @@ if ( ! function_exists( 'mailerlite_wp_get_groups') ) :
         $groups = array();
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $groupsApi = $mailerliteClient->groups();
             $results = $groupsApi->get();
@@ -118,7 +118,7 @@ if ( ! function_exists( 'mailerlite_wp_get_subscriber_by_email') ) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $subscribersApi = $mailerliteClient->subscribers();
             $subscriber = $subscribersApi->find( $email );
@@ -150,7 +150,7 @@ if ( ! function_exists( 'mailerlite_wp_update_subscriber') ) :
             return false;
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $subscribersApi = $mailerliteClient->subscribers();
 
@@ -176,7 +176,7 @@ if (! function_exists( 'mailerlite_wp_sync_customer')) :
             return false;
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerce = $mailerliteClient->woocommerce();
             $store = home_url();
@@ -206,7 +206,7 @@ if ( ! function_exists( 'mailerlite_wp_set_double_optin') ) :
 
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $settingsApi = $mailerliteClient->settings();
             $result = $settingsApi->setDoubleOptin( $status );
@@ -241,7 +241,7 @@ if ( ! function_exists( 'mailerlite_wp_create_custom_field') ) :
 
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $fieldsApi = $mailerliteClient->fields();
             $field_added = $fieldsApi->create( $field_data );
@@ -271,7 +271,7 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
 
         try {
 
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $fieldsApi = $mailerliteClient->fields();
 
@@ -279,7 +279,7 @@ if ( ! function_exists( 'mailerlite_wp_get_custom_fields') ) :
             return $fields;
 
         } catch (Exception $e) {
-            
+
             return false;
         }
     }
@@ -288,11 +288,11 @@ endif;
 /**
  * Sends to api shop data needed to make back and forth connection with woo commerce
  * Api returns account id and subdomain used to for universal script
- * 
+ *
  * @param string $consumerKey
  * @param string $consumerSecret
  * @param string $apiKey
- * 
+ *
  * @return array|bool
  */
 if (! function_exists('mailerlite_wp_set_consumer_data') ) :
@@ -301,7 +301,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite(MAILERLITE_WP_API_KEY);
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite(MAILERLITE_WP_API_KEY);
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $store = home_url();
@@ -309,7 +309,7 @@ if (! function_exists('mailerlite_wp_set_consumer_data') ) :
             if (empty($group)) {
                 return ['errors' => 'WooCommerce - MailerLite: Please select a group.'];
             }
-            if (strpos($store, 'https://') !== false ) {
+            if (strpos($store, 'https://') !== false) {
                 $result = $wooCommerceApi->setConsumerData( $consumerKey, $consumerSecret, $store, $currency, $group, $resubscribe, $ignoreList,$create_segments);
                 if ( isset( $result->account_id ) && (isset($result->account_subdomain))) {
                     update_option('account_id', $result->account_id);
@@ -331,9 +331,9 @@ endif;
 
 /**
  * Sends completed order data to api to be evaluated and saved and/if trigger automations
- * 
+ *
  * @param array $order_data
- * 
+ *
  * @return bool|void
  */
 if ( ! function_exists( 'mailerlite_wp_send_order') ) :
@@ -343,10 +343,10 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            
+
             $store = home_url();
 
             $shop_url = site_url();
@@ -359,14 +359,14 @@ if ( ! function_exists( 'mailerlite_wp_send_order') ) :
             return false;
         }
     }
-endif; 
+endif;
 
 /**
  * Get triggered on deactivate plugin event. Sends store name to api
  * to toggle its active status
- * 
+ *
  * @param bool $active_state
- * 
+ *
  * @return bool|void
  */
 if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
@@ -376,23 +376,23 @@ if ( ! function_exists( 'mailerlite_wp_toggle_shop_connection') ) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            
+
             $store = home_url();
             $result =$wooCommerceApi->toggleShopConnection($store, $active_state);
         } catch (Exception $e) {
-            
+
             return false;
         }
     }
-endif; 
+endif;
 /**
  * Sending cart data on cart update
- * 
+ *
  * @param bool $cart_data
- * 
+ *
  * @return bool|void
  */
 if (! function_exists('mailerlite_wp_send_cart')) :
@@ -401,12 +401,12 @@ if (! function_exists('mailerlite_wp_send_cart')) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            
+
             $shop_url = home_url();
-            
+
             $result = $wooCommerceApi->sendCartData($shop_url, $cart_data);
             if (isset($result->deactivate) && $result->deactivate) {
                 woo_ml_deactivate_woo_ml_plugin(true);
@@ -418,10 +418,10 @@ if (! function_exists('mailerlite_wp_send_cart')) :
 endif;
 
 /**
- * Sending order data on creation of order and/or order status change to processing 
+ * Sending order data on creation of order and/or order status change to processing
  * @param array $data
  * @param string $event
- * 
+ *
  * @return bool
  */
 if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
@@ -431,10 +431,10 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
-            
+
             $shop_url = site_url();
             $data['shop_url'] = home_url();
             $data['order_url'] = $shop_url."/wp-admin/post.php?post=".$data['order_id']."&action=edit";
@@ -442,7 +442,7 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
             //receive newsletters
             if ($event === 'order_created') {
                 $result = $wooCommerceApi->sendSubscriberData($data);
-            
+
                 if (isset($result->added_to_group) && isset($result->updated_fields)) {
                     return $result;
                 } else if (isset($result->deactivate) && $result->deactivate){
@@ -458,7 +458,7 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
                 }
                 return true;
             }
-            
+
         } catch (Exception $e) {
             return false;
         }
@@ -466,7 +466,7 @@ if(! function_exists('mailerlite_wp_add_subscriber_and_save_order')) :
 endif;
 /**
  * API call to get all shop settings from the MailerLite side
- * 
+ *
  * @return array|bool
  */
 if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
@@ -476,12 +476,12 @@ if (! function_exists('mailerlite_wp_get_shop_settings_from_db')) :
             return false;
 
         try {
-            $mailerliteClient = new \MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
+            $mailerliteClient = new \MailerLite_Woo\MailerLiteApi\MailerLite( MAILERLITE_WP_API_KEY );
 
             $wooCommerceApi = $mailerliteClient->woocommerce();
             $result = $wooCommerceApi->getShopSettings(home_url());
             if (isset($result['body'])) {
-                
+
                 if (isset($result['body']->deactivate) && $result['body']->deactivate) {
                     woo_ml_deactivate_woo_ml_plugin(true);
                 } else {
