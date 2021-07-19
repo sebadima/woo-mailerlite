@@ -59,6 +59,29 @@ jQuery(document).ready(function ($) {
         });
     });
 
+
+    /**
+     * Resets the re-synchronization for all orders
+     */
+    $(document).on('click', '[data-woo-ml-reset-orders-sync]', function(event) {
+
+        event.preventDefault();
+
+        jQuery.ajax({
+            url: woo_ml_post.ajax_url,
+            type: 'post',
+            data: {
+                action: 'post_woo_ml_reset_orders_sync'
+            },
+            async: false, // In order not to break our while due to async actions
+            success: function (response) {
+
+                window.location.reload();
+            }
+
+        });
+    });
+
     /**
      * Synchronize untracked orders
      */

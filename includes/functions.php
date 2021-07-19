@@ -390,6 +390,31 @@ function woo_ml_get_untracked_orders($args = array()) {
     return $order_posts;
 }
 
+/**
+ * Resets the tracked orders so that they can be re-synced
+ */
+function woo_ml_reset_tracked_orders()
+{
+    set_time_limit(1800);
+
+    $defaults = array(
+        'numberposts' => -1,
+        'post_type'   => 'shop_order',
+        'post_status' => 'wc-completed',
+        'order'       => 'ASC', // old to new in order to get latest address data first
+        'meta_key'     => '_woo_ml_order_tracked',
+        'meta_compare' => 'EXISTS'
+    );
+
+    $args = wp_parse_args( [], $defaults );
+    $order_posts = get_posts( $args );
+
+    foreach ($order_posts as $post) {
+
+        delete_post_meta( $post->ID, '_woo_ml_order_tracked' );
+    }
+}
+
 function woo_ml_count_untracked_orders_count()
 {
     $defaults = array(
