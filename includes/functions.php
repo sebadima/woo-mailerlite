@@ -801,9 +801,20 @@ function woo_ml_payment_status_processing($order_id)
     if ($order->get_status() === 'processing') {
         $data = [];
         $customer_email = $order->get_billing_email();
-        $saved_checkout = woo_ml_get_saved_checkout_by_email($customer_email);
 
-        $data['checkout_id'] = ! empty($saved_checkout) ? $saved_checkout->checkout_id : null;
+        // load the checkout id from the cookie first
+        // if that fails, then check the mailerlite checkouts table
+        $checkoutId = null;
+        if (isset($_COOKIE['mailerlite_checkout_token'])) {
+
+            $checkoutId = $_COOKIE['mailerlite_checkout_token'];
+        } else {
+
+            $saved_checkout = woo_ml_get_saved_checkout_by_email($customer_email);
+            $checkoutId = ! empty($saved_checkout) ? $saved_checkout->checkout_id : null;
+        }
+
+        $data['checkout_id'] = $checkoutId;
         $data['order_id'] = $order_id;
         $data['payment_method'] = $order->get_payment_method();
         
