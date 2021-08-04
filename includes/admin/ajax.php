@@ -51,6 +51,17 @@ function woo_ml_admin_ajax_sync_untracked_orders() {
 add_action( 'wp_ajax_nopriv_post_woo_ml_sync_untracked_orders', 'woo_ml_admin_ajax_sync_untracked_orders' );
 add_action( 'wp_ajax_post_woo_ml_sync_untracked_orders', 'woo_ml_admin_ajax_sync_untracked_orders' );
 
+
+/**
+ * Is called when the user presses the Reset orders sync button in the plugin admin settings
+ */
+function woo_ml_reset_orders_sync()
+{
+
+    woo_ml_reset_tracked_orders();
+}
+add_action( 'wp_ajax_post_woo_ml_reset_orders_sync', 'woo_ml_reset_orders_sync' );
+
 function woo_ml_email_cookie() {
     if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
         try{

@@ -240,6 +240,13 @@ if ( ! class_exists( 'Woo_Mailerlite_Integration' ) ) :
                                 <?php printf( esc_html('Oops, we did not manage to sync all of your orders, please try again.','woo-mailerlite') ); ?>
                             </p>
                             <?php echo $this->get_description_html( $data ); ?>
+
+                        <?php } else if (empty($untracked_orders_count) && ! get_transient('woo_ml_order_sync_in_progress')) { ?>
+
+                            <button id="woo-ml-reset-orders-sync" class="button-secondary" data-woo-ml-reset-orders-sync="true">
+                                <?php _e( 'Reset order synchronization' ); ?>
+                            </button>
+
                         <?php } else if (! empty($untracked_orders_count) && get_transient('woo_ml_order_sync_in_progress')) { ?>
                             <div id="woo-ml-sync-untracked-orders-progress-bar" style="display: block; color: black;" class="woo-ml-progress-bar">
                             <div>
