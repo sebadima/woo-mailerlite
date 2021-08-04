@@ -29,7 +29,7 @@ This plugin allows you to easily connect WooCommerce with MailerLite. Track sale
 ## Building the plugin
 The plugin uses `php-scoper` to add a unique namespace into its dependencies in order to prevent conflicts with other plugins.
 
-To use the plugin, install `php-scoper` in your system and run it in the plugin directory. Then, copy all files except the vendor folder into the generated build directory and run `composer dump-autoload`.
+To use the plugin, install `php-scoper` in your system and run it in the plugin directory. Then, copy all files except the vendor folder into the generated build directory and run `composer dump-autoload`. Finally, run the `fix-autoload.php` to prevent conflicts with plugins that use the same packages.
 
 ### Credits
 
