@@ -697,7 +697,7 @@ function woo_ml_debug_log( $message ) {
 */
 function mailerlite_universal_woo_commerce()
 {
-    $shopUrl = get_option('siteurl');
+    $shopUrl = home_url();
     $shopUrl = str_replace('http://', '', $shopUrl);
     $shopUrl = str_replace('https://', '', $shopUrl);
 
