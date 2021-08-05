@@ -87,8 +87,10 @@ Yes, WordPress Multisite is supported by this official plugin..
 6. Dashboard e-commerce performance
 
 == Changelog ==
-= 1.5.6 (Xth July 2021) =
+= 1.5.6 (5th August 2021) =
 * Button to reset the sync status of all orders so that they can be synced again
+* Fix of dependencies hashes to resolve conflicts with other plugins
+* Fix for abandoned cart trigger after the order was submitted
 
 = 1.5.5 (10th May 2021) =
 * Changed activate/deactivate method names with a prefix to resolve conflicts with other plugins
